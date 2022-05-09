@@ -1,0 +1,31 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    transition: all .3s linear;
+}
+p,h1,h2,h3,h4,h5,h6{
+  margin: 0;
+}
+
+html{
+  font-family: 'EnnVisions' !important;
+}
+
+body{
+  font-family: "EnnVisions" !important;
+  background-color: lightgray;
+}
+
+@font-face {
+  font-family: "EnnVisions";
+  src: local("SFUIText-Regular"),
+      url("./Assets/fonts/EnnVisions.otf") format("truetype");
+}
+@font-face {
+  font-family: "EnnVisionsBold";
+  src: local("SFUIText-Regular"),
+      url("./Assets/fonts/EnnVisionsMedium.otf") format("truetype");
+}
