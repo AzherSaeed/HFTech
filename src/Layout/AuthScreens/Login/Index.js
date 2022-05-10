@@ -54,6 +54,7 @@ const Index = () => {
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" />
           <h1>Welcome to HF Tech</h1>
+          {/* <span>asdfasdf</span> */}
         </div>
         <div className="login-container-card-form">
           <Formik
