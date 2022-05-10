@@ -97,7 +97,7 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <p to="/">Forgot Password</p>
+                    <p to="/" className="forget_password">Forgot Password?</p>
                     <CustomButton
                       bgcolor={BasicColor}
                       color="white"
