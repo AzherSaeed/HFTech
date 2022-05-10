@@ -3,6 +3,7 @@ const SideBarContainer =styled.div`
  
 .ant-layout-header {
     background: #dcdcdc !important;
+  
 }
 .ant-layout-sider-children {
     background: #dcdcdc !important;   

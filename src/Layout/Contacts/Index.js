@@ -4,15 +4,22 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Tag, Space } from 'antd';
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
-import deleteIcon from '../../Assets/ic_delete.svg';
-import editIcon from '../../Assets/ic_edit.svg';
-
+import deleteIcon from '../../Assets/icons/ic_delete.svg';
+import editIcon from '../../Assets/icons/ic_edit.svg';
+import pdfIcon from '../../Assets/icons/ic_pdf.svg';
+import downloadIcon from '../../Assets/icons/ic_download.svg';
+import tickIcon from '../../Assets/icons/ic_tick.svg';
+import emailIcon from '../../Assets/icons/ic_email.svg';
+import { Link } from "react-router-dom";
 
 const columns = [
     {
         title: 'Id',
         dataIndex: 'key',
         key: 'key',
+        render:(text,record)=>(
+          <Link to={`/contact/${record.key}`}>{text}</Link>
+        )
     },
     {
       title: 'Client | Contact',
@@ -46,14 +53,14 @@ const columns = [
       render: (text, record) => (
         <Space size="middle">
         <div style={{display:'flex', gap:'4px'}}>
-          <img  src={editIcon} alt="edit Icon" className="action_icons"/>
-          <img src={deleteIcon} alt="Delete Icon" className="action_icons"/>
-          <img  src={editIcon} alt="edit Icon" className="action_icons"/>
-          <img src={deleteIcon} alt="Delete Icon" className="action_icons"/>
+        <img  src={pdfIcon} alt="edit Icon" className="action_icons"/>
+          <img src={downloadIcon} alt="Delete Icon" className="action_icons"/>
+          <img  src={emailIcon} alt="edit Icon" className="action_icons"/>
+          <img src={tickIcon} alt="Delete Icon" className="action_icons"/>
           </div>
           <div style={{display:'flex', gap:'4px'}}>
-          <img  src={editIcon} alt="edit Icon" className="action_icons"/>
-          <img src={deleteIcon} alt="Delete Icon" className="action_icons"/>
+          <img  src={deleteIcon} alt="delete Icon" className="action_icons deleteicon"/>
+          <img src={editIcon} alt="edit Icon" className="action_icons editicon"/>
         </div>
         </Space>
       ),
@@ -61,14 +68,6 @@ const columns = [
   ];
   
   const data = [
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
     {
       key: '5678',
       name: 'Mah Adnan Qureshi',

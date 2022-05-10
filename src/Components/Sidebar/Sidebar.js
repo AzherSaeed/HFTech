@@ -12,6 +12,7 @@ import notificationIcon from "../../Assets/ic_notification.svg";
 import flagIcon from "../../Assets/ic_flag.svg";
 import profileIcon from "../../Assets/card-profile.png";
 import { Link } from "react-router-dom";
+import CustomButton from "../CustomButton/Index";
 const { Header, Content, Footer, Sider } = Layout;
 const Sidebar = ({children}) => {
   return (
@@ -47,6 +48,16 @@ const Sidebar = ({children}) => {
               <Menu.Item key='/contact'> <Link to="/contact"/>Contact</Menu.Item>
               <Menu.Item key='/client'> <Link to="/client"/>Client</Menu.Item>
           </Menu>
+         {/* <div className="lgOutButton"> 
+          <CustomButton
+                     bgcolor="#156985"
+                      color="white"
+                      padding="11px 8px"
+                      width="100%"
+                      type="submit"
+                      title="Log Out"
+          />
+          </div> */}
         </Sider>
 
         <Layout>

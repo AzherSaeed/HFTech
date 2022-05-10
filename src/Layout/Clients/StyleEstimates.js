@@ -15,14 +15,19 @@ const StyleEstimates = styled.div`
   .ant-table-tbody > tr > td {
     border-bottom: none !important;
   }
-  .action_icons {
-    color: blue;
-    background: green;
-    width: 20px;
-    height: 20px;
+  .action_icons{
+    background:#E1E2E2 ;
+    width:23px;
+    height:22px;
     padding: 3px;
     border-radius: 2px;
-  }
+}
+.deleteicon{
+    background: #D63229 !important;
+}
+.editicon{
+    background: #007AFF !important;
+}
   
 `;
 

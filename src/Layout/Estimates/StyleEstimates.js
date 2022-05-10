@@ -16,12 +16,17 @@ const StyleEstimates =styled.div`
 border-bottom: none !important;
 }
 .action_icons{
-    color:blue;
-    background:green ;
-    width:20px;
-    height:20px;
+    background:#E1E2E2 ;
+    width:23px;
+    height:22px;
     padding: 3px;
     border-radius: 2px;
+}
+.deleteicon{
+    background: #D63229 !important;
+}
+.editicon{
+    background: #007AFF !important;
 }
 `; 
 

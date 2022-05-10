@@ -12,7 +12,7 @@ import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
 import { toast } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const initialValues = {
   username: "",
@@ -31,9 +31,11 @@ const validationSchema = Yup.object({
 });
 const Index = () => {
   const genericService = new GenericService();
+  const navigate=useNavigate();
 
   const onSubmit = (value) => {
-    console.log(value, "value");
+    navigate('/');
+    //console.log(value, "value");
     genericService
       .post(`${API_URL}auth/signin`, value)
       .then((msg) => {
@@ -157,7 +159,7 @@ const Index = () => {
       </div>
       <div className="login-container-bottom">
         <p>Already have Account? </p>
-        <h6>&nbsp; Login</h6>
+        <h6>&nbsp;<Link to='/'> Login</Link></h6>
       </div>
     </LoginContainer>
   );

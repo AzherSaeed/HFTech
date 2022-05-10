@@ -31,7 +31,7 @@ const Index = () => {
  const navigate=useNavigate();
   const onSubmit = (value) => {
     //console.log(value, "value");
-    navigate('/estimates');
+    navigate('/');
     genericService
       .post(`${API_URL}auth/signin`, value)
       .then((msg) => {
@@ -55,7 +55,6 @@ const Index = () => {
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" />
-          <h1>Welcome to HF Tech</h1>
         </div>
         <div className="login-container-card-form">
           <Formik
@@ -72,20 +71,8 @@ const Index = () => {
                   autoComplete="off"
                   validateMessages={validationSchema}
                 >
+                <h1 className="main-heading">Reset Password</h1>
                   <div className="login-input-fields">
-                    <div>
-                      <FormControl
-                        control="input"
-                        type="text"
-                        name="username"
-                        placeholder="Email Address"
-                        className={
-                          formik.errors.username && formik.touched.username
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                      />
-                    </div>
                     <div className="login-input-fields-field">
                       <FormControl
                         control="password"
@@ -99,14 +86,27 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <p className="forget_password"><Link to='/forgetPassword'>Forgot Password?</Link></p>
+                    <div className="login-input-fields-field">
+
+                      <FormControl
+                        control="password"
+                        type="text"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        className={
+                          formik.errors.username && formik.touched.username
+                            ? "is-invalid"
+                            : "customPasswordInput"
+                        }
+                      />
+                    </div>
                     <CustomButton
                       bgcolor={BasicColor}
                       color="white"
                       padding="11px 8px"
                       width="100%"
                       type="submit"
-                      title="Sign In"
+                      title="Submit"
                     />
                   </div>
                 </Form>
@@ -114,10 +114,6 @@ const Index = () => {
             }}
           </Formik>
         </div>
-      </div>
-      <div className="login-container-bottom">
-        <p>New Here? </p>
-        <h6><Link to='/signup'> Create an Account</Link></h6>
       </div>
     </LoginContainer>
   );
