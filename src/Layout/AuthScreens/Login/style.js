@@ -6,13 +6,13 @@ export const LoginContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
-  background-color: lightgray;
+  background-color: #FAFAFA;
   .login-container {
     &-card {
       background-color: white;
       padding: 20px;
       border-radius: 6px;
-      width: 400px;
+      width: 40%;
       margin-left: auto;
       margin-right: auto;
 
@@ -26,8 +26,8 @@ export const LoginContainer = styled.div`
 
         h1 {
           font-size: 20px;
-          font-weight: normal;
-          color: ${BasicColor};
+          font-weight: 700;
+          color:#1B283F;
         }
       }
     }
@@ -73,8 +73,32 @@ export const LoginContainer = styled.div`
   }
   .forget_password{
     text-align: right;
+    color: #156985 !important;
   }
   .ant-input-suffix {
     margin-left: 30px;
+}
+.logo{
+  height: 60px;
+  width: 155px;
+  margin-bottom: 20px;
+}
+@media screen and (max-width: 768px) {
+  .login-container{
+    &-card{
+      width: 60%;
+      background-color: #FAFAFA;
+
+    }
+  }
+}
+@media screen and (max-width: 425px) {
+  .login-container{
+    &-card{
+      width: 90%;
+      /* background-color: #FAFAFA; */
+
+    }
+  } 
 }
 `;

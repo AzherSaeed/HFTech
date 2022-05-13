@@ -6,7 +6,7 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import SideBarContainer from "./Style";
-import logos from '../../Assets/ic_logo.svg';
+import logos from '../../Assets/icons/ic_logo_small.svg';
 import searchIcon from "../../Assets/ic_search.svg";
 import notificationIcon from "../../Assets/ic_notification.svg";
 import flagIcon from "../../Assets/ic_flag.svg";
@@ -75,9 +75,8 @@ const Sidebar = ({children}) => {
               </div>
             </div>
           </Header>
-          <Content style={{ margin: "0px 16px 0", overflow: "initial" }}>
+          <Content style={{ margin: "0px 16px 0", overflow: "initial",background:"#FAFAFA" }}>
             <div
-              className="site-layout-background"
               style={{ padding: 24, minHeight: 360 }}
             >
            

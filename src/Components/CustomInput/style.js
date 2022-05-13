@@ -9,7 +9,7 @@ export const CustomInputContainer = styled.div`
     text-transform: capitalize;
     ////sad
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
   }
 
 `;

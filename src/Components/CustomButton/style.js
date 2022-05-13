@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const CustormButtonContainer = styled.div`
-  /* width: 100%;
-  margin-bottom: 10px; */
+  /* width: 100%; */
+  margin-bottom: 10px;
   width: ${(props) => props.width};
   .ant-btn {
     border: none;

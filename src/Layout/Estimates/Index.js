@@ -10,7 +10,7 @@ import pdfIcon from '../../Assets/icons/ic_pdf.svg';
 import downloadIcon from '../../Assets/icons/ic_download.svg';
 import tickIcon from '../../Assets/icons/ic_tick.svg';
 import emailIcon from '../../Assets/icons/ic_email.svg';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const columns = [
@@ -67,6 +67,8 @@ const columns = [
       ),
     },
   ];
+  
+  
   
   const data = [
     {
@@ -129,6 +131,10 @@ const columns = [
   ];
 
 const Index = () => {
+  const navigate=useNavigate();
+  const clickedHandler = () => {
+    navigate("/estimates/createNew");
+  }
   return (
     <Sidebar>
       <StyleEstimates>
@@ -140,6 +146,7 @@ const Index = () => {
             type="submit"
             width="130px"
             title="Create new"
+            clicked={clickedHandler}
           />
         </div>
         <Table pagination={false} columns={columns} dataSource={data} />

@@ -6,7 +6,7 @@ import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./style";
-import ic_logo from "../../../Assets/ic_logo.svg";
+import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
 import { toast } from "react-toastify";
@@ -54,8 +54,8 @@ const Index = () => {
       <div></div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
-          <img src={ic_logo} alt="ic_logo" />
-          <h1>Welcome to HF Tech</h1>
+          <img src={ic_logo} alt="ic_logo" className="logo" />
+          <h1  className="heading">Welcome to HF Tech</h1>
         </div>
         <div className="login-container-card-form">
           <Formik
@@ -99,9 +99,9 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <p className="forget_password"><Link to='/forgetPassword'>Forgot Password?</Link></p>
+                    <p className="forget_password"><Link to='/forgetPassword' className="forget_password">Forgot Password?</Link></p>
                     <CustomButton
-                      bgcolor={BasicColor}
+                      bgcolor="#156985"
                       color="white"
                       padding="11px 8px"
                       width="100%"
@@ -117,7 +117,7 @@ const Index = () => {
       </div>
       <div className="login-container-bottom">
         <p>New Here? </p>
-        <h6><Link to='/signup'> Create an Account</Link></h6>
+        <h6><Link to='/signup' style={{color:'#156985'}}> Create an Account</Link></h6>
       </div>
     </LoginContainer>
   );

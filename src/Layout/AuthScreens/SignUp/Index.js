@@ -6,7 +6,7 @@ import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./style";
-import ic_logo from "../../../Assets/ic_logo.svg";
+import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import ic_flag from "../../../Assets/ic_flag.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
@@ -58,7 +58,7 @@ const Index = () => {
       <div></div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
-          <img src={ic_logo} alt="ic_logo" />
+          <img src={ic_logo} alt="ic_logo" className="logo" />
         </div>
         <div className="login-container-card-form">
           <Formik
@@ -143,7 +143,7 @@ const Index = () => {
                     </div>
                     <p to="/" className="forget_password">Agreed with Terms & Conditions Privacy Policy</p>
                     <CustomButton
-                      bgcolor={BasicColor}
+                      bgcolor="#156985"
                       color="white"
                       padding="11px 8px"
                       width="100%"
@@ -159,7 +159,7 @@ const Index = () => {
       </div>
       <div className="login-container-bottom">
         <p>Already have Account? </p>
-        <h6>&nbsp;<Link to='/'> Login</Link></h6>
+        <h6>&nbsp;<Link to='/' style={{color:'#156985'}}> Login</Link></h6>
       </div>
     </LoginContainer>
   );

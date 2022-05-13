@@ -6,18 +6,17 @@ export const LoginContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
-  background-color: lightgray;
+  background-color: #FAFAFA;
   .login-container {
     &-card {
       background-color: white;
       padding: 20px;
       border-radius: 6px;
-      width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      width: 40%;
+      margin: auto;
 
       &-logo {
-        margin: 20px auto;
+        margin:auto;
         text-align: center;
 
         img {
@@ -80,5 +79,58 @@ export const LoginContainer = styled.div`
 .joinCommunity{
     font-weight: 600 ;
     margin-bottom: .3rem ;
+}
+.logo{
+  height: 60px;
+  width: 155px;
+  margin-bottom: 20px;
+}
+@media screen and (max-width: 925px) {
+  .login-container {
+    &-card {
+      width: 50%;
+      
+    }
+  }
+}
+@media screen and (max-width: 680px) {
+  .login-container {
+    &-card {
+      width: 60%;
+      background: #FAFAFA;
+    }
+  }
+}
+@media screen and (max-width: 580px) {
+  .login-container {
+    &-card {
+      width: 70%;
+      
+    }
+  }
+}
+@media screen and (max-width: 500px) {
+  .login-container {
+    &-card {
+      width: 80%;
+      &-logo{
+      h1{
+        font-size: 16px;
+      }
+    }
+  }
+}
+}
+@media screen and (max-width: 425px) {
+  .login-container {
+    &-card {
+      width: 90%;
+      &-logo{
+      h1{
+        font-size: 14px !important;
+      }
+    }
+  }
+}
 }
 `;

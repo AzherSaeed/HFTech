@@ -13,8 +13,9 @@ import UserLocation from './Layout/Locations/UserLocation/Index';
 import ClientDetail from './Layout/Clients/ClientDetail/Index';
 import ForgetPassword from './Layout/AuthScreens/ForgotPassword/Index';
 import ResetPassword from './Layout/AuthScreens/ResetPassword/Index';
-
-
+import USerContact from './Layout/Contacts/UserContact/Index'; 
+import CreateNew from './Layout/Estimates/CreateNew/CreateNew';
+import AddItem from './Layout/Estimates/CreateNew/AddItems/Index';
 function App() {
   return (
     <div>
@@ -25,10 +26,13 @@ function App() {
         <Route path='/resetPassword' element={<ResetPassword/>}/>
         <Route path='/forgetPassword' element={<ForgetPassword/>}/>
         <Route path="/estimates" element={<Estimates />} />
+        <Route path="/estimates/createNew" element={<CreateNew />} />
+        <Route path='/estimates/createNew/addItem' element={<AddItem/>}/>
         <Route  path="/estimates/:estimstesId" element={<USerDetail  />} />
         <Route  path="/locations" element={<Locations/>} />
         <Route  path="/locations/:locationsId" element={<UserLocation/>} />
         <Route  path="/contact" element={<Contacts />} />
+        <Route  path="/contact/:contactId" element={<USerContact />} />
         <Route  path="/client" element={<Clients />} />
         <Route  path="/clients/:clientId" element={<ClientDetail/>} />
       </Routes>

@@ -6,7 +6,7 @@ import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./Style";
-import ic_logo from "../../../Assets/ic_logo.svg";
+import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
 import { toast } from "react-toastify";

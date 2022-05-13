@@ -2,15 +2,15 @@ import styled from 'styled-components';
 const SideBarContainer =styled.div`
  
 .ant-layout-header {
-    background: #dcdcdc !important;
+    background: #EEF0F8 !important;
   
 }
 .ant-layout-sider-children {
-    background: #dcdcdc !important;   
+    background:#ECECEC !important;   
 }
 .ant-menu.ant-menu-dark, .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark .ant-menu-sub ,.ant-menu-item {
     color: black !important;
-    background: #dcdcdc !important;
+    background: #ECECEC !important;
 }
 .logo{
     height: 60px;
@@ -19,6 +19,7 @@ const SideBarContainer =styled.div`
 .logos{
     justify-content: center;
     text-align: center;
+    background: #F2F2F7
 }
 .navigation{
     display: flex;
@@ -40,6 +41,9 @@ const SideBarContainer =styled.div`
     font-weight: 500;
     align-items: center;
     margin: 0;
+}
+.ant-layout{
+    background: #FAFAFA;
 }
  ` 
  export default SideBarContainer;
