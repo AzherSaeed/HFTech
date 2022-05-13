@@ -3,11 +3,11 @@ import styled from 'styled-components'
 const Style = styled.div`
 background: white;
 padding: 20px;
-.main-container{
+/* .main-container{
     display: grid;
     grid-template-columns: repeat(3,1fr);
     column-gap: 20px;
-}
+} */
 .first-table{
 grid-column-start: 1;
 grid-column-end: 2;

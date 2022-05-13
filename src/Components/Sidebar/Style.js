@@ -1,6 +1,30 @@
 import styled from 'styled-components';
 const SideBarContainer =styled.div`
  
+ 
+
+.ant-layout-content{
+.content-siderbar  {
+@media screen and (max-width:575px) {
+padding: 0 !important;
+
+}    
+padding: 24px;
+} 
+}
+
+.content-main-container{
+margin:0px 16px 0; 
+overflow: initial;background:#FAFAFA;
+@media screen and (max-width:575px) {
+margin:0px !important; 
+
+} 
+}
+
+.ant-layout-sider-zero-width-trigger{
+ display:none;
+ }
 .ant-layout-header {
     background: #EEF0F8 !important;
   
@@ -45,5 +69,7 @@ const SideBarContainer =styled.div`
 .ant-layout{
     background: #FAFAFA;
 }
+
+
  ` 
  export default SideBarContainer;

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { createContext, useState } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Layout/AuthScreens/Login/Index';
 import Signup from './Layout/AuthScreens/SignUp/Index';
 import { Routes, Route } from "react-router-dom";
@@ -16,9 +17,18 @@ import ResetPassword from './Layout/AuthScreens/ResetPassword/Index';
 import USerContact from './Layout/Contacts/UserContact/Index'; 
 import CreateNew from './Layout/Estimates/CreateNew/CreateNew';
 import AddItem from './Layout/Estimates/CreateNew/AddItems/Index';
+
+
+export const CollapsedContext=createContext();
 function App() {
+  const [collapse,setCollapse]=useState(true);
+  const menuCollapsed=(data)=>{
+    console.log("collapse trigger");
+    setCollapse(data);
+  }
+  
   return (
-    <div>
+    <CollapsedContext.Provider value={{menuCollapsed,collapse}}>
       <ToastContainer />
       <Routes>
         <Route exact path="/" element={<Login />} />
@@ -36,7 +46,7 @@ function App() {
         <Route  path="/client" element={<Clients />} />
         <Route  path="/clients/:clientId" element={<ClientDetail/>} />
       </Routes>
-    </div>
+    </CollapsedContext.Provider>
   );
 }
 

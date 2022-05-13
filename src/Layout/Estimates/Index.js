@@ -11,146 +11,154 @@ import downloadIcon from '../../Assets/icons/ic_download.svg';
 import tickIcon from '../../Assets/icons/ic_tick.svg';
 import emailIcon from '../../Assets/icons/ic_email.svg';
 import { Link, useNavigate } from "react-router-dom";
+import MobileTable from "./MobileTable";
 
 
 const columns = [
-    {
-        title: 'Id',
-        dataIndex: 'key',
-        key: 'key',
-        render:(text,record)=>(
-          <Link to={`/estimates/${record.key}`}>{text}</Link>
-        )
-    },
-    {
-      title: 'Client | Contact',
-      dataIndex: 'name',
-      key: 'name',
-     
-    },
-    {
-      title: 'Locations',
-      dataIndex: 'address',
-      key: 'locations',
-    },
-    {
-      title: 'Reference',
-      dataIndex: 'tags',
-      key: 'reference',
-    },
-    {
-      title: 'Total Price',
-      key: 'totalPrice',
-      dataIndex: 'totalPrice',
-    } ,
-    {
-      title: 'Date',
-      key: 'date',
-      dataIndex: 'date',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-        <div style={{display:'flex', gap:'4px'}}>
-          <img  src={pdfIcon} alt="edit Icon" className="action_icons"/>
-          <img src={downloadIcon} alt="Delete Icon" className="action_icons"/>
-          <img  src={emailIcon} alt="edit Icon" className="action_icons"/>
-          <img src={tickIcon} alt="Delete Icon" className="action_icons"/>
-          </div>
-          <div style={{display:'flex', gap:'4px'}}>
-          <img  src={deleteIcon} alt="delete Icon" className="action_icons deleteicon"/>
-          <img src={editIcon} alt="edit Icon" className="action_icons editicon"/>
+  {
+    title: 'Id',
+    dataIndex: 'key',
+    key: 'key',
+    render: (text, record) => (
+      <Link to={`/estimates/${record.key}`}>{text}</Link>
+    )
+  },
+  {
+    title: 'Client | Contact',
+    dataIndex: 'name',
+    key: 'name',
+
+  },
+  {
+    title: 'Locations',
+    dataIndex: 'address',
+    key: 'locations',
+  },
+  {
+    title: 'Reference',
+    dataIndex: 'tags',
+    key: 'reference',
+  },
+  {
+    title: 'Total Price',
+    key: 'totalPrice',
+    dataIndex: 'totalPrice',
+  },
+  {
+    title: 'Date',
+    key: 'date',
+    dataIndex: 'date',
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: (text, record) => (
+      <Space size="middle">
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <img src={pdfIcon} alt="edit Icon" className="action_icons" />
+          <img src={downloadIcon} alt="Delete Icon" className="action_icons" />
+          <img src={emailIcon} alt="edit Icon" className="action_icons" />
+          <img src={tickIcon} alt="Delete Icon" className="action_icons" />
         </div>
-        </Space>
-      ),
-    },
-  ];
-  
-  
-  
-  const data = [
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    
-  ];
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <img src={deleteIcon} alt="delete Icon" className="action_icons deleteicon" />
+          <img src={editIcon} alt="edit Icon" className="action_icons editicon" />
+        </div>
+      </Space>
+    ),
+  },
+];
+
+
+
+const data = [
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+  {
+    key: '5678',
+    name: 'Mah Adnan Qureshi',
+    address: 'Improve Canada, United States',
+    tags: 'qureshi786',
+    totalPrice: '$20.00',
+    date: "10/23/2021"
+  },
+
+];
 
 const Index = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const clickedHandler = () => {
     navigate("/estimates/createNew");
   }
   return (
     <Sidebar>
-      <StyleEstimates>
-        <div className="btn">
-          <CustomButton
-            bgcolor={BasicColor}
-            color="white"
-            padding="11px 8px"
-            type="submit"
-            width="130px"
-            title="Create new"
-            clicked={clickedHandler}
-          />
+      <div>
+        <div className="d-sm-none">
+          <MobileTable />
         </div>
-        <Table pagination={false} columns={columns} dataSource={data} />
-      </StyleEstimates>
+        <div className="d-none d-sm-block">
+          <StyleEstimates>
+            <div className="btn">
+              <CustomButton
+                bgcolor={BasicColor}
+                color="white"
+                padding="6px 8px"
+                type="submit"
+                width="130px"
+                title="Create new"
+                clicked={clickedHandler}
+              />
+            </div>
+            <Table pagination={false} columns={columns} dataSource={data} />
+          </StyleEstimates>
+        </div>
+      </div>
     </Sidebar>
   );
 };

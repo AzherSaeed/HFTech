@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Layout, Menu } from "antd";
 import {
   UploadOutlined,
@@ -12,11 +12,16 @@ import notificationIcon from "../../Assets/ic_notification.svg";
 import flagIcon from "../../Assets/ic_flag.svg";
 import profileIcon from "../../Assets/card-profile.png";
 import { Link } from "react-router-dom";
-import CustomButton from "../CustomButton/Index";
-const { Header, Content, Footer, Sider } = Layout;
+import { CollapsedContext } from "../../App";
+import Navbars from "../Navbar/Navbar";
+const { Header, Content, Sider } = Layout;
 const Sidebar = ({children}) => {
+  const {menuCollapsed,collapse}=useContext(CollapsedContext);
   return (
     <SideBarContainer>
+       <div className="d-sm-none">
+      <Navbars />
+      </div>
       <Layout>
         <Sider
           style={{
@@ -26,12 +31,13 @@ const Sidebar = ({children}) => {
             // zIndex: 2,
           }}
           breakpoint="lg"
+          collapsed={collapse}
           collapsedWidth="0"
           onBreakpoint={(broken) => {
             console.log(broken);
           }}
           onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
+            menuCollapsed(collapsed);
           }}
         >
           <div className="logos">
@@ -61,6 +67,7 @@ const Sidebar = ({children}) => {
         </Sider>
 
         <Layout>
+          <div className="d-none d-sm-block">
           <Header
             className="site-layout-sub-header-background"
             // style={{ position: "fixed", zIndex: 1, width: "100%" }}
@@ -75,9 +82,10 @@ const Sidebar = ({children}) => {
               </div>
             </div>
           </Header>
-          <Content style={{ margin: "0px 16px 0", overflow: "initial",background:"#FAFAFA" }}>
-            <div
-              style={{ padding: 24, minHeight: 360 }}
+          </div>
+          <Content className="content-main-container" >
+            <div className="content-siderbar"
+              style={{ minHeight: 360 }}
             >
            
                     {children}

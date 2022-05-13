@@ -4,6 +4,7 @@ import Sidebar from "../../../../Components/Sidebar/Sidebar";
 import { InputNumber } from "antd";
 import CustomButton from "../../../../Components/CustomButton/Index";
 import { Tabs,Radio } from "antd";
+import MobileProjectManager from "./MobileProjectManager";
 
 const { TabPane } = Tabs;
 const Index = () => {
@@ -16,7 +17,11 @@ const Index = () => {
     <Sidebar>
       <Style>
         <div className="main-container">
-          <div className="first-table">
+          <div className="row">
+            <div className="col-md-6 col-sm-12">
+     
+
+            <div className="first-table">
             <Tabs defaultActiveKey="1" onChange={callback}>
               <TabPane tab="Labor Lineitems" key="1">
               {Array(10).fill('').map((_,index)=>
@@ -44,7 +49,15 @@ const Index = () => {
               </TabPane>
             </Tabs>
           </div>
-          <div className="second-table">
+              
+            </div>
+            <div className="col-md-6 col-sm-12 mt-3">
+            <div className="d-sm-none">
+<MobileProjectManager/>
+              </div>
+              <div className="d-none d-sm-block">
+
+            <div className="second-table">
             <div className="main-heading">
               <p>Project Manager</p>
             </div>
@@ -97,7 +110,9 @@ const Index = () => {
                   </div>
                   <div className="rateWrapper">
                     <h3>Other Rate(not base on an hourly rate)</h3>
-                    <div className="input-fields">
+                    <div className="input-fields" style={{
+                      flexWrap:'wrap'
+                    }}>
                       <InputNumber
                         addonBefore="$"
                         addonAfter="Rate"
@@ -132,7 +147,7 @@ const Index = () => {
                 <div className="tabWrapper">
                   <div className="rateWrapper">
                     <h3>Other Rate(not base on an hourly rate)</h3>
-                    <div className="input-fields">
+                    <div className="input-fields flex-wrap">
                       <InputNumber
                         addonBefore="$"
                         addonAfter="Rate"
@@ -148,7 +163,7 @@ const Index = () => {
                   </div>
                   <div className="">
                   <h3>Units of Measure</h3>
-                    <Radio.Group defaultValue="a" buttonStyle="solid">
+                    <Radio.Group defaultValue="a" buttonStyle="solid" className="flex-wrap">
                       <Radio.Button value="a">Day</Radio.Button>
                       <Radio.Button value="b">Each</Radio.Button>
                       <Radio.Button value="c">Pair</Radio.Button>
@@ -174,6 +189,11 @@ const Index = () => {
               </>
             )}
           </div>
+              </div>
+            </div>
+          </div>
+        
+         
         </div>
       </Style>
     </Sidebar>
