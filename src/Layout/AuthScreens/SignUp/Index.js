@@ -34,7 +34,7 @@ const Index = () => {
   const navigate=useNavigate();
 
   const onSubmit = (value) => {
-    navigate('/');
+    navigate('/login');
     //console.log(value, "value");
     genericService
       .post(`${API_URL}auth/signin`, value)
@@ -157,6 +157,7 @@ const Index = () => {
           </Formik>
         </div>
       </div>
+      <hr className="line"/>
       <div className="login-container-bottom">
         <p>Already have Account? </p>
         <h6>&nbsp;<Link to='/' style={{color:'#156985'}}> Login</Link></h6>

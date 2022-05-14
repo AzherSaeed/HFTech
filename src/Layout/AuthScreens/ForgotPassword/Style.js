@@ -113,11 +113,12 @@ export const LoginContainer = styled.div`
 
   .login-container {
     &-card {
-      width: 70%;
-     
+      width: 95%;
     }
   }
-  
+  .main-heading{
+         display: none;
+}
 }
 @media screen and (max-width: 350px) {
 

@@ -115,6 +115,7 @@ const Index = () => {
           </Formik>
         </div>
       </div>
+      <hr className="line"/>
       <div className="login-container-bottom">
         <p>New Here? </p>
         <h6><Link to='/signup' style={{color:'#156985'}}> Create an Account</Link></h6>

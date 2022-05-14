@@ -139,10 +139,10 @@ const Index = () => {
   return (
     <Sidebar>
       <div>
-        <div className="d-sm-none">
+        <div className="d-md-none">
           <MobileTable />
         </div>
-        <div className="d-none d-sm-block">
+        <div className="d-none d-md-block">
           <StyleEstimates>
             <div className="btn">
               <CustomButton

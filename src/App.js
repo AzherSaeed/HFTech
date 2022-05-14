@@ -17,7 +17,8 @@ import ResetPassword from './Layout/AuthScreens/ResetPassword/Index';
 import USerContact from './Layout/Contacts/UserContact/Index'; 
 import CreateNew from './Layout/Estimates/CreateNew/CreateNew';
 import AddItem from './Layout/Estimates/CreateNew/AddItems/Index';
-
+import Home from './Layout/Home/Index';
+import Delete from './Components/Delete/Index';
 
 export const CollapsedContext=createContext();
 function App() {
@@ -31,11 +32,13 @@ function App() {
     <CollapsedContext.Provider value={{menuCollapsed,collapse}}>
       <ToastContainer />
       <Routes>
-        <Route exact path="/" element={<Login />} />
+        <Route exact path="/" element={<Delete/>} />
+        <Route exact path="/login" element={<Login />} />
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/resetPassword' element={<ResetPassword/>}/>
         <Route path='/forgetPassword' element={<ForgetPassword/>}/>
         <Route path="/estimates" element={<Estimates />} />
+        <Route path="/estimates/delete" element={<Delete />} />
         <Route path="/estimates/createNew" element={<CreateNew />} />
         <Route path='/estimates/createNew/addItem' element={<AddItem/>}/>
         <Route  path="/estimates/:estimstesId" element={<USerDetail  />} />

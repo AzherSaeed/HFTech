@@ -31,7 +31,7 @@ const Index = () => {
  const navigate=useNavigate();
   const onSubmit = (value) => {
     //console.log(value, "value");
-    navigate('/');
+    navigate('/login');
     genericService
       .post(`${API_URL}auth/signin`, value)
       .then((msg) => {

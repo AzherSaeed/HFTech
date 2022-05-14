@@ -16,11 +16,19 @@ const Index = () => {
             <p className="title">Saturday, May 7, 2022</p>
             <p className="identity">Date</p>
           </div>
+          </div>
+          <div className="grid-container">
+          <div>
           <div className="data ">
             <p className="title">Improve Canada, United State</p>
             <p className="identity">Location</p>
           </div>
-          <div className="data rowmerge ">
+          <div className="data ">
+            <p className="title">Jamen Tabesh</p>
+            <p className="identity">Contact</p>
+          </div>
+          </div>
+          <div className="data ">
             <p className="title">
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
               nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
@@ -31,10 +39,8 @@ const Index = () => {
             </p>
             <p className="identity">Estimate Description</p>
           </div>
-          <div className="data ">
-            <p className="title">Jamen Tabesh</p>
-            <p className="identity">Contact</p>
           </div>
+          <div className="grid-container">
           <div className="data " style={{marginBottom:'10px'}}>
             <p className="title " >Jamen13</p>
             <p className="identity">Reference Number</p>

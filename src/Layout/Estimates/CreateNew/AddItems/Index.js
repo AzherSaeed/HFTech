@@ -61,7 +61,7 @@ const Index = () => {
             <div className="main-heading">
               <p>Project Manager</p>
             </div>
-            {tab === "1" ? (
+            {tab == "1" ? (
               <>
                 <div className="tabWrapper">
                   <div className="rateWrapper">
@@ -110,9 +110,7 @@ const Index = () => {
                   </div>
                   <div className="rateWrapper">
                     <h3>Other Rate(not base on an hourly rate)</h3>
-                    <div className="input-fields" style={{
-                      flexWrap:'wrap'
-                    }}>
+                    <div className="input-fields" >
                       <InputNumber
                         addonBefore="$"
                         addonAfter="Rate"
@@ -147,7 +145,7 @@ const Index = () => {
                 <div className="tabWrapper">
                   <div className="rateWrapper">
                     <h3>Other Rate(not base on an hourly rate)</h3>
-                    <div className="input-fields flex-wrap">
+                    <div className="input-fields ">
                       <InputNumber
                         addonBefore="$"
                         addonAfter="Rate"

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BasicColor } from "../../../Components/GlobalStyle";
+import { BasicColor } from "../../Components/GlobalStyle";
 
 export const LoginContainer = styled.div`
   display: flex;
@@ -9,10 +9,10 @@ export const LoginContainer = styled.div`
   background-color: #FAFAFA;
   .login-container {
     &-card {
-      background-color: white;
+      background-color: #FAFAFA;
       padding: 20px;
       border-radius: 6px;
-      width: 40%;
+      width: 50%;
       /* margin-left: auto;
       margin-right: auto; */
       margin: auto;
@@ -22,7 +22,7 @@ export const LoginContainer = styled.div`
         text-align: center;
 
         img {
-          width: 200px;
+          width: 40%;
         }
 
         h1 {
@@ -91,8 +91,6 @@ export const LoginContainer = styled.div`
   .login-container{
     &-card{
       width: 60%;
-      background-color: #FAFAFA;
-
     }
   }
 }
@@ -101,14 +99,6 @@ export const LoginContainer = styled.div`
   .login-container{
     &-card{
       width: 95%;
-      /* padding: 10px; */
-      /* background-color: #FAFAFA; */
-      &-logo {
-        h1{
-          display: none;
-          
-        }
-      }
     }
   } 
   .line{ 

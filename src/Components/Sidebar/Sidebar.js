@@ -19,23 +19,20 @@ const Sidebar = ({children}) => {
   const {menuCollapsed,collapse}=useContext(CollapsedContext);
   return (
     <SideBarContainer>
-       <div className="d-sm-none">
+       <div className="d-md-none">
       <Navbars />
       </div>
       <Layout>
         <Sider
           style={{
-            height: "100vh",
-            // position: "fixed",
-            // top: 0,
-            // zIndex: 2,
+             height: "100vh",
+            // // position: "fixed",
+            // // top: 0,
+            // // zIndex: 2,
           }}
-          breakpoint="lg"
+          breakpoint="md"
           collapsed={collapse}
           collapsedWidth="0"
-          onBreakpoint={(broken) => {
-            console.log(broken);
-          }}
           onCollapse={(collapsed, type) => {
             menuCollapsed(collapsed);
           }}
@@ -67,7 +64,7 @@ const Sidebar = ({children}) => {
         </Sider>
 
         <Layout>
-          <div className="d-none d-sm-block">
+          <div className="d-none d-md-block">
           <Header
             className="site-layout-sub-header-background"
             // style={{ position: "fixed", zIndex: 1, width: "100%" }}

@@ -8,6 +8,10 @@ const Style = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 40px;
+    @media screen and (max-width:925px) {
+      grid-template-columns: 1fr;
+      
+    }
   }
   .data {
     width: 100%;
@@ -22,6 +26,7 @@ const Style = styled.div`
     color: #1b283f;
     font-size: 16px;
     font-weight: 500;
+    line-height: 15px;
   }
   .identity {
     letter-spacing: 0px;

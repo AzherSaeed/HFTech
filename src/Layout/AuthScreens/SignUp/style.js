@@ -6,7 +6,7 @@ export const LoginContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   .login-container {
     &-card {
       background-color: white;
@@ -16,7 +16,7 @@ export const LoginContainer = styled.div`
       margin: auto;
 
       &-logo {
-        margin:auto;
+        margin: auto;
         text-align: center;
 
         img {
@@ -27,12 +27,14 @@ export const LoginContainer = styled.div`
           font-size: 20px;
           font-weight: normal;
           color: ${BasicColor};
+          font-weight: 600;
+          margin-bottom: 0.3rem;
         }
       }
     }
 
     &-bottom {
-      display:flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
@@ -60,7 +62,8 @@ export const LoginContainer = styled.div`
     outline: none;
     margin-bottom: 8px;
   }
-  .customInput,.customPasswordInput {
+  .customInput,
+  .customPasswordInput {
     background: white;
     border: 1px solid #c6c6c8;
     border-radius: 4px;
@@ -70,67 +73,77 @@ export const LoginContainer = styled.div`
     outline: none;
     margin-bottom: 8px;
   }
-  .forget_password{
+  .forget_password {
     text-align: center;
   }
   .ant-input-suffix {
     margin-left: 30px;
-}
-.joinCommunity{
-    font-weight: 600 ;
-    margin-bottom: .3rem ;
-}
-.logo{
-  height: 60px;
-  width: 155px;
-  margin-bottom: 20px;
-}
-@media screen and (max-width: 925px) {
-  .login-container {
-    &-card {
-      width: 50%;
-      
+  }
+  .logo {
+    height: 60px;
+    width: 155px;
+    margin-bottom: 20px;
+  }
+  .joinCommunity {
+    font-size: 20px;
+    font-weight: normal;
+    color: #1B283F;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .line{
+    display:none;
+  }
+  @media screen and (max-width: 925px) {
+    .login-container {
+      &-card {
+        width: 50%;
+      }
+    }
+    .joinCommunity{
+      font-size: 16px;
     }
   }
-}
-@media screen and (max-width: 680px) {
-  .login-container {
-    &-card {
-      width: 60%;
-      background: #FAFAFA;
-    }
-  }
-}
-@media screen and (max-width: 580px) {
-  .login-container {
-    &-card {
-      width: 70%;
-      
-    }
-  }
-}
-@media screen and (max-width: 500px) {
-  .login-container {
-    &-card {
-      width: 80%;
-      &-logo{
-      h1{
-        font-size: 16px;
+  @media screen and (max-width: 680px) {
+    .login-container {
+      &-card {
+        width: 60%;
+        background: #fafafa;
       }
     }
   }
-}
-}
-@media screen and (max-width: 425px) {
-  .login-container {
-    &-card {
-      width: 90%;
-      &-logo{
-      h1{
-        font-size: 14px !important;
+  @media screen and (max-width: 580px) {
+    .login-container {
+      &-card {
+        width: 70%;
       }
     }
   }
-}
-}
+  @media screen and (max-width: 500px) {
+    .login-container {
+      &-card {
+        width: 80%;
+        &-logo {
+          h1 {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 425px) {
+    .login-container {
+      &-card {
+        width: 95%;
+      }
+    }
+    .joinCommunity{
+      display: none;
+    }
+    .line{ 
+    display:inline;
+    width: 90%;
+    margin: auto;
+  }
+  }
 `;

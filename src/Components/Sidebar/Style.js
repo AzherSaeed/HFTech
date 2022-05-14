@@ -30,7 +30,7 @@ margin:0px !important;
   
 }
 .ant-layout-sider-children {
-    background:#ECECEC !important;   
+    background:#ECECEC !important;  
 }
 .ant-menu.ant-menu-dark, .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark .ant-menu-sub ,.ant-menu-item {
     color: black !important;
@@ -52,7 +52,7 @@ margin:0px !important;
 }
 .right-side{
     display: flex;
-  flex-wrap: wrap;
+    flex-wrap: wrap;
     gap:10px;
 }
 .user-icon{

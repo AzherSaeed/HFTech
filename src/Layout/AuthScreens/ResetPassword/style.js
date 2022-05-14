@@ -72,8 +72,8 @@ export const LoginContainer = styled.div`
 }
 .main-heading{
   font-size: 20px;
-  font-weight: 700;
-  color: black;
+  font-weight: 600;
+  color: #1B283F;
   margin-bottom: 0;
 }
 @media screen and (max-width: 925px) {
@@ -114,9 +114,11 @@ export const LoginContainer = styled.div`
 
 .login-container {
   &-card {
-    width: 70%;
-   
+    width: 95%;
   }
+}
+.main-heading{
+  display: none;
 }
 
 }
@@ -125,7 +127,7 @@ export const LoginContainer = styled.div`
 .login-container {
   &-card {
     width: 90%;
-   
+   padding: 0px;
   }
 }
 
