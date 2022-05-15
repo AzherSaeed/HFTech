@@ -8,6 +8,9 @@ padding: 20px;
     grid-template-columns: repeat(3,1fr);
     column-gap: 20px;
 } */
+.heading{
+    font-weight: 700;
+}
 .first-table{
 grid-column-start: 1;
 grid-column-end: 2;
@@ -17,6 +20,9 @@ grid-column-end: 2;
     grid-column-end: 4;
     border: 0.5px solid #D1D1D6;
     border-radius: 4px;
+    @media screen and (max-width:575px) {
+      border:none;  
+    }
 }
 .main-heading{
     background: #F9F9F9;
