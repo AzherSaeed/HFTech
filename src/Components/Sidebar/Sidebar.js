@@ -16,7 +16,6 @@ import { CollapsedContext } from "../../App";
 import Navbars from "../Navbar/Navbar";
 const { Header, Content, Sider } = Layout;
 const Sidebar = ({children}) => {
-  const {menuCollapsed,collapse}=useContext(CollapsedContext);
   return (
     <SideBarContainer>
        <div className="d-md-none">
@@ -30,11 +29,11 @@ const Sidebar = ({children}) => {
             // // top: 0,
             // // zIndex: 2,
           }}
-          breakpoint="md"
-          collapsed={collapse}
+          breakpoint="lg"
+         
           collapsedWidth="0"
           onCollapse={(collapsed, type) => {
-            menuCollapsed(collapsed);
+            
           }}
         >
           <div className="logos">
