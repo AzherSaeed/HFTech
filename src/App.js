@@ -21,6 +21,7 @@ import Home from './Layout/Home/Index';
 import Delete from './Components/Delete/Index';
 import MobileSiderBar from './Components/Drawer/Drawer';
 
+import UpdateEstiamte from './Layout/Estimates/UpdateEstiamte/Index';
 
 export const CollapsedContext=createContext();
 function App() {
@@ -34,7 +35,7 @@ function App() {
       <MobileSiderBar/>
       <ToastContainer />
       <Routes>
-        <Route exact path="/" element={<Delete/>} />
+        <Route exact path="/" element={<Home/>} />
         <Route exact path="/login" element={<Login />} />
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/resetPassword' element={<ResetPassword/>}/>
@@ -42,6 +43,7 @@ function App() {
         <Route path="/estimates" element={<Estimates />} />
         <Route path="/estimates/delete" element={<Delete />} />
         <Route path="/estimates/createNew" element={<CreateNew />} />
+        <Route path="/estimates/update" element={<UpdateEstiamte />} />
         <Route path='/estimates/createNew/addItem' element={<AddItem/>}/>
         <Route  path="/estimates/:estimstesId" element={<USerDetail  />} />
         <Route  path="/locations" element={<Locations/>} />

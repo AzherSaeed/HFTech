@@ -86,7 +86,7 @@ const Index = () => {
                           </div>
                         </div>
                         <div className="rateWrapper">
-                          <h3>Over Timjkldfhjkghjkdfhgjksdfhgjkhsdfjke Rate(Per Hour)</h3>
+                          <h3>Over Time Rate(Per Hour)</h3>
                           <div className="input-fields">
                             <InputNumber
                               addonBefore="$"

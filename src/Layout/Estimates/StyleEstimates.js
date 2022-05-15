@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 const StyleEstimates =styled.div`
 .btn{
     display: flex;
@@ -21,12 +22,15 @@ border-bottom: none !important;
     height:22px;
     padding: 3px;
     border-radius: 2px;
+    cursor: pointer;
 }
 .deleteicon{
     background: #D63229 !important;
+    cursor: pointer;
 }
 .editicon{
     background: #007AFF !important;
+    cursor: pointer;
 }
 `; 
 

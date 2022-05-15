@@ -19,6 +19,10 @@ body{
   background-color: lightgray;
 }
 
+.ant-modal-content{
+  border-radius: 7px !important;
+}
+
 @font-face {
   font-family: "EnnVisions";
   src: local("SFUIText-Regular"),
@@ -28,4 +32,8 @@ body{
   font-family: "EnnVisionsBold";
   src: local("SFUIText-Regular"),
       url("./Assets/fonts/EnnVisionsMedium.otf") format("truetype");
+}
+
+.drawer-menu a{
+  color: black !important;
 }
