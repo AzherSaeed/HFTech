@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BasicColor } from "../../Components/GlobalStyle";
+import { BasicColor } from "../GlobalStyle";
 
 export const LoginContainer = styled.div`
   display: flex;

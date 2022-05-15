@@ -155,7 +155,6 @@ const Index = () => {
                       <InputNumber
                         addonBefore="Total"
                         defaultValue={100}
-                        className
                       />
                     </div>
                   </div>
