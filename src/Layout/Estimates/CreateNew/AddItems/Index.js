@@ -158,7 +158,7 @@ const Index = () => {
                       />
                     </div>
                   </div>
-                  <div className="">
+                  <div className="rateWrapper">
                   <h3>Units of Measure</h3>
                     <Radio.Group defaultValue="a" buttonStyle="solid" className="flex-wrap">
                       <Radio.Button value="a">Day</Radio.Button>
