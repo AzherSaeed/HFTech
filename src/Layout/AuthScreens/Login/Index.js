@@ -6,12 +6,13 @@ import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./style";
-import ic_logo from "../../../Assets/ic_logo.svg";
+import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
 import { toast } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const initialValues = {
   username: "",
@@ -27,9 +28,10 @@ const validationSchema = Yup.object({
 });
 const Index = () => {
   const genericService = new GenericService();
-
+ const navigate=useNavigate();
   const onSubmit = (value) => {
-    console.log(value, "value");
+    //console.log(value, "value");
+    navigate('/estimates');
     genericService
       .post(`${API_URL}auth/signin`, value)
       .then((msg) => {
@@ -52,14 +54,13 @@ const Index = () => {
       <div></div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
-          <img src={ic_logo} alt="ic_logo" />
-          <h1>Welcome to HF Tech</h1>
-          {/* <span>asdfasdf</span> */}
+          <img src={ic_logo} alt="ic_logo" className="logo" />
+          <h1  className="heading">Welcome to HF Tech</h1>
         </div>
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+           // validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             {(formik) => {
@@ -98,9 +99,9 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <p to="/">Forgot Password</p>
+                    <p className="forget_password"><Link to='/forgetPassword' className="forget_password">Forgot Password?</Link></p>
                     <CustomButton
-                      bgcolor={BasicColor}
+                      bgcolor="#156985"
                       color="white"
                       padding="11px 8px"
                       width="100%"
@@ -114,9 +115,10 @@ const Index = () => {
           </Formik>
         </div>
       </div>
+      <hr className="line"/>
       <div className="login-container-bottom">
         <p>New Here? </p>
-        <h6>Create an Account</h6>
+        <h6><Link to='/signup' style={{color:'#156985'}}> Create an Account</Link></h6>
       </div>
     </LoginContainer>
   );
