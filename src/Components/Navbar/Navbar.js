@@ -7,13 +7,13 @@ import { Link} from 'react-router-dom';
 import { CollapsedContext } from '../../App';
 
 const Navbars = () => {
- const {menuCollapsed,collapse}=useContext(CollapsedContext);
+ const {menuCollapsed}=useContext(CollapsedContext);
   return (
      <NavbarStyledMain>
     <Navbar className='navbar-main' expand="lg">
     <Container fluid >
       <Navbar.Toggle 
-      onClick={()=>menuCollapsed(!collapse)}
+      onClick={()=>menuCollapsed(true)}
       aria-controls="navbarScroll" />
       <Navbar.Brand href="#">Estimate List</Navbar.Brand>
       <Navbar.Brand href="#"><div className="d-flex">

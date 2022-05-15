@@ -17,18 +17,19 @@ import ResetPassword from './Layout/AuthScreens/ResetPassword/Index';
 import USerContact from './Layout/Contacts/UserContact/Index'; 
 import CreateNew from './Layout/Estimates/CreateNew/CreateNew';
 import AddItem from './Layout/Estimates/CreateNew/AddItems/Index';
+import MobileSiderBar from './Components/Drawer/Drawer';
 
 
 export const CollapsedContext=createContext();
 function App() {
-  const [collapse,setCollapse]=useState(true);
+  const [collapse,setCollapse]=useState(false);
   const menuCollapsed=(data)=>{
-    console.log("collapse trigger");
     setCollapse(data);
   }
   
   return (
     <CollapsedContext.Provider value={{menuCollapsed,collapse}}>
+      <MobileSiderBar/>
       <ToastContainer />
       <Routes>
         <Route exact path="/" element={<Login />} />
