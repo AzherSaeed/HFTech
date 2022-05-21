@@ -4,22 +4,20 @@ import * as Yup from "yup";
 import { Form } from "antd";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
-import GenericService from "../../../Services/GenericService";
-import { API_URL } from "../../../Services/config";
 import { toast } from "react-toastify";
-import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import {useDispatch} from 'react-redux';
+import {loginActionCalled} from '../../../store/action'
 
 const initialValues = {
-  username: "",
+  email: "",
   password: "",
 };
 const validationSchema = Yup.object({
-  username: Yup.string()
+  email: Yup.string()
     .required("Username is required!")
     .matches(/^(\S+$)/g, "Username cannot contain blankspaces"),
   password: Yup.string()
@@ -27,26 +25,15 @@ const validationSchema = Yup.object({
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
-  const genericService = new GenericService();
+  const dispatch = useDispatch()
+
+ 
  const navigate=useNavigate();
+
+ 
   const onSubmit = (value) => {
-    //console.log(value, "value");
-    navigate('/estimates');
-    genericService
-      .post(`${API_URL}auth/signin`, value)
-      .then((msg) => {
-        if (msg.resultCode == 200) {
-          toast(msg.message, "top-right");
-        } else {
-          toast(msg.message, "top-right");
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-        if (error.response.status == 401) {
-          toast("login credentials is invalid", "top-right");
-        }
-      });
+    console.log(value , 'value');
+    dispatch(loginActionCalled(value))
   };
 
   return (
@@ -77,10 +64,10 @@ const Index = () => {
                       <FormControl
                         control="input"
                         type="text"
-                        name="username"
+                        name="email"
                         placeholder="Email Address"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.email && formik.touched.email
                             ? "is-invalid"
                             : "customInput"
                         }
