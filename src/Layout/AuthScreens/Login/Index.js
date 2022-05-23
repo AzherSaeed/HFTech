@@ -4,24 +4,21 @@ import * as Yup from "yup";
 import { Form } from "antd";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
-import GenericService from "../../../Services/GenericService";
-import { API_URL } from "../../../Services/config";
-import { toast, ToastContainer } from "react-toastify";
-import { BasicColor } from "../../../Components/GlobalStyle";
+import { toast,ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import {useSelector,useDispatch} from 'react-redux';
+import {loginActionCalled} from '../../../store/action'
 import { fetchUser } from "../../../features/login/login-slice";
-import { useSelector, useDispatch } from "react-redux";
 
-let initialValues = {
-  username: "",
+const initialValues = {
+  email: "",
   password: "",
 };
 const validationSchema = Yup.object({
-  username: Yup.string()
+  email: Yup.string()
     .required("Username is required!")
     .matches(/^(\S+$)/g, "Username cannot contain blankspaces"),
   password: Yup.string()
@@ -29,48 +26,15 @@ const validationSchema = Yup.object({
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
-  const loginStatus = useSelector((state) => state.fetchUser);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  // const genericService = new GenericService();
-  const navigate = useNavigate();
+
+ const navigate=useNavigate();
+
 
   const onSubmit = (value) => {
-    let data = { email: "azhersaeed@gmail.com", password: "asdfasdf" };
-    dispatch(fetchUser(data));
-
-    // toast.success(" You are Successfully registered here", {
-    //   position: toast.POSITION.TOP_CENTER,
-    // });
-
-    // toast.error(" Error occured while registering", {
-    //   position: toast.POSITION.TOP_CENTER,
-    // });
-
-    console.log(loginStatus.user, "login user status");
-    console.log(loginStatus.error, "login user error status");
-
-    //console.log(value, "value");
-    setTimeout(() => {
-      if (loginStatus.error === "") {
-        navigate("/estimates");
-      }
-    }, 1000);
-    // genericService
-    //   .post(`${API_URL}auth/signin`, value)
-    //   .then((msg) => {
-    //     if (msg.resultCode == 200) {
-    //       toast(msg.message, "top-right");
-    //     } else {
-    //       toast(msg.message, "top-right");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error, "error");
-    //     if (error.response.status == 401) {
-    //       toast("login credentials is invalid", "top-right");
-    //     }
-    //   });
+    console.log(value , 'value');
+    dispatch(loginActionCalled(value))
   };
 
   return (
@@ -100,10 +64,10 @@ const Index = () => {
                       <FormControl
                         control="input"
                         type="text"
-                        name="username"
+                        name="email"
                         placeholder="Email Address"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.email && formik.touched.email
                             ? "is-invalid"
                             : "customInput"
                         }
