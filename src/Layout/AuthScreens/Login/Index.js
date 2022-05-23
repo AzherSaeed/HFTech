@@ -9,12 +9,14 @@ import { LoginContainer } from "./style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { fetchUser } from "../../../features/login/login-slice";
+import { useSelector, useDispatch } from "react-redux";
 
-const initialValues = {
+let initialValues = {
   username: "",
   password: "",
 };
@@ -27,40 +29,61 @@ const validationSchema = Yup.object({
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
-  const genericService = new GenericService();
- const navigate=useNavigate();
+  const loginStatus = useSelector((state) => state.fetchUser);
+  const dispatch = useDispatch();
+
+  // const genericService = new GenericService();
+  const navigate = useNavigate();
+
   const onSubmit = (value) => {
+    let data = { email: "azhersaeed@gmail.com", password: "asdfasdf" };
+    dispatch(fetchUser(data));
+
+    // toast.success(" You are Successfully registered here", {
+    //   position: toast.POSITION.TOP_CENTER,
+    // });
+
+    // toast.error(" Error occured while registering", {
+    //   position: toast.POSITION.TOP_CENTER,
+    // });
+
+    console.log(loginStatus.user, "login user status");
+    console.log(loginStatus.error, "login user error status");
+
     //console.log(value, "value");
-    navigate('/estimates');
-    genericService
-      .post(`${API_URL}auth/signin`, value)
-      .then((msg) => {
-        if (msg.resultCode == 200) {
-          toast(msg.message, "top-right");
-        } else {
-          toast(msg.message, "top-right");
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-        if (error.response.status == 401) {
-          toast("login credentials is invalid", "top-right");
-        }
-      });
+    setTimeout(() => {
+      if (loginStatus.error === "") {
+        navigate("/estimates");
+      }
+    }, 1000);
+    // genericService
+    //   .post(`${API_URL}auth/signin`, value)
+    //   .then((msg) => {
+    //     if (msg.resultCode == 200) {
+    //       toast(msg.message, "top-right");
+    //     } else {
+    //       toast(msg.message, "top-right");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error, "error");
+    //     if (error.response.status == 401) {
+    //       toast("login credentials is invalid", "top-right");
+    //     }
+    //   });
   };
 
   return (
     <LoginContainer>
-      <div></div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
-          <h1  className="heading">Welcome to HF Tech</h1>
-        </div>
+          <h1 className="heading"> Welcome to HF Tech </h1>{" "}
+        </div>{" "}
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
-           // validationSchema={validationSchema}
+            // validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             {(formik) => {
@@ -84,8 +107,8 @@ const Index = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                      />
-                    </div>
+                      />{" "}
+                    </div>{" "}
                     <div className="login-input-fields-field">
                       <FormControl
                         control="password"
@@ -97,9 +120,13 @@ const Index = () => {
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
-                      />
-                    </div>
-                    <p className="forget_password"><Link to='/forgetPassword' className="forget_password">Forgot Password?</Link></p>
+                      />{" "}
+                    </div>{" "}
+                    <p className="forget_password">
+                      <Link to="/forgetPassword" className="forget_password">
+                        Forgot Password ?
+                      </Link>{" "}
+                    </p>{" "}
                     <CustomButton
                       bgcolor="#156985"
                       color="white"
@@ -108,18 +135,23 @@ const Index = () => {
                       type="submit"
                       title="Sign In"
                     />
-                  </div>
+                  </div>{" "}
                 </Form>
               );
-            }}
-          </Formik>
-        </div>
-      </div>
-      <hr className="line"/>
+            }}{" "}
+          </Formik>{" "}
+        </div>{" "}
+      </div>{" "}
+      <hr className="line" />
       <div className="login-container-bottom">
-        <p>New Here? </p>
-        <h6><Link to='/signup' style={{color:'#156985'}}> Create an Account</Link></h6>
-      </div>
+        <p> New Here ? </p>{" "}
+        <h6>
+          <Link to="/signup" style={{ color: "#156985" }}>
+            Create an Account{" "}
+          </Link>{" "}
+        </h6>{" "}
+      </div>{" "}
+      <ToastContainer />
     </LoginContainer>
   );
 };

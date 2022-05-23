@@ -10,9 +10,11 @@ import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import ic_flag from "../../../Assets/ic_flag.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import axios from "axios";
 
 const initialValues = {
   username: "",
@@ -30,32 +32,84 @@ const validationSchema = Yup.object({
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
-  const genericService = new GenericService();
-  const navigate=useNavigate();
+  const mutation = useMutation(
+    (signUpData) => {
+      return axios.post(
+        "https://node01.dagnum.com:8443/hftech/api/user/createUser",
+        signUpData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            requestToken: "3487132813749274823(923008134089)",
+            lang: "en",
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (response) => {
+        console.log(" response from the sigin up api", response);
+      },
 
-  const onSubmit = (value) => {
-    navigate('/login');
-    //console.log(value, "value");
-    genericService
-      .post(`${API_URL}auth/signin`, value)
-      .then((msg) => {
-        if (msg.resultCode == 200) {
-          toast(msg.message, "top-right");
-        } else {
-          toast(msg.message, "top-right");
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-        if (error.response.status == 401) {
-          toast("login credentials is invalid", "top-right");
-        }
+      onError: (err, variables, snapshotValue) => {
+        console.log(err);
+      },
+    }
+  );
+
+  const genericService = new GenericService();
+  const navigate = useNavigate();
+
+  const onSubmit = async (value) => {
+    const data = {
+      userName: "Nouman Ahmad",
+      phoneNumber: "4167045420",
+      email: "n@gmail.com",
+      password: "asdf",
+      channel: "iPhone",
+      roleId: 2,
+    };
+    // let promise = new promise((resolve, reject) => {});
+
+    mutation.mutate(data);
+    mutation.isSuccess &&
+      toast.success(" You are Successfully registered here", {
+        position: toast.POSITION.TOP_CENTER,
       });
+    console.log(mutation.isSuccess, "isSuccess");
+    console.log(mutation.isError, "isError");
+    mutation.isError &&
+      toast.error(" Error occured while registering", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    // console.log(mutation.isError, "this is mutation isError");
+    // console.log(mutation.isSuccess, "this is mutation isSuccess");
+    console.log("value of inputs are", value);
+    setTimeout(() => {
+      mutation.isSuccess && navigate("/login");
+    }, 2000);
+
+    //console.log(value, "value");
+    // genericService
+    //   .post(`${API_URL}auth/signin`, value)
+    //   .then((msg) => {
+    //     if (msg.resultCode == 200) {
+    //       toast(msg.message, "top-right");
+    //     } else {
+    //       toast(msg.message, "top-right");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error, "error");
+    //     if (error.response.status == 401) {
+    //       toast("login credentials is invalid", "top-right");
+    //     }
+    //   });
   };
 
   return (
     <LoginContainer>
-      <div></div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
@@ -75,20 +129,20 @@ const Index = () => {
                   autoComplete="off"
                   validateMessages={validationSchema}
                 >
-                <h1 className="joinCommunity">Join HF Tech Community</h1>
+                  <h1 className="joinCommunity"> Join HF Tech Community </h1>
                   <div className="login-input-fields">
                     <div>
-                    <FormControl
+                      <FormControl
                         control="input"
                         type="text"
                         name="username"
                         placeholder="Full Name"
                         className={
-                            formik.errors.username && formik.touched.username
+                          formik.errors.username && formik.touched.username
                             ? "is-invalid"
                             : "customInput"
                         }
-                    />
+                      />
                       <FormControl
                         control="input"
                         type="text"
@@ -102,8 +156,8 @@ const Index = () => {
                       />
                     </div>
                     <div className="login-input-fields-field">
-                    <FormControl
-                        prefix={<img src={ic_flag} alt='ic_flag' />}
+                      <FormControl
+                        prefix={<img src={ic_flag} alt="ic_flag" />}
                         control="input"
                         type="text"
                         name="contactNumber"
@@ -141,7 +195,9 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <p to="/" className="forget_password">Agreed with Terms & Conditions Privacy Policy</p>
+                    <p to="/" className="forget_password">
+                      Agreed with Terms & Conditions Privacy Policy
+                    </p>
                     <CustomButton
                       bgcolor="#156985"
                       color="white"
@@ -157,11 +213,17 @@ const Index = () => {
           </Formik>
         </div>
       </div>
-      <hr className="line"/>
+      <hr className="line" />
       <div className="login-container-bottom">
-        <p>Already have Account? </p>
-        <h6>&nbsp;<Link to='/' style={{color:'#156985'}}> Login</Link></h6>
+        <p> Already have Account ? </p>
+        <h6>
+          & nbsp;
+          <Link to="/" style={{ color: "#156985" }}>
+            Login
+          </Link>
+        </h6>
       </div>
+      <ToastContainer />
     </LoginContainer>
   );
 };
