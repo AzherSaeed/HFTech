@@ -17,8 +17,12 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 
 const initialValues = {
-  username: "",
-  password: "",
+  userName: "Adnan QUreshi",
+  phoneNumber: "+300804391462",
+  email: "adnan.ahsaen@gmail.com",
+  password: "Hashmi786",
+  channel: "IOS",
+  roleId: 2,
 };
 const validationSchema = Yup.object({
   username: Yup.string()
@@ -58,16 +62,16 @@ const Index = () => {
     }
   );
 
-  const genericService = new GenericService();
+  // const genericService = new GenericService();
   const navigate = useNavigate();
 
   const onSubmit = async (value) => {
     const data = {
-      userName: "Nouman Ahmad",
-      phoneNumber: "4167045420",
-      email: "n@gmail.com",
-      password: "asdf",
-      channel: "iPhone",
+      userName: "Adnan QUreshi",
+      phoneNumber: "+300804391462",
+      email: "adnan.ahsaen@gmail.com",
+      password: "Hashmi786",
+      channel: "IOS",
       roleId: 2,
     };
     // let promise = new promise((resolve, reject) => {});
@@ -135,8 +139,8 @@ const Index = () => {
                       <FormControl
                         control="input"
                         type="text"
-                        name="username"
-                        placeholder="Full Name"
+                        name="userName"
+                        placeholder="User Name"
                         className={
                           formik.errors.username && formik.touched.username
                             ? "is-invalid"
@@ -147,7 +151,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="email"
-                        placeholder="Email Address"
+                        placeholder="Email address"
                         className={
                           formik.errors.username && formik.touched.username
                             ? "is-invalid"
@@ -160,7 +164,7 @@ const Index = () => {
                         prefix={<img src={ic_flag} alt="ic_flag" />}
                         control="input"
                         type="text"
-                        name="contactNumber"
+                        name="phoneNumber"
                         placeholder="(617)397 - 8483"
                         className={
                           formik.errors.username && formik.touched.username
@@ -172,7 +176,7 @@ const Index = () => {
                     <div className="login-input-fields-field">
                       <FormControl
                         control="password"
-                        type="text"
+                        type="password"
                         name="password"
                         placeholder="Password"
                         className={
@@ -182,7 +186,7 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <div className="login-input-fields-field">
+                    {/* <div className="login-input-fields-field">
                       <FormControl
                         control="password"
                         type="text"
@@ -194,7 +198,32 @@ const Index = () => {
                             : "customPasswordInput"
                         }
                       />
-                    </div>
+                    </div> */}
+
+                    <FormControl
+                      control="input"
+                      type="text"
+                      name="channel"
+                      placeholder="Channels"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                    />
+
+                    <FormControl
+                      control="input"
+                      type="number"
+                      name="roleId"
+                      placeholder="Role Id"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                    />
+
                     <p to="/" className="forget_password">
                       Agreed with Terms & Conditions Privacy Policy
                     </p>

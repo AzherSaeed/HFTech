@@ -20,8 +20,8 @@ import AddItem from "./Layout/Estimates/CreateNew/AddItems/Index";
 import Home from "./Layout/Home/Index";
 import Delete from "./Components/Delete/Index";
 import MobileSiderBar from "./Components/Drawer/Drawer";
-import Cakes from "./Components/Cakes/Cakes";
-import Icecream from "./Components/Icecream/Icecream";
+// import Cakes from "./Components/Cakes/Cakes";
+// import Icecream from "./Components/Icecream/Icecream";
 import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
 // this is the devTool the react query provides
@@ -58,8 +58,8 @@ function App() {
           <Route path="/contact/:contactId" element={<USerContact />} />
           <Route path="/client" element={<Clients />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
-          <Route path="/cakes" element={<Cakes />} />
-          <Route path="/icecream" element={<Icecream />} />
+          {/* <Route path="/cakes" element={<Cakes />} />
+          <Route path="/icecream" element={<Icecream />} /> */}
         </Routes>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />

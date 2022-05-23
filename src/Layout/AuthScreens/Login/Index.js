@@ -13,12 +13,14 @@ import { toast, ToastContainer } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { fetchUser } from "../../../features/login/login-slice";
+// import { fetchUser } from "../../../features/login/login-slice";
 import { useSelector, useDispatch } from "react-redux";
+
+import loginActionCalled from "../../../store/action";
 
 let initialValues = {
   username: "",
-  password: "",
+  email: "",
 };
 const validationSchema = Yup.object({
   username: Yup.string()
@@ -37,7 +39,7 @@ const Index = () => {
 
   const onSubmit = (value) => {
     let data = { email: "azhersaeed@gmail.com", password: "asdfasdf" };
-    dispatch(fetchUser(data));
+    // dispatch(fetchUser(data));
 
     // toast.success(" You are Successfully registered here", {
     //   position: toast.POSITION.TOP_CENTER,
@@ -47,14 +49,12 @@ const Index = () => {
     //   position: toast.POSITION.TOP_CENTER,
     // });
 
-    console.log(loginStatus.user, "login user status");
-    console.log(loginStatus.error, "login user error status");
+    // console.log(loginStatus.user, "login user status");
+    // console.log(loginStatus.error, "login user error status");
 
     //console.log(value, "value");
     setTimeout(() => {
-      if (loginStatus.error === "") {
-        navigate("/estimates");
-      }
+      navigate("/estimates");
     }, 1000);
     // genericService
     //   .post(`${API_URL}auth/signin`, value)
@@ -78,8 +78,8 @@ const Index = () => {
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
-          <h1 className="heading"> Welcome to HF Tech </h1>{" "}
-        </div>{" "}
+          <h1 className="heading"> Welcome to HF Tech </h1>
+        </div>
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
@@ -107,8 +107,8 @@ const Index = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                      />{" "}
-                    </div>{" "}
+                      />
+                    </div>
                     <div className="login-input-fields-field">
                       <FormControl
                         control="password"
@@ -120,13 +120,13 @@ const Index = () => {
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
-                      />{" "}
-                    </div>{" "}
+                      />
+                    </div>
                     <p className="forget_password">
                       <Link to="/forgetPassword" className="forget_password">
                         Forgot Password ?
-                      </Link>{" "}
-                    </p>{" "}
+                      </Link>
+                    </p>
                     <CustomButton
                       bgcolor="#156985"
                       color="white"
@@ -135,22 +135,22 @@ const Index = () => {
                       type="submit"
                       title="Sign In"
                     />
-                  </div>{" "}
+                  </div>
                 </Form>
               );
-            }}{" "}
-          </Formik>{" "}
-        </div>{" "}
-      </div>{" "}
+            }}
+          </Formik>
+        </div>
+      </div>
       <hr className="line" />
       <div className="login-container-bottom">
-        <p> New Here ? </p>{" "}
+        <p> New Here ? </p>
         <h6>
           <Link to="/signup" style={{ color: "#156985" }}>
-            Create an Account{" "}
-          </Link>{" "}
-        </h6>{" "}
-      </div>{" "}
+            Create an Account
+          </Link>
+        </h6>
+      </div>
       <ToastContainer />
     </LoginContainer>
   );

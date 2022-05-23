@@ -77,11 +77,11 @@ const data = [
 ];
 
 const Index = () => {
-  const userDetail = useSelector((state) => state.fetchUser.user);
-  const userError = useSelector((state) => state.fetchUser.error);
+  // const userDetail = useSelector((state) => state.fetchUser.user);
+  // const userError = useSelector((state) => state.fetchUser.error);
 
-  console.log(userDetail);
-  console.log(userError);
+  // console.log(userDetail);
+  // console.log(userError);
 
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);

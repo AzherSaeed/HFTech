@@ -8,15 +8,16 @@ import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.css";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./app/store";
+import store from "./store/store";
 // import store from "./app/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <BrowserRouter>
     <Provider store={store}>
       <App />
-    </Provider>
+    </Provider>{" "}
   </BrowserRouter>
 );
 
