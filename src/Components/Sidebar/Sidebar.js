@@ -14,17 +14,17 @@ import profileIcon from "../../Assets/card-profile.png";
 import { Link } from "react-router-dom";
 import { CollapsedContext } from "../../App";
 import Navbars from "../Navbar/Navbar";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const { Header, Content, Sider } = Layout;
 const Sidebar = ({ children }) => {
-  const userName = useSelector((state) => state.fetchUser.user);
+  // const userName = useSelector((state) => state.fetchUser.user);
 
   return (
     <SideBarContainer>
       <div className="d-md-none">
         <Navbars />
-      </div>
+      </div>{" "}
       <Layout>
         <Sider
           style={{
@@ -39,44 +39,44 @@ const Sidebar = ({ children }) => {
         >
           <div className="logos">
             <img src={logos} alt="Logo" className="logo" />
-          </div>
+          </div>{" "}
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item key="/estimates">
               <Link to="/estimates" />
-              Estimates
-            </Menu.Item>
+              Estimates{" "}
+            </Menu.Item>{" "}
             <Menu.Item key="/locations">
               <Link to="/locations" />
-              Locations
-            </Menu.Item>
+              Locations{" "}
+            </Menu.Item>{" "}
             <Menu.Item key="/contact">
               <Link to="/contact" />
-              Contact
-            </Menu.Item>
+              Contact{" "}
+            </Menu.Item>{" "}
             <Menu.Item key="/client">
               <Link to="/client" />
-              Client
-            </Menu.Item>
+              Client{" "}
+            </Menu.Item>{" "}
             <Menu.Item key="/cakes">
               <Link to="/cakes" />
-              cakes
-            </Menu.Item>
+              cakes{" "}
+            </Menu.Item>{" "}
             <Menu.Item key="/icecream">
               <Link to="/icecream" />
-              icecream
-            </Menu.Item>
-          </Menu>
+              icecream{" "}
+            </Menu.Item>{" "}
+          </Menu>{" "}
           {/* <div className="lgOutButton">
-                      <CustomButton
-                                 bgcolor="#156985"
-                                  color="white"
-                                  padding="11px 8px"
-                                  width="100%"
-                                  type="submit"
-                                  title="Log Out"
-                      />
-                      </div> */}
-        </Sider>
+                                              <CustomButton
+                                                         bgcolor="#156985"
+                                                          color="white"
+                                                          padding="11px 8px"
+                                                          width="100%"
+                                                          type="submit"
+                                                          title="Log Out"
+                                              />
+                                              </div> */}{" "}
+        </Sider>{" "}
         <Layout>
           <div className="d-none d-md-block">
             <Header
@@ -88,26 +88,27 @@ const Sidebar = ({ children }) => {
                   <img src={searchIcon} alt="icons" />
                   <img src={notificationIcon} alt="icons" />
                   <img src={flagIcon} alt="icons" />
-                  <p className="username"> Hi, {userName} </p>
+                  <p className="username"> Hi, azher </p>{" "}
                   <img
                     src={profileIcon}
                     alt="user icon"
                     className="user-icon"
                   />
-                </div>
-              </div>
-            </Header>
-          </div>
+                </div>{" "}
+              </div>{" "}
+            </Header>{" "}
+          </div>{" "}
           <Content className="content-main-container">
             <div className="content-siderbar" style={{ minHeight: 360 }}>
-              {children}
-            </div>
-          </Content>
+              {" "}
+              {children}{" "}
+            </div>{" "}
+          </Content>{" "}
           {/* <Footer style={{ textAlign: "center" }}>
-                        Ant Design ©2018 Created by Ant UED
-                      </Footer> */}
-        </Layout>
-      </Layout>
+                                                Ant Design ©2018 Created by Ant UED
+                                              </Footer> */}{" "}
+        </Layout>{" "}
+      </Layout>{" "}
     </SideBarContainer>
   );
 };

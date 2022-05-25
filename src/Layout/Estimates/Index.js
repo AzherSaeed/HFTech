@@ -133,25 +133,25 @@ const Index = () => {
               alt="Delete Icon"
               className="action_icons"
               onClick={showModald}
-            />{" "}
+            />
             <img src={emailIcon} alt="edit Icon" className="action_icons" />
             <img src={tickIcon} alt="Delete Icon" className="action_icons" />
-          </div>{" "}
+          </div>
           <div style={{ display: "flex", gap: "4px" }}>
             <img
               src={deleteIcon}
               alt="delete Icon"
               className="action_icons deleteicon"
               onClick={showModal}
-            />{" "}
+            />
             <Link to="/estimates/update">
               <img
                 src={editIcon}
                 alt="edit Icon"
                 className="action_icons editicon"
               />
-            </Link>{" "}
-          </div>{" "}
+            </Link>
+          </div>
         </Space>
       ),
     },
@@ -176,7 +176,7 @@ const Index = () => {
       <div>
         <div className="d-md-none">
           <MobileTable />
-        </div>{" "}
+        </div>
         <div className="d-none d-md-block">
           <StyleEstimates>
             <div className="btn">
@@ -188,9 +188,9 @@ const Index = () => {
                 width="130px"
                 title="Create new"
                 clicked={clickedHandler}
-              />{" "}
-            </div>{" "}
-            <Table pagination={false} columns={columns} dataSource={data} />{" "}
+              />
+            </div>
+            <Table pagination={false} columns={columns} dataSource={data} />
             <Modal
               visible={isModalVisible}
               footer={null}
@@ -198,7 +198,7 @@ const Index = () => {
               centered={true}
             >
               <DeleteModal />
-            </Modal>{" "}
+            </Modal>
             <Modal
               visible={isModalVisibled}
               footer={null}
@@ -206,10 +206,10 @@ const Index = () => {
               centered={true}
             >
               <UpdateModal />
-            </Modal>{" "}
-          </StyleEstimates>{" "}
-        </div>{" "}
-      </div>{" "}
+            </Modal>
+          </StyleEstimates>
+        </div>
+      </div>
     </Sidebar>
   );
 };

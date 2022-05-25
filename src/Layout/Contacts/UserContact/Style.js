@@ -1,29 +1,30 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const Style = styled.div`
-.main-container{
+const Style = styled.div `
+  .main-container {
     display: flex;
     gap: 30px;
     @media screen and (max-width: 725px) {
-        flex-direction: column;
+      flex-direction: column;
     }
-}
-.leftSide{
+  }
+  .leftSide {
     background-color: white;
     width: 50%;
+    height: 80vh;
     padding: 10px 20px;
     border-radius: 8px;
+
     @media screen and (max-width: 725px) {
-        width:100% ;
+      width: 100%;
     }
-}
-.data {
+  }
+  .data {
     width: 100%;
     border-bottom: 2px solid #b5b5c3;
     line-height: 6px;
     margin-bottom: 10px;
     padding-top: 20px;
-
   }
   .title {
     letter-spacing: 0px;
@@ -35,6 +36,6 @@ const Style = styled.div`
     letter-spacing: 0px;
     color: #b5b5c3;
   }
-`
+`;
 
 export default Style;

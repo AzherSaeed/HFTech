@@ -36,6 +36,19 @@ const validationSchema = Yup.object({
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
+  const onSuccess = (response) => {
+    console.log(" response from the sigin up api", response);
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      navigate("/estimate");
+    }
+  };
   const mutation = useMutation(
     (signUpData) => {
       return axios.post(
@@ -45,71 +58,26 @@ const Index = () => {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            requestToken: "3487132813749274823(923008134089)",
-            lang: "en",
           },
         }
       );
     },
     {
-      onSuccess: (response) => {
-        console.log(" response from the sigin up api", response);
-      },
+      onSuccess,
 
       onError: (err, variables, snapshotValue) => {
         console.log(err);
+        toast.error(`${err} this is error`, {
+          position: toast.POSITION.TOP_CENTER,
+        });
       },
     }
   );
 
-  // const genericService = new GenericService();
   const navigate = useNavigate();
 
   const onSubmit = async (value) => {
-    const data = {
-      userName: "Adnan QUreshi",
-      phoneNumber: "+300804391462",
-      email: "adnan.ahsaen@gmail.com",
-      password: "Hashmi786",
-      channel: "IOS",
-      roleId: 2,
-    };
-    // let promise = new promise((resolve, reject) => {});
-
-    mutation.mutate(data);
-    mutation.isSuccess &&
-      toast.success(" You are Successfully registered here", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-    console.log(mutation.isSuccess, "isSuccess");
-    console.log(mutation.isError, "isError");
-    mutation.isError &&
-      toast.error(" Error occured while registering", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-    // console.log(mutation.isError, "this is mutation isError");
-    // console.log(mutation.isSuccess, "this is mutation isSuccess");
-    console.log("value of inputs are", value);
-    setTimeout(() => {
-      mutation.isSuccess && navigate("/login");
-    }, 2000);
-
-    //console.log(value, "value");
-    // genericService
-    //   .post(`${API_URL}auth/signin`, value)
-    //   .then((msg) => {
-    //     if (msg.resultCode == 200) {
-    //       toast(msg.message, "top-right");
-    //     } else {
-    //       toast(msg.message, "top-right");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error, "error");
-    //     if (error.response.status == 401) {
-    //       toast("login credentials is invalid", "top-right");
-    //     }
-    //   });
+    mutation.mutate(value);
   };
 
   return (
@@ -186,19 +154,6 @@ const Index = () => {
                         }
                       />
                     </div>
-                    {/* <div className="login-input-fields-field">
-                      <FormControl
-                        control="password"
-                        type="text"
-                        name="confirmPassword"
-                        placeholder="Confirm Password"
-                        className={
-                          formik.errors.username && formik.touched.username
-                            ? "is-invalid"
-                            : "customPasswordInput"
-                        }
-                      />
-                    </div> */}
 
                     <FormControl
                       control="input"
@@ -252,7 +207,7 @@ const Index = () => {
           </Link>
         </h6>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </LoginContainer>
   );
 };

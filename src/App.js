@@ -56,10 +56,11 @@ function App() {
           <Route path="/locations/:locationsId" element={<UserLocation />} />
           <Route path="/contact" element={<Contacts />} />
           <Route path="/contact/:contactId" element={<USerContact />} />
+          <Route path="/createContact" element={<USerContact />} />
           <Route path="/client" element={<Clients />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
           {/* <Route path="/cakes" element={<Cakes />} />
-          <Route path="/icecream" element={<Icecream />} /> */}
+                      <Route path="/icecream" element={<Icecream />} /> */}
         </Routes>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />

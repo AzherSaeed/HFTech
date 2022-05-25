@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Tag, Space } from "antd";
+import { Table, Tag, Space, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
@@ -10,10 +10,10 @@ import pdfIcon from "../../Assets/icons/ic_pdf.svg";
 import downloadIcon from "../../Assets/icons/ic_download.svg";
 import tickIcon from "../../Assets/icons/ic_tick.svg";
 import emailIcon from "../../Assets/icons/ic_email.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
-
+import DeleteModal from "../../Components/Delete/Index";
 const Index = () => {
   let [detail, setDetail] = useState([]);
   const onSuccess = (data) => {
@@ -26,6 +26,39 @@ const Index = () => {
   const onError = (err) => {
     console.log(err, "error while fetching data from api");
   };
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [deleteStatus, setDeleteStatus] = useState({
+  //   id: null,
+  //   shouldDelete: false,
+  // });
+  const [deleteUserDetail, setDeleteUserDetail] = useState({
+    name: "",
+    email: "",
+    id: "",
+  });
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const navigate = useNavigate();
+
+  const handleDelete = (id, email, name) => {
+    // alert("handle delte hit");
+    setDeleteUserDetail({ name: name, email: email, id: id });
+    setIsModalVisible(true);
+
+    // setDeleteStatus({ ...deleteStatus, id: id });
+  };
+  const handleIndividualDelete = () => {
+    // mutation.mutate(deleteUserDetail.id);
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/contact/${id}`);
+    // alert("handle edit hit");
+  };
+
   const { isLoading, isError, data, error } = useQuery(
     "dataFetching",
     () => {
@@ -41,14 +74,83 @@ const Index = () => {
         }
       );
     },
-    { refetchOnWindowFocus: false, onSuccess, onError }
+    { refetchOnWindowFocus: "always", onSuccess, onError }
   );
-  // if (isLoading) {
-  //   return <h3>Data Loading..</h3>;
-  // }
-  // if (isError) {
-  //   return <h2>{error.message}</h2>;
-  // }
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+      render: (text, record) => (
+        <Link to={`/contact/${record.key}`}> {text} </Link>
+      ),
+    },
+    {
+      title: "Contact",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Channel",
+      dataIndex: "channel",
+      key: "channel",
+    },
+    {
+      title: "Country Code",
+      key: "countryCode",
+      dataIndex: "countryCode",
+    },
+    {
+      title: "Phone",
+      key: "phone",
+      dataIndex: "phone",
+    },
+    {
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
+    },
+  ];
+
+  const contactData = data?.data?.result?.map((contact) => {
+    return {
+      id: contact.id,
+      name: contact.name,
+      email: contact.email,
+      channel: contact.channel,
+      countryCode: contact.countryCode,
+      phone: contact.phone,
+
+      action: (
+        <div style={{ display: "flex", gap: "4px" }}>
+          <img
+            src={deleteIcon}
+            alt="delete Icon"
+            className="action_icons deleteicon"
+            onClick={() => {
+              handleDelete(contact.id, contact.email, contact.name);
+            }}
+            style={{ cursor: "pointer" }}
+          />
+
+          <img
+            src={editIcon}
+            alt="edit Icon"
+            className="action_icons editicon"
+            onClick={() => {
+              handleEdit(contact.id);
+            }}
+            style={{ cursor: "pointer" }}
+          />
+        </div>
+      ),
+    };
+  });
   return (
     <Sidebar>
       <StyleEstimates>
@@ -63,41 +165,19 @@ const Index = () => {
           />
         </div>
 
-        <div>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-around",
-              fontSize: "24px",
-            }}
-          >
-            <p>Id</p>
-            <p>Full Name</p>
-            <p>Address</p>
-            <p>Email Address</p>
-            <p>Order Date</p>
-          </div>
-          {data?.data.data.map((item, index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-around",
-                }}
-              >
-                <p>{item.id}</p>
-                <p>{item.fullName}</p>
-                <p>{item.address}</p>
-                <p>{item.emailAddress}</p>
-
-                <p>{item.orderDate}</p>
-              </div>
-            );
-          })}
-        </div>
+        <Table pagination={false} columns={columns} dataSource={contactData} />
+        <Modal
+          visible={isModalVisible}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+        >
+          <DeleteModal
+            handleCancel={handleCancel}
+            userDetail={deleteUserDetail}
+            deleteUser={handleIndividualDelete}
+          />
+        </Modal>
       </StyleEstimates>
     </Sidebar>
   );
