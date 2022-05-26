@@ -1,1 +1,1 @@
-export const API_URL = 'https://node01.dagnum.com:8443/hftech/api/'
+export const API_URL = 'https://node01.dagnum.com:8443/hftech/'

@@ -1,7 +1,5 @@
 import GenericService from "../Services/GenericService";
-import {API_URL} from '../Services/config';
-
-
+import { API_URL } from "../Services/config";
 
 export const LOGIN_ACTION_SUCCESSFUL = "LOGIN_ACTION_SUCCESSFUL";
 export const LOGIN_ACTION_PENDING = "LOGIN_ACTION_PENDING";
