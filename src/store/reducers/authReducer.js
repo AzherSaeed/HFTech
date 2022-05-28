@@ -3,19 +3,20 @@ import {LOGIN_ACTION_FAILURE , LOGIN_ACTION_PENDING ,LOGIN_ACTION_SUCCESSFUL } f
 
 const initialState = {
 	isLoading: false,
-	users: null,
+	user: null,
 	errorMessage: null,
 };
 
 
 
 const usersReducer = (state = initialState, { type, payload }) => {
+	console.log('reducer called' , payload);
 	switch (type) {
 		case LOGIN_ACTION_PENDING:
 			return {
 				...state,
 				isLoading: true,
-				users: null,
+				user: null,
 				errorMessage: null,
 			};
 
@@ -23,7 +24,7 @@ const usersReducer = (state = initialState, { type, payload }) => {
 			return {
 				...state,
 				isLoading: false,
-				users: payload,
+				user: payload,
 			};
 
 		case LOGIN_ACTION_FAILURE:

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Form } from "antd";
@@ -6,34 +6,39 @@ import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { LoginContainer } from "./style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import {useDispatch} from 'react-redux';
-import {loginActionCalled} from '../../../store/action'
+import { useSelector, useDispatch } from "react-redux";
 
-const initialValues = {
+import { loginActionCalled } from "../../../store/action";
+
+let initialValues = {
   email: "",
   password: "",
 };
 const validationSchema = Yup.object({
-  email: Yup.string()
+  password: Yup.string()
     .required("Username is required!")
     .matches(/^(\S+$)/g, "Username cannot contain blankspaces"),
-  password: Yup.string()
+  email: Yup.string()
     .required("Invalid credentials. Please try again!")
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
- 
- const navigate=useNavigate();
+  const navigate = useNavigate();
 
- 
+  const { user } = useSelector((state) => state.authReducer);
+
+  useEffect(() => {
+    if(user){
+      navigate('/estimates')
+    }
+  },[user])
+  
   const onSubmit = (value) => {
-    console.log(value , 'value');
-    dispatch(loginActionCalled(value))
+    dispatch(loginActionCalled(value));
   };
 
   return (
@@ -80,7 +85,7 @@ const Index = () => {
                         name="password"
                         placeholder="Password"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.password && formik.touched.password
                             ? "is-invalid"
                             : "customPasswordInput"
                         }

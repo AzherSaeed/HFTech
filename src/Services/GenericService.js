@@ -28,10 +28,7 @@ class GenericService {
         .post(url, data , {
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("authToken"),
             "Access-Control-Allow-Origin":"*",
-            "requestToken":"3487132813749274823(923008134089)",
-            "lang":"en"
           },
         })
         .then((res) => {

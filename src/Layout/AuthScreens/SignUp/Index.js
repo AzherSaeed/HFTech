@@ -15,8 +15,12 @@ import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link,useNavigate } from "react-router-dom";
 
 const initialValues = {
-  username: "",
+  userName: "",
+  phoneNumber: "",
+  email: "",
   password: "",
+  channel: "",
+  roleId: '',
 };
 const validationSchema = Yup.object({
   username: Yup.string()
