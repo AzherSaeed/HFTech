@@ -57,7 +57,6 @@ const columns = [
 ];
 
 const Index = () => {
-  console.log("contact is rendred");
   const [isModalVisible, setIsModalVisible] = useState(false);
   // const [deleteStatus, setDeleteStatus] = useState({
   //   id: null,
