@@ -10,9 +10,11 @@ import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import ic_flag from "../../../Assets/ic_flag.svg";
 import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import axios from "axios";
 
 const initialValues = {
   userName: "",
@@ -34,32 +36,52 @@ const validationSchema = Yup.object({
     .min(6, "Minimum six character is required"),
 });
 const Index = () => {
-  const genericService = new GenericService();
-  const navigate=useNavigate();
-
-  const onSubmit = (value) => {
-    navigate('/login');
-    //console.log(value, "value");
-    genericService
-      .post(`${API_URL}auth/signin`, value)
-      .then((msg) => {
-        if (msg.resultCode == 200) {
-          toast(msg.message, "top-right");
-        } else {
-          toast(msg.message, "top-right");
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-        if (error.response.status == 401) {
-          toast("login credentials is invalid", "top-right");
-        }
+  const onSuccess = (response) => {
+    console.log(" response from the sigin up api", response);
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_CENTER,
       });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      navigate("/estimate");
+    }
+  };
+  const mutation = useMutation(
+    (signUpData) => {
+      return axios.post(
+        "https://node01.dagnum.com:8443/hftech/api/user/createUser",
+        signUpData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess,
+
+      onError: (err, variables, snapshotValue) => {
+        console.log(err);
+        toast.error(`${err} this is error`, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      },
+    }
+  );
+
+  const navigate = useNavigate();
+
+  const onSubmit = async (value) => {
+    mutation.mutate(value);
   };
 
   return (
     <LoginContainer>
-      <div></div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
@@ -79,25 +101,25 @@ const Index = () => {
                   autoComplete="off"
                   validateMessages={validationSchema}
                 >
-                <h1 className="joinCommunity">Join HF Tech Community</h1>
+                  <h1 className="joinCommunity"> Join HF Tech Community </h1>
                   <div className="login-input-fields">
                     <div>
-                    <FormControl
+                      <FormControl
                         control="input"
                         type="text"
-                        name="username"
-                        placeholder="Full Name"
+                        name="userName"
+                        placeholder="User Name"
                         className={
-                            formik.errors.username && formik.touched.username
+                          formik.errors.username && formik.touched.username
                             ? "is-invalid"
                             : "customInput"
                         }
-                    />
+                      />
                       <FormControl
                         control="input"
                         type="text"
                         name="email"
-                        placeholder="Email Address"
+                        placeholder="Email address"
                         className={
                           formik.errors.username && formik.touched.username
                             ? "is-invalid"
@@ -106,11 +128,11 @@ const Index = () => {
                       />
                     </div>
                     <div className="login-input-fields-field">
-                    <FormControl
-                        prefix={<img src={ic_flag} alt='ic_flag' />}
+                      <FormControl
+                        prefix={<img src={ic_flag} alt="ic_flag" />}
                         control="input"
                         type="text"
-                        name="contactNumber"
+                        name="phoneNumber"
                         placeholder="(617)397 - 8483"
                         className={
                           formik.errors.username && formik.touched.username
@@ -122,7 +144,7 @@ const Index = () => {
                     <div className="login-input-fields-field">
                       <FormControl
                         control="password"
-                        type="text"
+                        type="password"
                         name="password"
                         placeholder="Password"
                         className={
@@ -132,20 +154,34 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <div className="login-input-fields-field">
-                      <FormControl
-                        control="password"
-                        type="text"
-                        name="confirmPassword"
-                        placeholder="Confirm Password"
-                        className={
-                          formik.errors.username && formik.touched.username
-                            ? "is-invalid"
-                            : "customPasswordInput"
-                        }
-                      />
-                    </div>
-                    <p to="/" className="forget_password">Agreed with Terms & Conditions Privacy Policy</p>
+
+                    <FormControl
+                      control="input"
+                      type="text"
+                      name="channel"
+                      placeholder="Channels"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                    />
+
+                    <FormControl
+                      control="input"
+                      type="number"
+                      name="roleId"
+                      placeholder="Role Id"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                    />
+
+                    <p to="/" className="forget_password">
+                      Agreed with Terms & Conditions Privacy Policy
+                    </p>
                     <CustomButton
                       bgcolor="#156985"
                       color="white"
@@ -161,11 +197,17 @@ const Index = () => {
           </Formik>
         </div>
       </div>
-      <hr className="line"/>
+      <hr className="line" />
       <div className="login-container-bottom">
-        <p>Already have Account? </p>
-        <h6>&nbsp;<Link to='/' style={{color:'#156985'}}> Login</Link></h6>
+        <p> Already have Account ? </p>
+        <h6>
+          & nbsp;
+          <Link to="/" style={{ color: "#156985" }}>
+            Login
+          </Link>
+        </h6>
       </div>
+      {/* <ToastContainer /> */}
     </LoginContainer>
   );
 };

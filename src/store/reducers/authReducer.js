@@ -10,7 +10,6 @@ const initialState = {
 
 
 const usersReducer = (state = initialState, { type, payload }) => {
-	console.log('reducer called' , payload);
 	switch (type) {
 		case LOGIN_ACTION_PENDING:
 			return {

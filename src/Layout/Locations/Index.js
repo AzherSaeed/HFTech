@@ -1,133 +1,156 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Space, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
-import deleteIcon from '../../Assets/icons/ic_delete.svg';
-import editIcon from '../../Assets/icons/ic_edit.svg';
-import pdfIcon from '../../Assets/icons/ic_pdf.svg';
-import downloadIcon from '../../Assets/icons/ic_download.svg';
-import tickIcon from '../../Assets/icons/ic_tick.svg';
-import emailIcon from '../../Assets/icons/ic_email.svg';
-import { Link } from "react-router-dom";
+import deleteIcon from "../../Assets/icons/ic_delete.svg";
+import editIcon from "../../Assets/icons/ic_edit.svg";
+import pdfIcon from "../../Assets/icons/ic_pdf.svg";
+import downloadIcon from "../../Assets/icons/ic_download.svg";
+import tickIcon from "../../Assets/icons/ic_tick.svg";
+import emailIcon from "../../Assets/icons/ic_email.svg";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import axios from "axios";
+import DeleteModal from "../../Components/Delete/Index";
+const Index = () => {
+  let [detail, setDetail] = useState([]);
+  const onSuccess = (data) => {
+    console.log(data, "data from api");
+    setDetail([...data.data.data]);
+  };
+  useEffect(() => {
+    console.log(detail, "useState console");
+  }, [detail]);
+  const onError = (err) => {
+    console.log(err, "error while fetching data from api");
+  };
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [deleteStatus, setDeleteStatus] = useState({
+  //   id: null,
+  //   shouldDelete: false,
+  // });
+  const [deleteUserDetail, setDeleteUserDetail] = useState({
+    name: "",
+    email: "",
+    id: "",
+  });
 
-const columns = [
-    {
-        title: 'Id',
-        dataIndex: 'key',
-        key: 'key',
-        render:(text,record)=>(
-          <Link to={`/locations/${record.key}`}>{text}</Link>
-        )
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const navigate = useNavigate();
+
+  const handleDelete = (id, email, name) => {
+    // alert("handle delte hit");
+    setDeleteUserDetail({ name: name, email: email, id: id });
+    setIsModalVisible(true);
+
+    // setDeleteStatus({ ...deleteStatus, id: id });
+  };
+  const handleIndividualDelete = () => {
+    // mutation.mutate(deleteUserDetail.id);
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/contact/${id}`);
+    // alert("handle edit hit");
+  };
+
+  const { isLoading, isError, data, error } = useQuery(
+    "dataFetching",
+    () => {
+      return axios.get(
+        "https://node01.dagnum.com:8443/sunshine/api/getalldeliveredorders",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY1MzA0NDg5NCwiZXhwIjoxNjUzMDYyODk0fQ.343zBUUgUBYRyo53VKlNdf6fhwLMZN8X--dsgGQA2beNUyE8nw-ZvMrmF7jWDG_7fsTawrnrderCxW0xQ56FtA",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
     },
+    { refetchOnWindowFocus: "always", onSuccess, onError }
+  );
+  const columns = [
     {
-      title: 'Client | Contact',
-      dataIndex: 'name',
-      key: 'name',
-     
-    },
-    {
-      title: 'Locations',
-      dataIndex: 'address',
-      key: 'locations',
-    },
-    {
-      title: 'Reference',
-      dataIndex: 'tags',
-      key: 'reference',
-    },
-    {
-      title: 'Total Price',
-      key: 'totalPrice',
-      dataIndex: 'totalPrice',
-    } ,
-    {
-      title: 'Date',
-      key: 'date',
-      dataIndex: 'date',
-    },
-    {
-      title: 'Action',
-      key: 'action',
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
       render: (text, record) => (
-        <Space size="middle">
-        <div style={{display:'flex', gap:'4px'}}>
-        <img  src={pdfIcon} alt="edit Icon" className="action_icons"/>
-          <img src={downloadIcon} alt="Delete Icon" className="action_icons"/>
-          <img  src={emailIcon} alt="edit Icon" className="action_icons"/>
-          <img src={tickIcon} alt="Delete Icon" className="action_icons"/>
-          </div>
-          <div style={{display:'flex', gap:'4px'}}>
-          <img  src={deleteIcon} alt="delete Icon" className="action_icons deleteicon"/>
-          <img src={editIcon} alt="edit Icon" className="action_icons editicon"/>
-        </div>
-        </Space>
+        <Link to={`/contact/${record.key}`}> {text} </Link>
       ),
     },
-  ];
-  
-  const data = [
     {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
+      title: "Contact",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
+      title: "Channel",
+      dataIndex: "channel",
+      key: "channel",
     },
     {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
+      title: "Country Code",
+      key: "countryCode",
+      dataIndex: "countryCode",
     },
     {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
+      title: "Phone",
+      key: "phone",
+      dataIndex: "phone",
     },
     {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
     },
-    {
-      key: '5678',
-      name: 'Mah Adnan Qureshi',
-      address: 'Improve Canada, United States',
-      tags: 'qureshi786',
-      totalPrice:'$20.00',
-      date:"10/23/2021"
-    },
-    
   ];
 
-const Index = () => {
+  const contactData = data?.data?.result?.map((contact) => {
+    return {
+      id: contact.id,
+      name: contact.name,
+      email: contact.email,
+      channel: contact.channel,
+      countryCode: contact.countryCode,
+      phone: contact.phone,
+
+      action: (
+        <div style={{ display: "flex", gap: "4px" }}>
+          <img
+            src={deleteIcon}
+            alt="delete Icon"
+            className="action_icons deleteicon"
+            onClick={() => {
+              handleDelete(contact.id, contact.email, contact.name);
+            }}
+            style={{ cursor: "pointer" }}
+          />
+
+          <img
+            src={editIcon}
+            alt="edit Icon"
+            className="action_icons editicon"
+            onClick={() => {
+              handleEdit(contact.id);
+            }}
+            style={{ cursor: "pointer" }}
+          />
+        </div>
+      ),
+    };
+  });
   return (
     <Sidebar>
       <StyleEstimates>
@@ -141,7 +164,20 @@ const Index = () => {
             title="Create new"
           />
         </div>
-        <Table pagination={false} columns={columns} dataSource={data} />
+
+        <Table pagination={false} columns={columns} dataSource={contactData} />
+        <Modal
+          visible={isModalVisible}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+        >
+          <DeleteModal
+            handleCancel={handleCancel}
+            userDetail={deleteUserDetail}
+            deleteUser={handleIndividualDelete}
+          />
+        </Modal>
       </StyleEstimates>
     </Sidebar>
   );

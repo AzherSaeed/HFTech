@@ -13,9 +13,9 @@ import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
 import MobileTable from "./MobileTable";
 import { Modal } from "antd";
-import DeleteModal from '../../Components/Delete/Index'
-import UpdateModal from '../../Components/Download/Index'
-
+import DeleteModal from "../../Components/Delete/Index";
+import UpdateModal from "../../Components/Download/Index";
+import { useSelector } from "react-redux";
 
 const data = [
   {
@@ -77,6 +77,12 @@ const data = [
 ];
 
 const Index = () => {
+  // const userDetail = useSelector((state) => state.fetchUser.user);
+  // const userError = useSelector((state) => state.fetchUser.error);
+
+  // console.log(userDetail);
+  // console.log(userError);
+
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibled, setIsModalVisibled] = useState(false);
@@ -87,7 +93,7 @@ const Index = () => {
       dataIndex: "key",
       key: "key",
       render: (text, record) => (
-        <Link to={`/estimates/${record.key}`}>{text}</Link>
+        <Link to={`/estimates/${record.key}`}> {text} </Link>
       ),
     },
     {
@@ -122,7 +128,12 @@ const Index = () => {
         <Space size="middle">
           <div style={{ display: "flex", gap: "4px" }}>
             <img src={pdfIcon} alt="edit Icon" className="action_icons" />
-            <img src={downloadIcon} alt="Delete Icon" className="action_icons" onClick={showModald} />
+            <img
+              src={downloadIcon}
+              alt="Delete Icon"
+              className="action_icons"
+              onClick={showModald}
+            />
             <img src={emailIcon} alt="edit Icon" className="action_icons" />
             <img src={tickIcon} alt="Delete Icon" className="action_icons" />
           </div>
@@ -186,7 +197,7 @@ const Index = () => {
               onCancel={handleCancel}
               centered={true}
             >
-              <DeleteModal/>
+              <DeleteModal />
             </Modal>
             <Modal
               visible={isModalVisibled}
@@ -194,7 +205,7 @@ const Index = () => {
               onCancel={handleCancel}
               centered={true}
             >
-              <UpdateModal/> 
+              <UpdateModal />
             </Modal>
           </StyleEstimates>
         </div>
