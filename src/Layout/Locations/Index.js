@@ -11,14 +11,15 @@ import downloadIcon from "../../Assets/icons/ic_download.svg";
 import tickIcon from "../../Assets/icons/ic_tick.svg";
 import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
+import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
 const Index = () => {
   let [detail, setDetail] = useState([]);
   const onSuccess = (data) => {
     console.log(data, "data from api");
-    setDetail([...data.data.data]);
+    // setDetail([...data?.data?.data]);
   };
   useEffect(() => {
     console.log(detail, "useState console");
@@ -42,37 +43,60 @@ const Index = () => {
   };
 
   const navigate = useNavigate();
-
+  // const createNew = () => {
+  //   navigate("/locations/create");
+  // };
   const handleDelete = (id, email, name) => {
     // alert("handle delte hit");
-    setDeleteUserDetail({ name: name, email: email, id: id });
+    setDeleteUserDetail({ name: name, id: id });
     setIsModalVisible(true);
 
     // setDeleteStatus({ ...deleteStatus, id: id });
   };
-  const handleIndividualDelete = () => {
-    // mutation.mutate(deleteUserDetail.id);
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/contact/${id}`);
-    // alert("handle edit hit");
-  };
-
-  const { isLoading, isError, data, error } = useQuery(
-    "dataFetching",
-    () => {
-      return axios.get(
-        "https://node01.dagnum.com:8443/sunshine/api/getalldeliveredorders",
+  const mutation = useMutation(
+    (id) => {
+      return axios.delete(
+        API_URL + DELETE_SPACE,
+        { params: { spaceId: id } },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY1MzA0NDg5NCwiZXhwIjoxNjUzMDYyODk0fQ.343zBUUgUBYRyo53VKlNdf6fhwLMZN8X--dsgGQA2beNUyE8nw-ZvMrmF7jWDG_7fsTawrnrderCxW0xQ56FtA",
             "Access-Control-Allow-Origin": "*",
           },
         }
       );
+    },
+    {
+      onSuccess: (data) => {
+        refetch();
+      },
+      onError: (err) => {
+        console.log("deleting error : ", err);
+      },
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+  const handleIndividualDelete = () => {
+    mutation.mutate(deleteUserDetail.id);
+  };
+
+  const handleEdit = (countryId, id) => {
+    // alert("edit hit");
+    // let data = { countryId, id };
+    navigate(`/locations/${id}`);
+    // alert("handle edit hit");
+  };
+
+  const { isLoading, isError, refetch, data, error } = useQuery(
+    "dataFetching",
+    () => {
+      return axios.get(API_URL + GET_SPACE_DETAIL, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
     },
     { refetchOnWindowFocus: "always", onSuccess, onError }
   );
@@ -86,14 +110,14 @@ const Index = () => {
       ),
     },
     {
-      title: "Contact",
+      title: "Name",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "City",
+      dataIndex: "cityName",
+      key: "cityName",
     },
     {
       title: "Channel",
@@ -101,14 +125,24 @@ const Index = () => {
       key: "channel",
     },
     {
-      title: "Country Code",
-      key: "countryCode",
-      dataIndex: "countryCode",
+      title: "Address",
+      key: "address",
+      dataIndex: "address",
     },
     {
-      title: "Phone",
-      key: "phone",
-      dataIndex: "phone",
+      title: "State Id",
+      key: "stateId",
+      dataIndex: "stateId",
+    },
+    {
+      title: "City Id",
+      key: "cityId",
+      dataIndex: "cityId",
+    },
+    {
+      title: "Country",
+      key: "countryName",
+      dataIndex: "countryName",
     },
     {
       title: "Action",
@@ -117,14 +151,16 @@ const Index = () => {
     },
   ];
 
-  const contactData = data?.data?.result?.map((contact) => {
+  const contactData = data?.data?.result?.map((space) => {
     return {
-      id: contact.id,
-      name: contact.name,
-      email: contact.email,
-      channel: contact.channel,
-      countryCode: contact.countryCode,
-      phone: contact.phone,
+      id: space.id,
+      name: space.name,
+      cityName: space.cityName,
+      channel: space.channel,
+      address: space.address,
+      stateId: space.stateId,
+      cityId: space.cityId,
+      countryName: space.countryName,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -133,7 +169,7 @@ const Index = () => {
             alt="delete Icon"
             className="action_icons deleteicon"
             onClick={() => {
-              handleDelete(contact.id, contact.email, contact.name);
+              handleDelete(space.id, space.email, space.name);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -143,7 +179,7 @@ const Index = () => {
             alt="edit Icon"
             className="action_icons editicon"
             onClick={() => {
-              handleEdit(contact.id);
+              handleEdit(space.countryId, space.id);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -159,9 +195,12 @@ const Index = () => {
             bgcolor={BasicColor}
             color="white"
             padding="11px 8px"
-            type="submit"
+            type="button"
             width="130px"
             title="Create new"
+            clicked={() => {
+              navigate("/locations/createNew");
+            }}
           />
         </div>
 
@@ -176,6 +215,7 @@ const Index = () => {
             handleCancel={handleCancel}
             userDetail={deleteUserDetail}
             deleteUser={handleIndividualDelete}
+            toLocation="/locations"
           />
         </Modal>
       </StyleEstimates>

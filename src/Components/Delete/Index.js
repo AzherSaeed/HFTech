@@ -4,7 +4,7 @@ import ic_logo from "../../Assets/icons/ic_logo.svg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const Index = ({ handleCancel, userDetail, deleteUser }) => {
+const Index = ({ handleCancel, userDetail, deleteUser, toLocation }) => {
   const navigate = useNavigate();
   const closeModal = () => {
     handleCancel();
@@ -13,7 +13,7 @@ const Index = ({ handleCancel, userDetail, deleteUser }) => {
     deleteUser();
     setTimeout(() => {
       handleCancel();
-      navigate("/contact");
+      navigate(toLocation);
     }, 300);
   };
   return (

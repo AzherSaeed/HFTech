@@ -1,4 +1,4 @@
-export const API_URL = 'https://node01.dagnum.com:8443/hftech/api/'
+export const API_URL = "https://node01.dagnum.com:8443/hftech/api/";
 export const GET_CONTACT = "contact/get";
 export const GET_CLIENT = "client/get";
 export const CLIENT_UPDATE = "client/update";
@@ -7,3 +7,11 @@ export const SAVE_CONTACT = "contact/save";
 export const CONTACT_GET_BY_ID = "contact/getById";
 export const CONTACT_UPDATE = "contact/update";
 export const CONTACT_DELETE = "contact/delate";
+export const GET_SPACE_DETAIL = "space/get";
+export const GET_SPACE_BY_ID = "space/getById";
+export const GET_STATE_BY_ID = "state/getStateByCountryId";
+export const GET_CITY_BY_ID = "city/getCitiesByStateId";
+export const GET_COUNTRY = "country/get";
+export const UPDATE_SPACE = "space/updateSpace";
+export const DELETE_SPACE = "space/delateSpace";
+export const CREATE_SPACE = "space/addSpace";

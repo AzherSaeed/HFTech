@@ -183,7 +183,7 @@ const Index = () => {
             width="130px"
             title="Create new"
             clicked={() => {
-              navigate("/createContact");
+              navigate("/contact/createContact");
             }}
           />
         </div>
@@ -198,6 +198,7 @@ const Index = () => {
             handleCancel={handleCancel}
             userDetail={deleteUserDetail}
             deleteUser={handleIndividualDelete}
+            toLocation="/contact"
           />
         </Modal>
       </StyleEstimates>

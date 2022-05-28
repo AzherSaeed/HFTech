@@ -106,3 +106,5 @@ const Index = () => {
     </LoginContainer>
   );
 };
+
+export default Index;

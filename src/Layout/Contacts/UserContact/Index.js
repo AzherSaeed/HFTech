@@ -35,6 +35,7 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { contactId } = useParams();
+  console.log(contactId, "this is from useParam");
   const regex = /^\d*(\.\d+)?$/;
   const {
     data: userData,
@@ -64,7 +65,6 @@ const Index = () => {
       keepPreviousData: "false",
     }
   );
-
 
   const navigate = useNavigate();
   const onSuccess = (data) => {
@@ -96,10 +96,8 @@ const Index = () => {
     }
   );
 
-
   const onSubmit = (data1) => {
     console.log(data1, "data submitted after changes");
-
 
     mutation.mutate(data1);
   };
