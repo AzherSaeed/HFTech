@@ -18,11 +18,11 @@ import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
 const Index = () => {
   let [detail, setDetail] = useState([]);
   const onSuccess = (data) => {
-    console.log(data, "data from api");
+    // console.log(data, "data from api");
     // setDetail([...data?.data?.data]);
   };
   useEffect(() => {
-    console.log(detail, "useState console");
+    // console.log(detail, "useState console");
   }, [detail]);
   const onError = (err) => {
     console.log(err, "error while fetching data from api");

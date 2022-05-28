@@ -44,7 +44,7 @@ const Index = () => {
   const navigate = useNavigate();
   // const [queryStatus, setQueryStatus] = useState({ state: false, city: false });
 
-  console.log(locationsId, "this is from params");
+  // console.log(locationsId, "this is from params");
   // user query for user detail fetching
   const {
     data: spaceData,
@@ -73,7 +73,7 @@ const Index = () => {
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
       onSuccess: (data) => {
-        console.log(data, "from usequery of space by id");
+        // console.log(data, "from usequery of space by id");
         // setQueryStatus({ ...queryStatus, state: true });
       },
     }
@@ -108,7 +108,7 @@ const Index = () => {
       //   }));
       // },
       onSuccess: (data) => {
-        console.log(data, "from usequery of country data geting");
+        // console.log(data, "from usequery of country data geting");
         // setQueryStatus({ ...queryStatus, state: true });
       },
     }
@@ -140,10 +140,10 @@ const Index = () => {
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
       onSuccess: (data) => {
-        console.log(
-          data,
-          "from usequery of state data and should be run just after the first query "
-        );
+        // console.log(
+        //   data,
+        //   "from usequery of state data and should be run just after the first query "
+        // );
         // setQueryStatus({ ...queryStatus, city: true });
       },
       enabled: true,
@@ -176,10 +176,10 @@ const Index = () => {
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
       onSuccess: (data) => {
-        console.log(
-          data,
-          "from usequery of city and should be run after the state query"
-        );
+        // console.log(
+        //   data,
+        //   "from usequery of city and should be run after the state query"
+        // );
       },
       // enabled: true,
     }
@@ -215,7 +215,7 @@ const Index = () => {
     },
     {
       onSuccess: (data) => {
-        console.log(data, "this is data onSucces of either put or post method");
+        // console.log(data, "this is data onSucces of either put or post method");
         navigate("/locations");
       },
 
@@ -225,7 +225,7 @@ const Index = () => {
     }
   );
   const onSubmit = (data) => {
-    console.log(data, "this  is data from submit");
+    // console.log(data, "this  is data from submit");
     mutation.mutate(data);
   };
   return (
