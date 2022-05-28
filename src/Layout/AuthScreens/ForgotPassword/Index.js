@@ -28,10 +28,10 @@ const validationSchema = Yup.object({
 });
 const Index = () => {
   const genericService = new GenericService();
- const navigate=useNavigate();
+  const navigate = useNavigate();
   const onSubmit = (value) => {
     //console.log(value, "value");
-    navigate('/resetPassword');
+    navigate("/resetPassword");
     genericService
       .post(`${API_URL}auth/signin`, value)
       .then((msg) => {
@@ -51,7 +51,7 @@ const Index = () => {
 
   return (
     <LoginContainer>
-      <div></div>
+      <div> </div>
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" />
@@ -59,7 +59,7 @@ const Index = () => {
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
-           // validationSchema={validationSchema}
+            // validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             {(formik) => {
@@ -71,7 +71,9 @@ const Index = () => {
                   autoComplete="off"
                   validateMessages={validationSchema}
                 >
-                <h1 className="main-heading">Enter email for update password</h1>
+                  <h1 className="main-heading">
+                    Enter email for update password
+                  </h1>
                   <div className="login-input-fields">
                     <div>
                       <FormControl
