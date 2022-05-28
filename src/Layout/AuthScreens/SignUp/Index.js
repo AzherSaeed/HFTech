@@ -17,12 +17,12 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 
 const initialValues = {
-  userName: "Adnan QUreshi",
-  phoneNumber: "+300804391462",
-  email: "adnan.ahsaen@gmail.com",
-  password: "Hashmi786",
-  channel: "IOS",
-  roleId: 2,
+  userName: "",
+  phoneNumber: "",
+  email: "",
+  password: "",
+  channel: "",
+  roleId: '',
 };
 const validationSchema = Yup.object({
   username: Yup.string()

@@ -3,7 +3,6 @@ import { Formik } from "formik";
 import { Form } from "antd";
 import Style from "./Style";
 import FormControl from "../../../Components/FormControl";
-
 import CustomButton from "../../../Components/CustomButton/Index";
 import * as Yup from "yup";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
@@ -37,7 +36,6 @@ const validationSchema = Yup.object({
 const Index = () => {
   const { contactId } = useParams();
   const regex = /^\d*(\.\d+)?$/;
-  // contactId !== "createContact"
   const {
     data: userData,
     isSuccess,
@@ -67,11 +65,7 @@ const Index = () => {
     }
   );
 
-  console.log(userData, "this is data from the usequery hook");
-  // if (contactId !== "createContact") {
-  // } else {
-  // }
-  console.log(contactId, " this is Id from useParam");
+
   const navigate = useNavigate();
   const onSuccess = (data) => {
     console.log(data, "from the submission of update");
@@ -102,14 +96,11 @@ const Index = () => {
     }
   );
 
-  // const postMutation = useMutation(con);
 
   const onSubmit = (data1) => {
     console.log(data1, "data submitted after changes");
 
-    // if (contactId !== "createContact") {
-    //   mutation.mutate;
-    // }
+
     mutation.mutate(data1);
   };
 
@@ -117,7 +108,6 @@ const Index = () => {
     return <h1>loading...</h1>;
   }
 
-  // console.log(userData?.data?.result, "userData?.data?.result");
   return (
     <Sidebar>
       <Style>

@@ -27,7 +27,7 @@ export const loginActionCalled = (data) => (dispatch) => {
   dispatch(loginLoaderStart());
 
   generaticService
-    .post(`${API_URL}login/generate-token`, data)
-    .then((response) => dispatch(loginLoaderSuccess(response.data)))
+    .post('https://node01.dagnum.com:8443/hftech/login/generate-token', data)
+    .then((response) => dispatch(loginLoaderSuccess(response.result)))
     .catch((error) => dispatch(loginLoaderFailure(error.message)));
 };

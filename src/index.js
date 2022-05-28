@@ -7,18 +7,22 @@ import reportWebVitals from "./reportWebVitals";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.css";
 import { BrowserRouter } from "react-router-dom";
+import configureStore from "./store/store";
 import { Provider } from "react-redux";
-import store from "./store/store";
-// import store from "./app/store";
+
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+
 root.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>{" "}
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <Provider store={configureStore}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change
