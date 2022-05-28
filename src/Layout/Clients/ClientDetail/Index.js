@@ -232,7 +232,7 @@ const Index = () => {
                       </div>
                       <div>
                         <span style={{ fontWeight: "bold" }}>Owner:</span>_
-                        Jamen Tabesh
+                        Jamen Tabeshm,zxbcj,zxbhcjvzxhjcv
                       </div>
                     </div>
                   ))}
