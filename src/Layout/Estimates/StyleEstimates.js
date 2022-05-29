@@ -4,14 +4,26 @@ const StyleEstimates =styled.div`
 .btn{
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 14px;
+   
 }
 .ant-table {
     padding: 10px;
 }
 .ant-table-thead{
-    background-color: blue !important;
+    background-color: #F3F6F9 ;
     border-radius:8px;
+    .ant-table-cell{
+    background: transparent;
+    color:#1B283F;
+    font-family: 'EnnVisionsBold';
+    font-weight: 500;
+    padding: 8px 16px;
+    }
+}
+.ant-table-tbody{
+.ant-table-cell{
+padding: 2px 16px;   
+}    
 }
 .ant-table-tbody > tr > td{
 border-bottom: none !important;

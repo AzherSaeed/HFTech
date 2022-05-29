@@ -3,6 +3,9 @@ import styled from "styled-components"
 const Style = styled.div`
 background-color: white;
 padding: 20px 20px;
+
+
+
 .leftSide{
     width: 48%;
 }

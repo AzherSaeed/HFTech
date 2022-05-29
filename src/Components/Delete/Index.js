@@ -22,9 +22,25 @@ const Index = ({ handleCancel, userDetail, deleteUser, toLocation }) => {
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
         </div>
-        <h1> Do You Really Want to Delete!! </h1>
-        <p>{userDetail.name}</p>
-        <p>{userDetail.email}</p>
+        <h5 className="question-text"> Do You Really Want to Delete!! </h5>
+        <p className="inquiry-delete">
+        Estimate   
+        {" "} 
+          <span className="delete-user">
+           Improve Canada Mall 
+          </span>
+          {" "} 
+           is delete 
+          <br />
+          successfully
+          {" "} 
+          <span className="delete-by">
+          by O'Neil McLean
+          </span>
+        </p>
+      
+        {/* <p>{userDetail.name}</p>
+        <p>{userDetail.email}</p> */}
         <div className="login-container-card-btn">
           <button
             className="login-container-card-btn-yes"

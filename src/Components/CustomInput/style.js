@@ -10,6 +10,7 @@ export const CustomInputContainer = styled.div`
     ////sad
     display: block;
     margin-bottom: 10px;
+    color:#1B283F;
   }
 
 `;

@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import { Form } from "antd";
+import { Form, Modal, Spin } from "antd";
 import Style from "./Style";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
+import ic_logo from "../../..//Assets/icons/ic_logo.svg";
 import * as Yup from "yup";
+
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import {
   API_URL,
@@ -15,6 +17,7 @@ import { SAVE_CONTACT } from "../../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../../Components/Loader/Loader";
 
 const initialValues = {
   name: "",
@@ -35,6 +38,7 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { contactId } = useParams();
+  const [isModalVisibled, setIsModalVisibled] = useState(false);
   const regex = /^\d*(\.\d+)?$/;
   const {
     data: userData,
@@ -68,7 +72,7 @@ const Index = () => {
   const navigate = useNavigate();
   const onSuccess = (data) => {
     console.log(data, "from the submission of update");
-    navigate("/contact");
+   
   };
   const mutation = useMutation(
     (contactDetail) => {
@@ -94,19 +98,49 @@ const Index = () => {
       },
     }
   );
-
+ 
+  const handleModalSubmit=()=>{
+    setIsModalVisibled(true);
+    setTimeout(() => {
+      setIsModalVisibled(false)
+      navigate("/contact");
+    }, 2000);
+  }
+  const handleModalCancel=()=>{
+      setIsModalVisibled(false)
+      navigate("/contact");
+ 
+  }
   const onSubmit = (data1) => {
     console.log(data1, "data submitted after changes");
-
+    handleModalSubmit();
     mutation.mutate(data1);
   };
 
   if (isFetching) {
-    return <h1>loading...</h1>;
+    return <Loader/>;
   }
 
   return (
     <Sidebar>
+        <Modal
+              visible={isModalVisibled}
+              footer={null}
+              onCancel={handleModalCancel}
+              centered={true}
+            >
+              <div className="login-container-card text-center">
+        <div className="login-container-card-logo">
+          <img src={ic_logo} alt="ic_logo" className="logo" />
+        </div>
+        <h5 className="question-text mt-3"> Contact Update Successfull </h5>
+      
+      
+        {/* <p>{userDetail.name}</p>
+        <p>{userDetail.email}</p> */}
+       
+      </div>
+            </Modal>
       <Style>
         <div className="main-container">
           <div className="leftSide">
@@ -142,7 +176,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="name"
-                        placeholder="User Name"
+                        placeholder="Enter location name"
                         disabled={contactId == "edit"}
                         className={
                           formik.errors.name && formik.touched.name
@@ -169,14 +203,14 @@ const Index = () => {
                         type="email"
                         name="email"
                         disabled={contactId == "edit"}
-                        placeholder="Email address"
+                        placeholder="Enter email address"
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
                             : "customInput"
                         }
                       />
-                      <div>
+                      {/* <div>
                         <label htmlFor="channel">Channel</label>
                         <FormControl
                           control="input"
@@ -190,9 +224,9 @@ const Index = () => {
                               : "customInput"
                           }
                         />
-                      </div>
+                      </div> */}
                       {/* )} */}
-                      <div>
+                      {/* <div>
                         <label htmlFor="countryCode">CountryCode</label>
                         <FormControl
                           control="input"
@@ -206,17 +240,17 @@ const Index = () => {
                               : "customInput"
                           }
                         />
-                      </div>
+                      </div> */}
                       {}
                       <div style={{ marginTop: "auto" }}>
                         {contactId == "edit" ? null : (
                           <CustomButton
                             bgcolor="#156985"
                             color="white"
-                            padding="11px 8px"
+                            padding="5px 8px"
                             width="100%"
                             type="submit"
-                            title="SUBMIT"
+                            title="Save Contact"
                             margin="auto"
                           />
                         )}

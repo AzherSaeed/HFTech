@@ -22,30 +22,41 @@ const columns = [
     key: "id"
   },
   {
-    title: "Contact",
+    title: "Full Name",
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Email",
+    title: "Phone Number",
+    key: "phone",
+    dataIndex: "phone",
+  },
+  {
+    title: "Email Address",
     dataIndex: "email",
     key: "email",
   },
   {
-    title: "Channel",
-    dataIndex: "channel",
-    key: "channel",
+    title: "Created",
+    dataIndex: "created",
+    key: "created",
   },
   {
-    title: "Country Code",
-    key: "countryCode",
-    dataIndex: "countryCode",
+    title: "Owner",
+    dataIndex: "owner",
+    key: "owner",
   },
-  {
-    title: "Phone",
-    key: "phone",
-    dataIndex: "phone",
-  },
+  // {
+  //   title: "Channel",
+  //   dataIndex: "channel",
+  //   key: "channel",
+  // },
+  // {
+  //   title: "Country Code",
+  //   key: "countryCode",
+  //   dataIndex: "countryCode",
+  // },
+  
   {
     title: "Action",
     key: "action",
@@ -138,9 +149,11 @@ const Index = () => {
       id: <Link to={`/contact/edit`} >{contact.id}</Link>,
       name: contact.name,
       email: contact.email,
-      channel: contact.channel,
-      countryCode: contact.countryCode,
       phone: contact.phone,
+      created: "Not Available",
+      owner: "Not Available",
+      // channel: contact.channel,
+      // countryCode: contact.countryCode,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -175,7 +188,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="11px 8px"
+            padding="6px 8px"
             type="submit"
             width="130px"
             title="Create new"

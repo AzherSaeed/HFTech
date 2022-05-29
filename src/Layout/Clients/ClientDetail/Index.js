@@ -15,6 +15,7 @@ import CustomButton from "../../../Components/CustomButton/Index";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { Form } from "antd";
+import Loader from "../../../Components/Loader/Loader";
 
 const { TabPane } = Tabs;
 
@@ -122,7 +123,7 @@ const Index = () => {
   };
 
   if (isFetching) {
-    return <h1>loading</h1>;
+    return <Loader/>;
   }
 
 

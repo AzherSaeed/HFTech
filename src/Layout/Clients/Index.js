@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { API_URL, CLIENT_DELETE, GET_CLIENT } from "../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
+import Loader from "../../Components/Loader/Loader";
 const columns = [
   {
     title: "Id",
@@ -148,7 +149,7 @@ const Index = () => {
             }}
           />
         </div>
-        {isLoading && <div>Loading..</div>}
+        {isLoading && <Loader/>}
         {isError && <div>{error.message}</div>}
 
         {isSuccess && (

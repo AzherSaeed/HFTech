@@ -10,6 +10,7 @@ import { Formik } from "formik";
 import { API_URL } from "../../../Services/config";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { Link } from 'react-router-dom';
+import { RightOutlined } from '@ant-design/icons';
 
 const initialValues = {
     username: "",
@@ -160,7 +161,7 @@ const CreateNew = () => {
                          <Link to='/estimates/createNew/addItem'>
                          <div className='addItem-div'>
                              <div>Add LineItems</div>
-                             <div>&gt;</div>
+                             <div><RightOutlined /></div>
                          </div>
                          </Link>
                       </div>
@@ -170,7 +171,7 @@ const CreateNew = () => {
                       <CustomButton
                       bgcolor="#156985"
                       color="white"
-                      padding="11px 8px"
+                      padding="5px 8px"
                       width="100%"
                       type="submit"
                       title="Save Estimate"
