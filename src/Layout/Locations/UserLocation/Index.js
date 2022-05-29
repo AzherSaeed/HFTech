@@ -255,7 +255,7 @@ const Index = () => {
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
         </div>
-        <h5 className="question-text mt-3"> Location Updated Successfull </h5>
+        <h5 className="question-text mt-3 fs-5"> Location Updated Successfull </h5>
       
       
         {/* <p>{userDetail.name}</p>
