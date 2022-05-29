@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import StyleEstimates from "./StyleEstimates";
+import {LineItemContainer} from "./styled";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Tag, Space, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
@@ -193,7 +193,7 @@ const Index = () => {
   });
   return (
     <Sidebar>
-      <StyleEstimates>
+      <LineItemContainer>
         <div className="btn">
           <CustomButton
             bgcolor={BasicColor}
@@ -222,7 +222,7 @@ const Index = () => {
             toLocation="/locations"
           />
         </Modal>
-      </StyleEstimates>
+      </LineItemContainer>
     </Sidebar>
   );
 };
