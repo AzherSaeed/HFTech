@@ -4,13 +4,14 @@ import ErrorMsg from "../ErrorMessage";
 import { Input } from "antd";
 import { CustomInputContainer } from "./style";
 const InputField = (props) => {
-  const { label, prefix,maxLength, placeholder, className, name, ...rest } = props;
+  const { label, prefix,maxLength, disabled , placeholder, className, name, ...rest } = props;
   return (
     <CustomInputContainer>
       <label htmlFor={name}>{label}</label>
       <Field name={name} id={name}>
         {({ field }) => (
           <Input
+            disabled={disabled}
             prefix={prefix}
             className={className}
             readonly

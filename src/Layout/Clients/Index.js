@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Space } from "antd";
@@ -7,8 +7,8 @@ import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import { useNavigate } from "react-router-dom";
-import { API_URL, GET_CLIENT } from "../../Services/config";
-import { useQuery } from "react-query";
+import { API_URL, CLIENT_DELETE, GET_CLIENT } from "../../Services/config";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 const columns = [
   {
@@ -45,7 +45,12 @@ const columns = [
 
 const Index = () => {
   const navigate = useNavigate()
-  const { data, isLoading, isSuccess, error, isError } = useQuery(
+
+
+  const [clientData, setclientData] = useState()
+
+
+  const { data, isLoading, isSuccess, error, isError , refetch } = useQuery(
     "get-client",
     () => {
       return axios.get(API_URL + GET_CLIENT, {
@@ -68,6 +73,37 @@ const Index = () => {
     navigate(`/clients/${id}`)
   }
 
+  const mutation = useMutation(
+    (id) => {
+      return axios.delete(
+        API_URL + CLIENT_DELETE,
+        { params: { clientId: id } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data) => {
+        refetch();
+      },
+      onError: (err) => {
+        console.log("deleting error : ", err);
+      },
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+
+
+  const clientDeleteHandler = (client) => {
+    setclientData(client)
+    mutation.mutate(client.id);
+  }
   const Data = isSuccess && data.data.result?.map((client) => {
     return {
       id: client.id,
@@ -82,6 +118,7 @@ const Index = () => {
               src={deleteIcon}
               alt="delete Icon"
               className="action_icons deleteicon"
+              onClick={() => clientDeleteHandler(client)}
             />
             <img
               src={editIcon}
@@ -106,6 +143,9 @@ const Index = () => {
             type="submit"
             width="130px"
             title="Create new"
+            clicked={() => {
+              navigate("/clients/createClient");
+            }}
           />
         </div>
         {isLoading && <div>Loading..</div>}

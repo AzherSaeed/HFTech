@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
 import { Form } from "antd";
 import Style from "./Style";
@@ -35,6 +35,7 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { contactId } = useParams();
+
   const regex = /^\d*(\.\d+)?$/;
   const {
     data: userData,
@@ -64,7 +65,6 @@ const Index = () => {
       keepPreviousData: "false",
     }
   );
-
 
   const navigate = useNavigate();
   const onSuccess = (data) => {
@@ -96,10 +96,8 @@ const Index = () => {
     }
   );
 
-
   const onSubmit = (data1) => {
     console.log(data1, "data submitted after changes");
-
 
     mutation.mutate(data1);
   };
@@ -146,6 +144,7 @@ const Index = () => {
                         type="text"
                         name="name"
                         placeholder="User Name"
+                        disabled={contactId == "edit"}
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
@@ -157,6 +156,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="phone"
+                        disabled={contactId == "edit"}
                         placeholder="(617)397 - 8483"
                         className={
                           formik.errors.name && formik.touched.name
@@ -169,6 +169,7 @@ const Index = () => {
                         control="input"
                         type="email"
                         name="email"
+                        disabled={contactId == "edit"}
                         placeholder="Email address"
                         className={
                           formik.errors.name && formik.touched.name
@@ -176,13 +177,13 @@ const Index = () => {
                             : "customInput"
                         }
                       />
-                      {/* {contactId !== "createContact" && ( */}
                       <div>
                         <label htmlFor="channel">Channel</label>
                         <FormControl
                           control="input"
                           type="text"
                           name="channel"
+                          disabled={contactId == "edit"}
                           placeholder="channel"
                           className={
                             formik.errors.name && formik.touched.name
@@ -192,7 +193,6 @@ const Index = () => {
                         />
                       </div>
                       {/* )} */}
-                      {/* {contactId !== "createContact" && ( */}
                       <div>
                         <label htmlFor="countryCode">CountryCode</label>
                         <FormControl
@@ -200,6 +200,7 @@ const Index = () => {
                           type="text"
                           name="countryCode"
                           placeholder="Country Code"
+                          disabled={contactId == "edit"}
                           className={
                             formik.errors.name && formik.touched.name
                               ? "is-invalid"
@@ -207,17 +208,19 @@ const Index = () => {
                           }
                         />
                       </div>
-                      {/* )} */}
+                      {}
                       <div style={{ marginTop: "auto" }}>
-                        <CustomButton
-                          bgcolor="#156985"
-                          color="white"
-                          padding="11px 8px"
-                          width="100%"
-                          type="submit"
-                          title="SUBMIT"
-                          margin="auto"
-                        />
+                        {contactId == "edit" ? null : (
+                          <CustomButton
+                            bgcolor="#156985"
+                            color="white"
+                            padding="11px 8px"
+                            width="100%"
+                            type="submit"
+                            title="SUBMIT"
+                            margin="auto"
+                          />
+                        )}
                       </div>
                     </div>
                   </Form>

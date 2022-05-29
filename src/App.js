@@ -59,8 +59,6 @@ function App() {
           <Route path="/createContact" element={<USerContact />} />
           <Route path="/client" element={<Clients />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
-          {/* <Route path="/cakes" element={<Cakes />} />
-                      <Route path="/icecream" element={<Icecream />} /> */}
         </Routes>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />

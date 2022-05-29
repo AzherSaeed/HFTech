@@ -19,10 +19,7 @@ const columns = [
   {
     title: "Id",
     dataIndex: "id",
-    key: "id",
-    render: (text, record) => (
-      <Link to={`/contact/${record.key}`}> {text} </Link>
-    ),
+    key: "id"
   },
   {
     title: "Contact",
@@ -138,7 +135,7 @@ const Index = () => {
 
   const contactData = data?.data?.result?.map((contact) => {
     return {
-      id: contact.id,
+      id: <Link to={`/contact/edit`} >{contact.id}</Link>,
       name: contact.name,
       email: contact.email,
       channel: contact.channel,

@@ -25,6 +25,14 @@ const Style = styled.div`
     @media screen and (max-width: 725px) {
       width: 100%;
     }
+
+    .ant-checkbox-group {
+      width: 100%;
+
+      .ant-checkbox + span {
+        width: 100%;
+      }
+    }
   }
   .data {
     width: 100%;
@@ -56,16 +64,27 @@ const Style = styled.div`
     margin-right: 115px;
   }
   .details {
-    display: flex;
-    gap: 50px;
     border: 0.5px solid #c6c6c8;
     border-radius: 4px;
     padding: 0 10px;
     margin-bottom: 5px;
+    width: 100%;
+
+    .ant-checkbox-wrapper {
+      width: 100%;
+    }
+    &-checkbox {
+      display: flex;
+      gap: 50px;
+      width: 100%;
+    }
     &-list {
-      border-right: 0.5px solid #c6c6c8;
-      padding-right: 30px;
-      width: 50%;
+      width: 100%;
+
+      &-name {
+        font-weight: 900;
+        margin-right: 8px;
+      }
     }
   }
 `;

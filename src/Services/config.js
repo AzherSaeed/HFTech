@@ -3,6 +3,7 @@ export const GET_CONTACT = "contact/get";
 export const GET_CLIENT = "client/get";
 export const CLIENT_UPDATE = "client/update";
 export const CLIENT_CREATE = "client/save";
+export const CLIENT_DELETE = 'client/delate'
 export const SAVE_CONTACT = "contact/save";
 export const CONTACT_GET_BY_ID = "contact/getById";
 export const CONTACT_UPDATE = "contact/update";

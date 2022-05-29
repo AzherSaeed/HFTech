@@ -1,8 +1,12 @@
 import React from "react";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import Style from "./Style";
-import { Tabs } from "antd";
-import { CLIENT_CREATE , CLIENT_UPDATE , API_URL } from "../../../Services/config";
+import { Tabs, Checkbox } from "antd";
+import {
+  CLIENT_CREATE,
+  CLIENT_UPDATE,
+  API_URL,
+} from "../../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,20 +16,15 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { Form } from "antd";
 
-
-
-
-
 const { TabPane } = Tabs;
-
-
-
-
 
 const initialValues = {
   name: "",
   phone: "",
   email: "",
+  spaceIds : [],
+  contactIds : [],
+  channel:"IOS"
 };
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -34,14 +33,13 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .required("Email is required!")
     .matches(/^(\S+$)/g, "email cannot contain blankspaces"),
-    phone: Yup.number()
+  phone: Yup.number()
     .required("please enter number!")
     .min(11, "Minimum six degits are required"),
 });
 
-
-
 const Index = () => {
+  const navigate = useNavigate();
   const { clientId } = useParams();
 
   const regex = /^\d*(\.\d+)?$/;
@@ -55,35 +53,49 @@ const Index = () => {
   } = useQuery(
     "get-Client-By-Id",
     () => {
-      return axios.get(
-        API_URL + `client/getById?clientId=${clientId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
+      return axios.get( API_URL + `client/getById?clientId=${clientId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
     },
     {
       enabled: regex.test(clientId),
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
+    }
+  );
+  const {
+    data: locationData,
+  } = useQuery(
+    "get-location-By-Id",
+    () => {
+      return axios.get( API_URL + "space/get", {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    },
+    {
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
     }
   );
 
 
 
-
-  const navigate = useNavigate();
   const onSuccess = (data) => {
-    console.log(data, "from the submission of update");
+    alert(data.data.message)
+    navigate('/client')
   };
   const mutation = useMutation(
     (contactDetail) => {
-      return clientId !== "createContact"
-        ? axios.put(API_URL + CLIENT_UPDATE , contactDetail, {
+      return clientId !== "createClient"
+        ? axios.put(API_URL + CLIENT_UPDATE, contactDetail, {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
@@ -105,41 +117,41 @@ const Index = () => {
     }
   );
 
-
   const onSubmit = (data1) => {
-    console.log(data1, "data submitted after changes");
-
-
     mutation.mutate(data1);
   };
 
-  if(!userData?.data?.result ){
-    return <h1>loading</h1>
+  if (isFetching) {
+    return <h1>loading</h1>;
   }
 
 
   return (
     <Sidebar>
       <Style>
-        <div className="main-container">
-          <div className="leftSide">
-            <Formik
-              initialValues={userData.data.result ? userData.data.result :initialValues}
-              // validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            >
-              {(formik) => {
-                return (
-                  <Form
-                    style={{
-                      height: "100%",
-                    }}
-                    name="basic"
-                    onFinish={formik.handleSubmit}
-                    // onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                    validateMessages={validationSchema}
-                  >
+        <Formik
+          initialValues={
+            userData?.data?.result
+              ? userData?.data?.result
+              : initialValues
+          }
+          // validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {(formik) => {
+            return (
+              <Form
+                style={{
+                  height: "100%",
+                }}
+                name="basic"
+                onFinish={formik.handleSubmit}
+                // onFinishFailed={onFinishFailed}
+                autoComplete="off"
+                validateMessages={validationSchema}
+              >
+                <div className="main-container">
+                  <div className="leftSide">
                     <div
                       className="login-input-fields "
                       style={{
@@ -184,8 +196,7 @@ const Index = () => {
                             : "customInput"
                         }
                       />
-              
-          
+
                       <div style={{ marginTop: "auto" }}>
                         <CustomButton
                           bgcolor="#156985"
@@ -198,48 +209,66 @@ const Index = () => {
                         />
                       </div>
                     </div>
-                  </Form>
-                );
-              }}
-            </Formik>
-          </div>
-          <div className="rightSide">
-            <Tabs defaultActiveKey="1" size="large">
-              <TabPane tab="Locations" key="1">
-                {Array(13)
-                  .fill("")
-                  .map((_ , i) => (
-                    <div key={i} className="details">
-                      <div className="details-list">
-                        <span style={{ fontWeight: "bold" }}>Name:</span>_
-                        Improve Canada Mall
-                      </div>
-                      <div>
-                        <span style={{ fontWeight: "bold" }}>Owner:</span>_
-                        Jamen Tabesh
-                      </div>
-                    </div>
-                  ))}
-              </TabPane>
-              <TabPane tab="Contacts" key="2">
-                {Array(13)
-                  .fill("")
-                  .map((_ , i) => (
-                    <div key={i} className="details">
-                      <div className="details-list">
-                        <span style={{ fontWeight: "bold" }}>Name:</span>_Adnan
-                        Qureshi
-                      </div>
-                      <div>
-                        <span style={{ fontWeight: "bold" }}>Owner:</span>_
-                        Jamen Tabeshm,zxbcj,zxbhcjvzxhjcv
-                      </div>
-                    </div>
-                  ))}
-              </TabPane>
-            </Tabs>
-          </div>
-        </div>
+                  </div>
+                  <div className="rightSide">
+                    <Tabs defaultActiveKey="1" size="large">
+                      <TabPane tab="Locations" key="1">
+                        <Checkbox.Group  defaultValue={[3]}  onChange={(value) =>  formik.setFieldValue('spaceIds' , value )} >
+                          {locationData && locationData?.data.result?.map((data, i) => (
+                            <div key={i} className="details">
+                              <Checkbox value={{ id: data.id }} name='spaceIds'  >
+                                <div className="details-checkbox">
+                                  <div className="details-list">
+                                    <span className="details-list-name">
+                                      Name:
+                                    </span>
+                                    {data.countryName}
+                                  </div>
+                                  <div className="details-list">
+                                    <span className="details-list-name">
+                                      Owner:
+                                    </span>
+                                    {data.name}
+                                  </div>
+                                </div>
+                              </Checkbox>
+                            </div>
+                          ))}
+                        </Checkbox.Group>
+                      </TabPane>
+                      <TabPane tab="Contacts" key="2">
+                        <Checkbox.Group
+                        onChange={(value) =>  formik.setFieldValue('contactIds' , value )}
+                        >
+                          {locationData && locationData?.data.result?.map((data, i) => (
+                            <div key={i} className="details">
+                              <Checkbox value={{ id: data.id }} name='contactIds' >
+                                <div className="details-checkbox">
+                                  <div className="details-list">
+                                    <span className="details-list-name">
+                                      Name:
+                                    </span>
+                                    {data.dtoUser.userName}
+                                  </div>
+                                  <div className="details-list">
+                                    <span className="details-list-name">
+                                      Owner:
+                                    </span>
+                                    {data.dtoUser.email}
+                                  </div>
+                                </div>
+                              </Checkbox>
+                            </div>
+                          ))}
+                        </Checkbox.Group>
+                      </TabPane>
+                    </Tabs>
+                  </div>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
       </Style>
     </Sidebar>
   );
