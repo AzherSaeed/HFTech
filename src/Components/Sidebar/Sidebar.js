@@ -54,9 +54,16 @@ const Sidebar = ({ children }) => {
               Contact{" "}
             </Menu.Item>{" "}
             <Menu.Item key="/client">
+              <Link to="/lineItem" />
+              Labour LineItems{" "}
+            </Menu.Item>
+            <Menu.Item key="/client">
+              <Link to="/materialItem" />
+              Materials LineItems{" "}
+            </Menu.Item>
+            <Menu.Item key="/client">
               <Link to="/client" />
-              Client{" "}
-            </Menu.Item>{" "}
+            </Menu.Item>
           </Menu>{" "}
           {/* <div className="lgOutButton">
                                               <CustomButton

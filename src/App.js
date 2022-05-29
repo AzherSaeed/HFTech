@@ -17,11 +17,12 @@ import ResetPassword from "./Layout/AuthScreens/ResetPassword/Index";
 import USerContact from "./Layout/Contacts/UserContact/Index";
 import CreateNew from "./Layout/Estimates/CreateNew/CreateNew";
 import AddItem from "./Layout/Estimates/CreateNew/AddItems/Index";
+import MeterialItem from './Layout/MaterialItem/index'
+import LineItem from './Layout/LineItem'
 import Home from "./Layout/Home/Index";
 import Delete from "./Components/Delete/Index";
 import MobileSiderBar from "./Components/Drawer/Drawer";
-// import Cakes from "./Components/Cakes/Cakes";
-// import Icecream from "./Components/Icecream/Icecream";
+
 import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
 // this is the devTool the react query provides
@@ -56,7 +57,8 @@ function App() {
           <Route path="/locations/:locationsId" element={<UserLocation />} />
           <Route path="/contact" element={<Contacts />} />
           <Route path="/contact/:contactId" element={<USerContact />} />
-          <Route path="/createContact" element={<USerContact />} />
+          <Route path="/lineItem" element={<LineItem />} />
+          <Route path="/materialItem" element={<MeterialItem />} />
           <Route path="/client" element={<Clients />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
         </Routes>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Tag, Space, Modal } from "antd";
@@ -11,49 +11,26 @@ import downloadIcon from "../../Assets/icons/ic_download.svg";
 import tickIcon from "../../Assets/icons/ic_tick.svg";
 import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL, GET_CONTACT, CONTACT_DELETE } from "../../Services/config";
-import { useMutation, useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
-const columns = [
-  {
-    title: "Id",
-    dataIndex: "id",
-    key: "id"
-  },
-  {
-    title: "Contact",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Channel",
-    dataIndex: "channel",
-    key: "channel",
-  },
-  {
-    title: "Country Code",
-    key: "countryCode",
-    dataIndex: "countryCode",
-  },
-  {
-    title: "Phone",
-    key: "phone",
-    dataIndex: "phone",
-  },
-  {
-    title: "Action",
-    key: "action",
-    dataIndex: "action",
-  },
-];
+import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
+
+
+
 
 const Index = () => {
+  let [detail, setDetail] = useState([]);
+  const onSuccess = (data) => {
+    // console.log(data, "data from api");
+    // setDetail([...data?.data?.data]);
+  };
+  useEffect(() => {
+    // console.log(detail, "useState console");
+  }, [detail]);
+  const onError = (err) => {
+    console.log(err, "error while fetching data from api");
+  };
   const [isModalVisible, setIsModalVisible] = useState(false);
   // const [deleteStatus, setDeleteStatus] = useState({
   //   id: null,
@@ -69,11 +46,22 @@ const Index = () => {
     setIsModalVisible(false);
   };
 
+  const navigate = useNavigate();
+  // const createNew = () => {
+  //   navigate("/locations/create");
+  // };
+  const handleDelete = (id, email, name) => {
+    // alert("handle delte hit");
+    setDeleteUserDetail({ name: name, id: id });
+    setIsModalVisible(true);
+
+    // setDeleteStatus({ ...deleteStatus, id: id });
+  };
   const mutation = useMutation(
     (id) => {
       return axios.delete(
-        API_URL + CONTACT_DELETE,
-        { params: { contactId: id } },
+        API_URL + DELETE_SPACE,
+        { params: { spaceId: id } },
         {
           headers: {
             "Content-Type": "application/json",
@@ -93,54 +81,90 @@ const Index = () => {
       refetchOnWindowFocus: false,
     }
   );
-
-  const navigate = useNavigate();
-
-  const handleDelete = (id, email, name) => {
-    // alert("handle delte hit");
-    setDeleteUserDetail({ name: name, email: email, id: id });
-    setIsModalVisible(true);
-
-    // setDeleteStatus({ ...deleteStatus, id: id });
+  const handleIndividualDelete = () => {
+    mutation.mutate(deleteUserDetail.id);
   };
 
-  const handleEdit = (id) => {
-    navigate(`/contact/${id}`);
+  const handleEdit = (countryId, id) => {
+    // alert("edit hit");
+    // let data = { countryId, id };
+    navigate(`/locations/${id}`);
     // alert("handle edit hit");
   };
 
-  const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
-    "get-contact",
+  const { isLoading, isError, refetch, data, error } = useQuery(
+    "dataFetching",
     () => {
-      return axios.get(API_URL + GET_CONTACT, {
+      return axios.get(API_URL + GET_SPACE_DETAIL, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
       });
     },
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      refetchInterval: false,
-      refetchOnWindowFocus: true,
-      // enabled: true,
-    }
+    { refetchOnWindowFocus: "always", onSuccess, onError }
   );
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+      render: (text, record) => (
+        <Link to={`/contact/${record.key}`}> {text} </Link>
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "City",
+      dataIndex: "cityName",
+      key: "cityName",
+    },
+    {
+      title: "Channel",
+      dataIndex: "channel",
+      key: "channel",
+    },
+    {
+      title: "Address",
+      key: "address",
+      dataIndex: "address",
+    },
+    {
+      title: "State Id",
+      key: "stateId",
+      dataIndex: "stateId",
+    },
+    {
+      title: "City Id",
+      key: "cityId",
+      dataIndex: "cityId",
+    },
+    {
+      title: "Country",
+      key: "countryName",
+      dataIndex: "countryName",
+    },
+    {
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
+    },
+  ];
 
-  const handleIndividualDelete = () => {
-    mutation.mutate(deleteUserDetail.id);
-  };
-
-  const contactData = data?.data?.result?.map((contact) => {
+  const contactData = data?.data?.result?.map((space) => {
     return {
-      id: <Link to={`/contact/edit`} >{contact.id}</Link>,
-      name: contact.name,
-      email: contact.email,
-      channel: contact.channel,
-      countryCode: contact.countryCode,
-      phone: contact.phone,
+      id: space.id,
+      name: space.name,
+      cityName: space.cityName,
+      channel: space.channel,
+      address: space.address,
+      stateId: space.stateId,
+      cityId: space.cityId,
+      countryName: space.countryName,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -149,7 +173,7 @@ const Index = () => {
             alt="delete Icon"
             className="action_icons deleteicon"
             onClick={() => {
-              handleDelete(contact.id, contact.email, contact.name);
+              handleDelete(space.id, space.email, space.name);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -159,7 +183,7 @@ const Index = () => {
             alt="edit Icon"
             className="action_icons editicon"
             onClick={() => {
-              handleEdit(contact.id);
+              handleEdit(space.countryId, space.id);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -167,7 +191,6 @@ const Index = () => {
       ),
     };
   });
-
   return (
     <Sidebar>
       <StyleEstimates>
@@ -176,14 +199,15 @@ const Index = () => {
             bgcolor={BasicColor}
             color="white"
             padding="11px 8px"
-            type="submit"
+            type="button"
             width="130px"
             title="Create new"
             clicked={() => {
-              navigate("/contact/createContact");
+              navigate("/locations/createNew");
             }}
           />
         </div>
+
         <Table pagination={false} columns={columns} dataSource={contactData} />
         <Modal
           visible={isModalVisible}
@@ -195,7 +219,7 @@ const Index = () => {
             handleCancel={handleCancel}
             userDetail={deleteUserDetail}
             deleteUser={handleIndividualDelete}
-            toLocation="/contact"
+            toLocation="/locations"
           />
         </Modal>
       </StyleEstimates>

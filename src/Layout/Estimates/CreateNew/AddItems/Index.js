@@ -16,7 +16,7 @@ const Index = () => {
   const [tab, setTab] = useState(1);
 
 
-  const { data : {data : lineData}, isLoading, isSuccess, error, isError , refetch } = useQuery(
+  const { data  , isLoading, isSuccess, error, isError , refetch } = useQuery(
     "getLineItem",
     () => {
       return axios.get(API_URL + LINE_ITEMS_GET, {
@@ -35,11 +35,6 @@ const Index = () => {
     }
   );
 
-
-  console.log(lineData , 'data');
-
-
-
   function callback(key) {
     setTab(key);
   }
@@ -52,14 +47,12 @@ const Index = () => {
               <div className="first-table">
                 <Tabs defaultActiveKey="1" onChange={callback}>
                   <TabPane tab="Labor Lineitems" key="1">
-                    {Array(10)
-                      .fill("")
-                      .map((_, index) => (
+                    {data?.data?.result?.map((item, index) => (
                         <div className="addItem">
                           {/* <Link to='/estimates/createNew/addItem'> */}
 
                           <div className="addItem-div">
-                            <div>Project Manager</div>
+                            <div>{item.name}</div>
                             <div>&gt;</div>
                           </div>
 

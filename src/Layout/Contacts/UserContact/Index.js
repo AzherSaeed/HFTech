@@ -35,7 +35,6 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { contactId } = useParams();
-
   const regex = /^\d*(\.\d+)?$/;
   const {
     data: userData,
