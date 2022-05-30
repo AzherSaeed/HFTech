@@ -4,16 +4,14 @@ import * as Yup from "yup";
 import { Form } from "antd";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import ic_flag from "../../../Assets/ic_flag.svg";
-import GenericService from "../../../Services/GenericService";
 import { API_URL } from "../../../Services/config";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import axios from "axios";
 
 const initialValues = {
@@ -21,23 +19,22 @@ const initialValues = {
   phoneNumber: "",
   email: "",
   password: "",
-  channel: "",
-  roleId: '',
+  channel: "IOS",
+  roleId: "2",
 };
 const validationSchema = Yup.object({
-  username: Yup.string()
-    .required("Name is required!")
-    .min(5, "Minimun six character is required"),
+  userName: Yup.string().required("username is required!"),
   email: Yup.string()
+    .email("Email should be valid")
     .required("Email is required!")
     .matches(/^(\S+$)/g, "email cannot contain blankspaces"),
-  password: Yup.string()
-    .required("Invalid credentials. Please try again!")
-    .min(6, "Minimum six character is required"),
+  password: Yup.string().required("Password is required"),
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .min(10, "Minimum ten character is required"),
 });
 const Index = () => {
   const onSuccess = (response) => {
-    console.log(" response from the sigin up api", response);
     if (response.data?.code !== 201) {
       toast.error(response.data.message, {
         position: toast.POSITION.TOP_CENTER,
@@ -46,7 +43,7 @@ const Index = () => {
       toast.success(response.data.message, {
         position: toast.POSITION.TOP_CENTER,
       });
-      navigate("/estimate");
+      navigate("/login");
     }
   };
   const mutation = useMutation(
@@ -67,7 +64,7 @@ const Index = () => {
 
       onError: (err, variables, snapshotValue) => {
         console.log(err);
-        toast.error(`${err} this is error`, {
+        toast.error('Please provide valid detail', {
           position: toast.POSITION.TOP_CENTER,
         });
       },
@@ -89,7 +86,7 @@ const Index = () => {
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
-            // validationSchema={validationSchema}
+            validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             {(formik) => {
@@ -110,7 +107,7 @@ const Index = () => {
                         name="userName"
                         placeholder="User Name"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.userName && formik.touched.userName
                             ? "is-invalid"
                             : "customInput"
                         }
@@ -121,23 +118,9 @@ const Index = () => {
                         name="email"
                         placeholder="Email address"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.email && formik.touched.email
                             ? "is-invalid"
                             : "customInput"
-                        }
-                      />
-                    </div>
-                    <div className="login-input-fields-field">
-                      <FormControl
-                        prefix={<img src={ic_flag} alt="ic_flag" />}
-                        control="input"
-                        type="text"
-                        name="phoneNumber"
-                        placeholder="(617)397 - 8483"
-                        className={
-                          formik.errors.username && formik.touched.username
-                            ? "is-invalid"
-                            : "customPasswordInput"
                         }
                       />
                     </div>
@@ -148,42 +131,34 @@ const Index = () => {
                         name="password"
                         placeholder="Password"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.password && formik.touched.password
+                            ? "is-invalid"
+                            : "customPasswordInput"
+                        }
+                      />
+                    </div>
+                    <div className="login-input-fields-field">
+                      <FormControl
+                        prefix={<img src={ic_flag} alt="ic_flag" />}
+                        control="input"
+                        type="text"
+                        name="phoneNumber"
+                        placeholder="(617)397 - 8483"
+                        maxLength="10"
+                        className={
+                          formik.errors.phoneNumber &&
+                          formik.touched.phoneNumber
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
                       />
                     </div>
 
-                    <FormControl
-                      control="input"
-                      type="text"
-                      name="channel"
-                      placeholder="Channels"
-                      className={
-                        formik.errors.username && formik.touched.username
-                          ? "is-invalid"
-                          : "customInput"
-                      }
-                    />
-
-                    <FormControl
-                      control="input"
-                      type="number"
-                      name="roleId"
-                      placeholder="Role Id"
-                      className={
-                        formik.errors.username && formik.touched.username
-                          ? "is-invalid"
-                          : "customInput"
-                      }
-                    />
-
                     <p to="/" className="forget_password">
                       Agreed with Terms & Conditions Privacy Policy
                     </p>
                     <CustomButton
-                      bgcolor="#156985"
+                      bgcolor={BasicColor}
                       color="white"
                       padding="11px 8px"
                       width="100%"
@@ -201,13 +176,11 @@ const Index = () => {
       <div className="login-container-bottom">
         <p> Already have Account ? </p>
         <h6>
-          & nbsp;
-          <Link to="/" style={{ color: "#156985" }}>
+          <Link to="/login" style={{ color: {BasicColor} }}>
             Login
           </Link>
         </h6>
       </div>
-      {/* <ToastContainer /> */}
     </LoginContainer>
   );
 };

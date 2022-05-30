@@ -21,7 +21,7 @@ const Index = () => {
       <hr className="line"/>
       <div className="login-container-bottom">
         <p>Don't have an account? </p>
-        <h6><Link to='/login' style={{color:'#156985'}}> Sign Up</Link></h6>
+        <h6><Link to='/login' style={{color:'#156985'}}> Log in</Link></h6>
       </div>
     </LoginContainer>
   );

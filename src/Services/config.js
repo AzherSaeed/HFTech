@@ -17,4 +17,6 @@ export const GET_COUNTRY = "country/get";
 export const UPDATE_SPACE = "space/updateSpace";
 export const DELETE_SPACE = "space/delateSpace";
 export const CREATE_SPACE = "space/addSpace";
-export const CREATE_LINEITEM = 'lineItem/save'
+export const CREATE_LINEITEM = 'lineItem/save';
+export const FORGOT_PASSWORD = 'user/forgotPassword';
+export const RESET_PASSWORD = 'user/restPassword';

@@ -9,6 +9,7 @@ import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import {toast} from 'react-toastify'
 
 import { loginActionCalled } from "../../../store/action";
 
@@ -18,11 +19,10 @@ let initialValues = {
 };
 const validationSchema = Yup.object({
   password: Yup.string()
-    .required("Username is required!")
+    .required("Password is required!")
     .matches(/^(\S+$)/g, "Username cannot contain blankspaces"),
-  email: Yup.string()
-    .required("Invalid credentials. Please try again!")
-    .min(6, "Minimum six character is required"),
+  email: Yup.string().email('Email should be valid')
+    .required("Email is required")
 });
 const Index = () => {
   const dispatch = useDispatch();
@@ -32,11 +32,16 @@ const Index = () => {
   const { user } = useSelector((state) => state.authReducer);
 
   useEffect(() => {
-    if(user){
-      navigate('/estimates')
+    console.log(user);
+    if (user?.code == 500) {
+      toast('login Credential Invalid' , 'error' , 'top-right')
     }
-  },[user])
-  
+    else if(user?.code == 200){
+      navigate("/estimates");
+
+    }
+  }, [user]);
+
   const onSubmit = (value) => {
     dispatch(loginActionCalled(value));
   };
@@ -51,7 +56,7 @@ const Index = () => {
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
-            // validationSchema={validationSchema}
+            validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             {(formik) => {

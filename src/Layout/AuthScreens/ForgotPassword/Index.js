@@ -4,49 +4,73 @@ import * as Yup from "yup";
 import { Form } from "antd";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { AuthScreenContainer } from "../style";
 import { LoginContainer } from "./Style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
-import GenericService from "../../../Services/GenericService";
-import { API_URL } from "../../../Services/config";
+import { API_URL , FORGOT_PASSWORD } from "../../../Services/config";
 import { toast } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
+import axios from "axios";
+
+
+
 
 const initialValues = {
-  username: "",
-  password: "",
+  email: "",
+  channel: "IOS",
+  roleId: "2",
 };
 const validationSchema = Yup.object({
-  username: Yup.string()
-    .required("Username is required!")
-    .matches(/^(\S+$)/g, "Username cannot contain blankspaces"),
-  password: Yup.string()
-    .required("Invalid credentials. Please try again!")
-    .min(6, "Minimum six character is required"),
+  email: Yup.string()
+    .email("Email should be valid")
+    .required("Email is required!"),
 });
 const Index = () => {
-  const genericService = new GenericService();
   const navigate = useNavigate();
-  const onSubmit = (value) => {
-    //console.log(value, "value");
-    navigate("/resetPassword");
-    genericService
-      .post(`${API_URL}auth/signin`, value)
-      .then((msg) => {
-        if (msg.resultCode == 200) {
-          toast(msg.message, "top-right");
-        } else {
-          toast(msg.message, "top-right");
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-        if (error.response.status == 401) {
-          toast("login credentials is invalid", "top-right");
-        }
+
+
+
+  const onSuccess = (response) => {
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_CENTER,
       });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      navigate("/resetPassword");
+    }
+  };
+
+
+
+  const mutation = useMutation(
+    (forgotData) => {
+      return axios.post(API_URL+FORGOT_PASSWORD,
+        forgotData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess,
+
+      onError: (err, variables, snapshotValue) => {
+        console.log(err);
+        toast.error('Please provide valid detail', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      },
+    }
+  );
+  const onSubmit = (value) => {
+    mutation.mutate(value);
   };
 
   return (
@@ -59,7 +83,7 @@ const Index = () => {
         <div className="login-container-card-form">
           <Formik
             initialValues={initialValues}
-            // validationSchema={validationSchema}
+            validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             {(formik) => {
@@ -79,10 +103,10 @@ const Index = () => {
                       <FormControl
                         control="input"
                         type="text"
-                        name="username"
+                        name="email"
                         placeholder="Email Address"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.email && formik.touched.email
                             ? "is-invalid"
                             : "customInput"
                         }

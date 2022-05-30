@@ -28,6 +28,6 @@ export const loginActionCalled = (data) => (dispatch) => {
 
   generaticService
     .post('https://node01.dagnum.com:8443/hftech/login/generate-token', data)
-    .then((response) => dispatch(loginLoaderSuccess(response.result)))
-    .catch((error) => dispatch(loginLoaderFailure(error.message)));
+    .then((response) => dispatch(loginLoaderSuccess(response)))
+    .catch((error) => dispatch(loginLoaderFailure(error)));
 };
