@@ -3,6 +3,7 @@ import Input from "./CustomInput/Index";
 import Select from "./CustomSelect/Index";
 import Datepicker from './CustomDatePicker/Index';
 import Textarea from './CustomTextArea/Index';
+import InputNumber from './CustomInputNumber'
 // import Checkbox from "./Checkbox";
 import PasswordInput from './CustomPasswordInput/Index'
 const Formickcontroller = (props) => {
@@ -19,7 +20,8 @@ const Formickcontroller = (props) => {
       return <PasswordInput {...rest} />;
     case "textarea":
       return <Textarea {...rest} />;
-
+    case 'inputNumber':
+      return <InputNumber  {...rest} />
     // case "radio":
     //   return <Radio {...rest} />;
     case "date":

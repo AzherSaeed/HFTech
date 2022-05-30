@@ -20,7 +20,7 @@ const Index = (props) => {
               <div >
                 <DatePicker
                   className="customdatepicker"
-                  suffixIcon={<img src={dateIcon}/>}
+                  suffixIcon={<img src={dateIcon} alt='dateIcon'/>}
                   name={name}
                   id={name}
                   {...rest}

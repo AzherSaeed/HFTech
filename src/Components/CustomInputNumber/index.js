@@ -1,25 +1,37 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 import ErrorMsg from "../ErrorMessage";
-import { Input } from "antd";
+import { InputNumber } from "antd";
 import { CustomInputContainer } from "./style";
 const InputField = (props) => {
-  const { label, prefix,maxLength, disabled , placeholder, className, name, ...rest } = props;
+  const {
+    label,
+    prefix,
+    maxLength,
+    disabled,
+    placeholder,
+    className,
+    name,
+    ...rest
+  } = props;
   return (
     <CustomInputContainer>
       <label htmlFor={name}>{label}</label>
       <Field name={name} id={name}>
         {({ field }) => (
-          <Input
-            disabled={disabled}
-            prefix={prefix}
-            className={className}
-            type="text"
-            maxLength={maxLength}
+          <InputNumber
+            addonBefore="$"
+            addonAfter="Rate"
             {...rest}
-            placeholder={placeholder}
             {...field}
+            type="text"
+            placeholder={placeholder}
+            defaultValue={100}
+            disabled={disabled}
+            className={className}
+            maxLength={maxLength}
           />
+
         )}
       </Field>
       <ErrorMessage name={name} component={ErrorMsg} />

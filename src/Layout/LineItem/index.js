@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {LineItemContainer} from "./styled";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Tag, Space, Modal } from "antd";
+import { Table, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import pdfIcon from "../../Assets/icons/ic_pdf.svg";
-import downloadIcon from "../../Assets/icons/ic_download.svg";
-import tickIcon from "../../Assets/icons/ic_tick.svg";
-import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
-import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
+import { API_URL, LINE_ITEMS_GET, DELETE_SPACE } from "../../Services/config";
 
 
 
@@ -93,9 +89,9 @@ const Index = () => {
   };
 
   const { isLoading, isError, refetch, data, error } = useQuery(
-    "dataFetching",
+    "lineItemGet",
     () => {
-      return axios.get(API_URL + GET_SPACE_DETAIL, {
+      return axios.get(API_URL + LINE_ITEMS_GET, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -203,7 +199,7 @@ const Index = () => {
             width="130px"
             title="Create new"
             clicked={() => {
-              navigate("/locations/createNew");
+              navigate("/createLineItem");
             }}
           />
         </div>

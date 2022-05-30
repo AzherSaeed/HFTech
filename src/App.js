@@ -17,8 +17,8 @@ import ResetPassword from "./Layout/AuthScreens/ResetPassword/Index";
 import USerContact from "./Layout/Contacts/UserContact/Index";
 import CreateNew from "./Layout/Estimates/CreateNew/CreateNew";
 import AddItem from "./Layout/Estimates/CreateNew/AddItems/Index";
-import MeterialItem from './Layout/MaterialItem/index'
 import LineItem from './Layout/LineItem'
+import CreateLineItem from './Layout/LineItem/CreateLineItem/index.js'
 import Home from "./Layout/Home/Index";
 import Delete from "./Components/Delete/Index";
 import MobileSiderBar from "./Components/Drawer/Drawer";
@@ -58,7 +58,7 @@ function App() {
           <Route path="/contact" element={<Contacts />} />
           <Route path="/contact/:contactId" element={<USerContact />} />
           <Route path="/lineItem" element={<LineItem />} />
-          <Route path="/materialItem" element={<MeterialItem />} />
+          <Route path="/createLineItem" element={<CreateLineItem />} />
           <Route path="/client" element={<Clients />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
         </Routes>

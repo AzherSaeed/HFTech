@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu  } from "antd";
 import {
   UploadOutlined,
   UserOutlined,
@@ -54,15 +54,12 @@ const Sidebar = ({ children }) => {
               Contact{" "}
             </Menu.Item>{" "}
             <Menu.Item key="/client">
-              <Link to="/lineItem" />
-              Labour LineItems{" "}
-            </Menu.Item>
-            <Menu.Item key="/client">
-              <Link to="/materialItem" />
-              Materials LineItems{" "}
-            </Menu.Item>
-            <Menu.Item key="/client">
               <Link to="/client" />
+              Client{" "}
+            </Menu.Item>
+            <Menu.Item key="/lineItem">
+              <Link to="/lineItem" />
+              LineItems{" "}
             </Menu.Item>
           </Menu>{" "}
           {/* <div className="lgOutButton">

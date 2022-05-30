@@ -346,37 +346,6 @@ const Index = () => {
                 );
               }}
             </Formik>
-
-            {/* <div className="data">
-              <p className="title">Improve Canada Mall</p>
-              <p className="identity">Location Name</p>
-            </div>
-            <div className="data">
-              <p className="title">United State</p>
-              <p className="identity">Country</p>
-            </div>
-            <div className="data">
-              <p className="title">Toronto</p>
-              <p className="identity">State</p>
-            </div>
-            <div className="data">
-              <p className="title">Concord</p>
-              <p className="identity">City</p>
-            </div>
-            <div className="data">
-              <p className="title">
-                7250 keele st, concord, on l4k 1z8, canada
-              </p>
-              <p className="identity">Address</p>
-            </div>
-            <div className="data">
-              <p className="title">Jamen Tabesh</p>
-              <p className="identity">Location Owner</p>
-            </div>
-            <div className="data">
-              <p className="title">4/20/2022 12:00 PM</p>
-              <p className="identity">Created</p>
-            </div> */}
           </div>
           <div className="rightSide">
             <iframe
