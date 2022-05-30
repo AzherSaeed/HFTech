@@ -110,58 +110,34 @@ const Index = () => {
       ),
     },
     {
-      title: "Name",
+      title: "Line item Name",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "City",
-      dataIndex: "cityName",
-      key: "cityName",
+      title: "Line item Type",
+      dataIndex: "type",
+      key: "type",
     },
     {
-      title: "Channel",
-      dataIndex: "channel",
-      key: "channel",
+      title: "Created",
+      dataIndex: "created",
+      key: "created",
     },
     {
-      title: "Address",
-      key: "address",
-      dataIndex: "address",
-    },
-    {
-      title: "State Id",
-      key: "stateId",
-      dataIndex: "stateId",
-    },
-    {
-      title: "City Id",
-      key: "cityId",
-      dataIndex: "cityId",
-    },
-    {
-      title: "Country",
-      key: "countryName",
-      dataIndex: "countryName",
-    },
-    {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
-    },
+      title: "Owner",
+      key: "owner",
+      dataIndex: "owner",
+    }
   ];
 
   const contactData = data?.data?.result?.map((space) => {
     return {
       id: space.id,
       name: space.name,
-      cityName: space.cityName,
-      channel: space.channel,
-      address: space.address,
-      stateId: space.stateId,
-      cityId: space.cityId,
-      countryName: space.countryName,
-
+      type: space.lineItemType,
+      created: space.insertedDate,
+      owner: space.dtoUser.userName,
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
           <img

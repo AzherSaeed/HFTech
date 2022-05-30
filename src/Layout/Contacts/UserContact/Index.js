@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import { Form } from "antd";
+import { Form, Modal, Spin } from "antd";
 import Style from "./Style";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
+import ic_logo from "../../..//Assets/icons/ic_logo.svg";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import {
   API_URL,
@@ -15,11 +17,15 @@ import { SAVE_CONTACT } from "../../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../../Components/Loader/Loader";
+import { BasicColor } from "../../../Components/GlobalStyle";
 
 const initialValues = {
   name: "",
   phone: "",
   email: "",
+  channel: "IOS",
+  countryCode: "+1",
 };
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -35,7 +41,13 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { contactId } = useParams();
+
+
+
+  const [isModalVisibled, setIsModalVisibled] = useState(false);
   const regex = /^\d*(\.\d+)?$/;
+
+
   const {
     data: userData,
     isSuccess,
@@ -66,10 +78,20 @@ const Index = () => {
   );
 
   const navigate = useNavigate();
-  const onSuccess = (data) => {
-    console.log(data, "from the submission of update");
-    navigate("/contact");
+
+  const onSuccess = (response) => {
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      navigate("/contact");
+    }
   };
+
   const mutation = useMutation(
     (contactDetail) => {
       return contactId !== "createContact"
@@ -90,23 +112,47 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err, "error in submitting values");
+        toast.error('Please provide valid detail', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       },
     }
   );
 
+  const handleModalSubmit = () => {
+    setIsModalVisibled(true);
+    setTimeout(() => {
+      setIsModalVisibled(false);
+      navigate("/contact");
+    }, 2000);
+  };
+  const handleModalCancel = () => {
+    setIsModalVisibled(false);
+    navigate("/contact");
+  };
   const onSubmit = (data1) => {
-    console.log(data1, "data submitted after changes");
-
     mutation.mutate(data1);
   };
 
   if (isFetching) {
-    return <h1>loading...</h1>;
+    return <Loader />;
   }
 
   return (
     <Sidebar>
+      <Modal
+        visible={isModalVisibled}
+        footer={null}
+        onCancel={handleModalCancel}
+        centered={true}
+      >
+        <div className="login-container-card text-center">
+          <div className="login-container-card-logo">
+            <img src={ic_logo} alt="ic_logo" className="logo" />
+          </div>
+          <p className="question-text mt-3 fs-5">Contact Update Successfully</p>
+        </div>
+      </Modal>
       <Style>
         <div className="main-container">
           <div className="leftSide">
@@ -142,7 +188,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="name"
-                        placeholder="User Name"
+                        placeholder="Enter location name"
                         disabled={contactId == "edit"}
                         className={
                           formik.errors.name && formik.touched.name
@@ -155,6 +201,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="phone"
+                        maxLength='10'
                         disabled={contactId == "edit"}
                         placeholder="(617)397 - 8483"
                         className={
@@ -169,54 +216,22 @@ const Index = () => {
                         type="email"
                         name="email"
                         disabled={contactId == "edit"}
-                        placeholder="Email address"
+                        placeholder="Enter email address"
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
                             : "customInput"
                         }
                       />
-                      <div>
-                        <label htmlFor="channel">Channel</label>
-                        <FormControl
-                          control="input"
-                          type="text"
-                          name="channel"
-                          disabled={contactId == "edit"}
-                          placeholder="channel"
-                          className={
-                            formik.errors.name && formik.touched.name
-                              ? "is-invalid"
-                              : "customInput"
-                          }
-                        />
-                      </div>
-                      {/* )} */}
-                      <div>
-                        <label htmlFor="countryCode">CountryCode</label>
-                        <FormControl
-                          control="input"
-                          type="text"
-                          name="countryCode"
-                          placeholder="Country Code"
-                          disabled={contactId == "edit"}
-                          className={
-                            formik.errors.name && formik.touched.name
-                              ? "is-invalid"
-                              : "customInput"
-                          }
-                        />
-                      </div>
-                      {}
                       <div style={{ marginTop: "auto" }}>
                         {contactId == "edit" ? null : (
                           <CustomButton
-                            bgcolor="#156985"
+                            bgcolor={BasicColor}
                             color="white"
-                            padding="11px 8px"
+                            padding="5px 8px"
                             width="100%"
                             type="submit"
-                            title="SUBMIT"
+                            title="Save Contact"
                             margin="auto"
                           />
                         )}

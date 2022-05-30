@@ -110,19 +110,9 @@ const Index = () => {
       ),
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "City",
+      title: "Location Name",
       dataIndex: "cityName",
       key: "cityName",
-    },
-    {
-      title: "Channel",
-      dataIndex: "channel",
-      key: "channel",
     },
     {
       title: "Address",
@@ -130,37 +120,59 @@ const Index = () => {
       dataIndex: "address",
     },
     {
-      title: "State Id",
-      key: "stateId",
-      dataIndex: "stateId",
+      title: "Created",
+      key: "created",
+      dataIndex: "created",
     },
     {
-      title: "City Id",
-      key: "cityId",
-      dataIndex: "cityId",
+      title: "Owner",
+      key: "owner",
+      dataIndex: "owner",
     },
-    {
-      title: "Country",
-      key: "countryName",
-      dataIndex: "countryName",
-    },
+    // {
+    //   title: "Name",
+    //   dataIndex: "name",
+    //   key: "name",
+    // },
+    
+    // {
+    //   title: "Channel",
+    //   dataIndex: "channel",
+    //   key: "channel",
+    // },
+    // {
+    //   title: "State Id",
+    //   key: "stateId",
+    //   dataIndex: "stateId",
+    // },
+    // {
+    //   title: "City Id",
+    //   key: "cityId",
+    //   dataIndex: "cityId",
+    // },
+    // {
+    //   title: "Country",
+    //   key: "countryName",
+    //   dataIndex: "countryName",
+    // },
     {
       title: "Action",
       key: "action",
       dataIndex: "action",
     },
+    
   ];
 
   const contactData = data?.data?.result?.map((space) => {
     return {
       id: space.id,
-      name: space.name,
-      cityName: space.cityName,
-      channel: space.channel,
       address: space.address,
-      stateId: space.stateId,
-      cityId: space.cityId,
-      countryName: space.countryName,
+      cityName: space.cityName,
+      // name: space.name,
+      // channel: space.channel,
+      // stateId: space.stateId,
+      created: "Not Available",
+      owner: "Not Available",
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -194,7 +206,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="11px 8px"
+            padding="6px 12px"
             type="button"
             width="130px"
             title="Create new"

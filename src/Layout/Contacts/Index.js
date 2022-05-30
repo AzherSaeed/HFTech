@@ -19,33 +19,44 @@ const columns = [
   {
     title: "Id",
     dataIndex: "id",
-    key: "id"
+    key: "id",
   },
   {
-    title: "Contact",
+    title: "Full Name",
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Email",
+    title: "Phone Number",
+    key: "phone",
+    dataIndex: "phone",
+  },
+  {
+    title: "Email Address",
     dataIndex: "email",
     key: "email",
   },
   {
-    title: "Channel",
-    dataIndex: "channel",
-    key: "channel",
+    title: "Created",
+    dataIndex: "created",
+    key: "created",
   },
   {
-    title: "Country Code",
-    key: "countryCode",
-    dataIndex: "countryCode",
+    title: "Owner",
+    dataIndex: "owner",
+    key: "owner",
   },
-  {
-    title: "Phone",
-    key: "phone",
-    dataIndex: "phone",
-  },
+  // {
+  //   title: "Channel",
+  //   dataIndex: "channel",
+  //   key: "channel",
+  // },
+  // {
+  //   title: "Country Code",
+  //   key: "countryCode",
+  //   dataIndex: "countryCode",
+  // },
+
   {
     title: "Action",
     key: "action",
@@ -97,16 +108,13 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleDelete = (id, email, name) => {
-    // alert("handle delte hit");
     setDeleteUserDetail({ name: name, email: email, id: id });
     setIsModalVisible(true);
 
-    // setDeleteStatus({ ...deleteStatus, id: id });
   };
 
   const handleEdit = (id) => {
     navigate(`/contact/${id}`);
-    // alert("handle edit hit");
   };
 
   const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
@@ -125,7 +133,6 @@ const Index = () => {
       },
       refetchInterval: false,
       refetchOnWindowFocus: true,
-      // enabled: true,
     }
   );
 
@@ -135,12 +142,14 @@ const Index = () => {
 
   const contactData = data?.data?.result?.map((contact) => {
     return {
-      id: <Link to={`/contact/edit`} >{contact.id}</Link>,
+      id: <Link to={`/contact/edit`}>{contact.id}</Link>,
       name: contact.name,
       email: contact.email,
-      channel: contact.channel,
-      countryCode: contact.countryCode,
       phone: contact.phone,
+      created: "Not Available",
+      owner: "Not Available",
+      // channel: contact.channel,
+      // countryCode: contact.countryCode,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -175,7 +184,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="11px 8px"
+            padding="6px 8px"
             type="submit"
             width="130px"
             title="Create new"

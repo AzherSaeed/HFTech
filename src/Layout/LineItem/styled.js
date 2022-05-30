@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const LineItemContainer = styled.div``;
+export const LineItemContainer = styled.div`
+  .btn{
+    float: right;
+  }
+`;
 
 export const LineItemDetailContainer = styled.div`
   .lineItemBar {

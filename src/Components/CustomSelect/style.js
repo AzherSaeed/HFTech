@@ -27,10 +27,13 @@ export const CustomSelectContainer = styled.div`
     display: block;
     margin-bottom: 10px;
   }
+  .ant-select-arrow{
+  color: #000000;
+  }
 
   .ant-select{
         background: white;
-       border: 0.3px solid #D6D6E0;
+       border: 0.5px solid #D6D6E0;
        border-radius: 3px;
        /* height: 48px; */
        width: 100%;

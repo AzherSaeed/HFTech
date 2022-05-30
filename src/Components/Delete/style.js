@@ -7,6 +7,23 @@ export const LoginContainer = styled.div`
   justify-content: space-between;
   /* height: 100vh;
   background-color: #212121; */
+  .question-text{
+    font-size: 16px;
+    color: #156985;
+    
+    text-transform: capitalize;
+  }
+  .inquiry-delete{
+    font-size: 16px !important;
+    margin-bottom: 0 !important;
+   .delete-user{
+    color: #156985;
+    
+   } 
+   .delete-by{
+    color: #156985;
+   }
+  }
   .login-container {
     &-card {
       background-color: white;

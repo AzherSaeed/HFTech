@@ -4,11 +4,12 @@ import SideBarContainer from "../../../Components/Sidebar/Sidebar";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Form } from "antd";
-import { SAVE_CONTACT } from "../../../Services/config";
+import { Form, Modal } from "antd";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
+import ic_logo from "../../..//Assets/icons/ic_logo.svg";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   API_URL,
   GET_SPACE_BY_ID,
@@ -40,12 +41,10 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { locationsId } = useParams();
+  const [isModalVisibled, setIsModalVisibled] = useState(false);
   const regex = /^\d*(\.\d+)?$/;
   const navigate = useNavigate();
-  // const [queryStatus, setQueryStatus] = useState({ state: false, city: false });
-
-  // console.log(locationsId, "this is from params");
-  // user query for user detail fetching
+ 
   const {
     data: spaceData,
     isSuccess,
@@ -73,8 +72,7 @@ const Index = () => {
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
       onSuccess: (data) => {
-        // console.log(data, "from usequery of space by id");
-        // setQueryStatus({ ...queryStatus, state: true });
+ 
       },
     }
   );
@@ -185,6 +183,26 @@ const Index = () => {
     }
   );
 
+  const handleModalCancel = () => {
+    setIsModalVisibled(false);
+  };
+
+
+  const onSuccess = (response) => {
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      navigate("/locations");
+      setIsModalVisibled(false);
+    }
+  };
+
+
   const mutation = useMutation(
     (countryDetail) => {
       return locationsId !== "createNew"
@@ -214,30 +232,45 @@ const Index = () => {
           );
     },
     {
-      onSuccess: (data) => {
-        // console.log(data, "this is data onSucces of either put or post method");
-        navigate("/locations");
-      },
+      onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err, "error in submitting values");
+        toast.error('Please provide valid detail', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       },
     }
   );
   const onSubmit = (data) => {
-    // console.log(data, "this  is data from submit");
     mutation.mutate(data);
   };
   return (
     <SideBarContainer>
+      <Modal
+        visible={isModalVisibled}
+        footer={null}
+        onCancel={handleModalCancel}
+        centered={true}
+      >
+        <div className="login-container-card text-center">
+          <div className="login-container-card-logo">
+            <img src={ic_logo} alt="ic_logo" className="logo" />
+          </div>
+          <h5 className="question-text mt-3 fs-5">
+            {" "}
+            Location Updated Successfull{" "}
+          </h5>
+
+          {/* <p>{userDetail.name}</p>
+        <p>{userDetail.email}</p> */}
+        </div>
+      </Modal>
       <Style>
         <div className="main-container">
           <div className="leftSide">
             <Formik
               initialValues={
-                // spaceData?.data?.result
-                //   ? spaceData?.data?.result
-                //   :
+           
                 { ...initialValues, id: spaceData?.data?.result?.id }
               }
               // validationSchema={validationSchema}
@@ -263,12 +296,12 @@ const Index = () => {
                         flexDirection: "column",
                       }}
                     >
-                      <label htmlFor="name"> Name</label>
+                      <label htmlFor="name">Location Name</label>
                       <FormControl
                         control="input"
                         type="text"
                         name="name"
-                        placeholder=" Name"
+                        placeholder="Enter location name"
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
@@ -294,7 +327,7 @@ const Index = () => {
                         type="text"
                         name="stateId"
                         options={stateData?.data?.result}
-                        placeholder="state"
+                        placeholder="Select State"
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
@@ -309,7 +342,7 @@ const Index = () => {
                           type="text"
                           name="cityId"
                           options={cityData?.data?.result}
-                          placeholder="City"
+                          placeholder="Select City"
                           className={
                             formik.errors.name && formik.touched.name
                               ? "is-invalid"
@@ -324,7 +357,7 @@ const Index = () => {
                           control="input"
                           type="text"
                           name="address"
-                          placeholder="Address"
+                          placeholder="Enter complete address"
                           className={
                             formik.errors.name && formik.touched.name
                               ? "is-invalid"
@@ -338,7 +371,7 @@ const Index = () => {
                         padding="11px 8px"
                         width="100%"
                         type="submit"
-                        title="SUBMIT"
+                        title="Save Location"
                         margin="auto"
                       />
                     </div>

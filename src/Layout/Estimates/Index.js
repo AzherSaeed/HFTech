@@ -74,6 +74,52 @@ const data = [
     totalPrice: "$20.00",
     date: "10/23/2021",
   },
+  {
+    key: "5678",
+    name: "Mah Adnan Qureshi",
+    address: "Improve Canada, United States",
+    tags: "qureshi786",
+    totalPrice: "$20.00",
+    date: "10/23/2021",
+  },
+  {
+    key: "5678",
+    name: "Mah Adnan Qureshi",
+    address: "Improve Canada, United States",
+    tags: "qureshi786",
+    totalPrice: "$20.00",
+    date: "10/23/2021",
+  },  {
+    key: "5678",
+    name: "Mah Adnan Qureshi",
+    address: "Improve Canada, United States",
+    tags: "qureshi786",
+    totalPrice: "$20.00",
+    date: "10/23/2021",
+  },
+  {
+    key: "5678",
+    name: "Mah Adnan Qureshi",
+    address: "Improve Canada, United States",
+    tags: "qureshi786",
+    totalPrice: "$20.00",
+    date: "10/23/2021",
+  },  {
+    key: "5678",
+    name: "Mah Adnan Qureshi",
+    address: "Improve Canada, United States",
+    tags: "qureshi786",
+    totalPrice: "$20.00",
+    date: "10/23/2021",
+  },
+  {
+    key: "5678",
+    name: "Mah Adnan Qureshi",
+    address: "Improve Canada, United States",
+    tags: "qureshi786",
+    totalPrice: "$20.00",
+    date: "10/23/2021",
+  },
 ];
 
 const Index = () => {
@@ -97,14 +143,9 @@ const Index = () => {
       ),
     },
     {
-      title: "Client | Contact",
+      title: "Contact",
       dataIndex: "name",
       key: "name",
-    },
-    {
-      title: "Locations",
-      dataIndex: "address",
-      key: "locations",
     },
     {
       title: "Reference",
@@ -125,8 +166,8 @@ const Index = () => {
       title: "Action",
       key: "action",
       render: (text, record) => (
-        <Space size="middle">
-          <div style={{ display: "flex", gap: "4px" }}>
+        <Space size="large">
+          <div style={{ display: "flex", gap: "6px" }}>
             <img src={pdfIcon} alt="edit Icon" className="action_icons" />
             <img
               src={downloadIcon}
@@ -155,6 +196,15 @@ const Index = () => {
         </Space>
       ),
     },
+    // {
+    //   title: "Locations",
+    //   dataIndex: "address",
+    //   key: "locations",
+    // },
+   
+  
+  
+   
   ];
 
   const showModal = () => {

@@ -15,6 +15,10 @@ import CustomButton from "../../../Components/CustomButton/Index";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { Form } from "antd";
+import Loader from "../../../Components/Loader/Loader";
+import { toast } from "react-toastify";
+
+
 
 const { TabPane } = Tabs;
 
@@ -88,10 +92,19 @@ const Index = () => {
 
 
 
-  const onSuccess = (data) => {
-    alert(data.data.message)
-    navigate('/client')
+  const onSuccess = (response) => {
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      navigate("/client");
+    }
   };
+
   const mutation = useMutation(
     (contactDetail) => {
       return clientId !== "createClient"
@@ -112,7 +125,9 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err, "error in submitting values");
+        toast.error('Please provide valid detail', {
+          position: toast.POSITION.TOP_RIGHT,
+        });;
       },
     }
   );
@@ -122,7 +137,7 @@ const Index = () => {
   };
 
   if (isFetching) {
-    return <h1>loading</h1>;
+    return <Loader/>;
   }
 
 
@@ -177,6 +192,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="phone"
+                        maxLength='10'
                         placeholder="(617)397 - 8483"
                         className={
                           formik.errors.name && formik.touched.name

@@ -12,6 +12,9 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../../Components/Delete/Index";
 import FormControl from "../../../Components/FormControl";
+import { toast } from "react-toastify";
+
+
 import {
   API_URL,
   CREATE_LINEITEM,
@@ -29,7 +32,9 @@ const initialValues = {
   overTimeRatePerHour: "",
   premiumRatePerHour: "",
   otherRate: "",
-  dtoUnitOfMeasure: "",
+  dtoUnitOfMeasure: {
+    id : 4
+  },
   channel: "IOS",
 };
 const validationSchema = Yup.object({
@@ -43,12 +48,22 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const {clientId} = useParams;
+  const navigate = useNavigate();
   const [selectedRateType, setselectedRateType] = useState("");
 
 
-  const onSuccess = (data) => {
-    alert(data.data.message)
-    // navigate('/client')
+ 
+  const onSuccess = (response) => {
+    if (response.data?.code !== 201) {
+      toast.error(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.success(response.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      navigate("/lineItem");
+    }
   };
 
   const mutation = useMutation(
@@ -71,7 +86,9 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err, "error in submitting values");
+        toast.error('Please provide valid detail', {
+          position: toast.POSITION.TOP_RIGHT,
+        });;
       },
     }
   );

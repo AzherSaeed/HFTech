@@ -1,7 +1,7 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Space } from "antd";
+import { Table, Space , Modal} from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { API_URL, CLIENT_DELETE, GET_CLIENT } from "../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
+import Loader from "../../Components/Loader/Loader";
+import DeleteModal from "../../Components/Delete/Index";
 const columns = [
   {
     title: "Id",
@@ -44,13 +46,12 @@ const columns = [
 ];
 
 const Index = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
+  const [clientData, setclientData] = useState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [clientData, setclientData] = useState()
-
-
-  const { data, isLoading, isSuccess, error, isError , refetch } = useQuery(
+  const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
     "get-client",
     () => {
       return axios.get(API_URL + GET_CLIENT, {
@@ -62,7 +63,7 @@ const Index = () => {
     },
     {
       onSuccess: (data) => {
-        console.log(data);
+        setIsModalVisible(false);
       },
       refetchInterval: false,
       refetchOnWindowFocus: false,
@@ -70,8 +71,8 @@ const Index = () => {
   );
 
   const editIconHandler = (id) => {
-    navigate(`/clients/${id}`)
-  }
+    navigate(`/clients/${id}`);
+  };
 
   const mutation = useMutation(
     (id) => {
@@ -98,39 +99,48 @@ const Index = () => {
     }
   );
 
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
 
 
   const clientDeleteHandler = (client) => {
-    setclientData(client)
-    mutation.mutate(client.id);
-  }
-  const Data = isSuccess && data.data.result?.map((client) => {
-    return {
-      id: client.id,
-      name: client.name,
-      email: client.email,
-      phone: client.phone,
-      channel: client.channel,
-      action: (
-        <Space size="middle">
-          <div style={{ display: "flex", gap: "4px" }}>
-            <img
-              src={deleteIcon}
-              alt="delete Icon"
-              className="action_icons deleteicon"
-              onClick={() => clientDeleteHandler(client)}
-            />
-            <img
-              src={editIcon}
-              alt="edit Icon"
-              className="action_icons editicon"
-              onClick={() => editIconHandler(client.id) }
-            />
-          </div>
-        </Space>
-      ),
-    };
-  });
+    setIsModalVisible(true);
+    setclientData(client);
+  };
+  const handleIndividualDelete = () => {
+    mutation.mutate(clientData.id);
+  };
+  const Data =
+    isSuccess &&
+    data.data.result?.map((client) => {
+      return {
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        phone: client.phone,
+        channel: client.channel,
+        action: (
+          <Space size="middle">
+            <div style={{ display: "flex", gap: "4px" }}>
+              <img
+                src={deleteIcon}
+                alt="delete Icon"
+                className="action_icons deleteicon"
+                onClick={() => clientDeleteHandler(client)}
+              />
+              <img
+                src={editIcon}
+                alt="edit Icon"
+                className="action_icons editicon"
+                onClick={() => editIconHandler(client.id)}
+              />
+            </div>
+          </Space>
+        ),
+      };
+    });
 
   return (
     <Sidebar>
@@ -148,16 +158,26 @@ const Index = () => {
             }}
           />
         </div>
-        {isLoading && <div>Loading..</div>}
+        {isLoading && <Loader />}
         {isError && <div>{error.message}</div>}
 
         {isSuccess && (
-          <Table
-            pagination={false}
-            columns={columns}
-            dataSource={Data}
-          />
+          <Table pagination={false} columns={columns} dataSource={Data} />
         )}
+
+        <Modal
+          visible={isModalVisible}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+        >
+          <DeleteModal
+            handleCancel={handleCancel}
+            userDetail={clientData}
+            deleteUser={handleIndividualDelete}
+            toLocation="/client"
+          />
+        </Modal>
       </StyleEstimates>
     </Sidebar>
   );
