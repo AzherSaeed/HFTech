@@ -25,9 +25,9 @@ const initialValues = {
   name: "",
   coordinate: "72.718292,33.912812929",
   channel: "IOS",
-  countryId: 161,
-  cityId: 1,
-  stateId: 303,
+  countryId: "",
+  cityId: "",
+  stateId: "",
   address: "",
 };
 const validationSchema = Yup.object({
@@ -44,7 +44,7 @@ const Index = () => {
   const [isModalVisibled, setIsModalVisibled] = useState(false);
   const regex = /^\d*(\.\d+)?$/;
   const navigate = useNavigate();
- 
+
   const {
     data: spaceData,
     isSuccess,
@@ -71,9 +71,7 @@ const Index = () => {
       refetchInterval: false,
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
-      onSuccess: (data) => {
- 
-      },
+      onSuccess: (data) => {},
     }
   );
 
@@ -95,20 +93,10 @@ const Index = () => {
       });
     },
     {
-      // enabled: regex.test(contactId),
       refetchInterval: false,
       refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
-      // select: (data) => {
-      //   return data.map((country) => ({
-      //     key: country.id,
-      //     value: country.name,
-      //   }));
-      // },
-      onSuccess: (data) => {
-        // console.log(data, "from usequery of country data geting");
-        // setQueryStatus({ ...queryStatus, state: true });
-      },
+      keepPreviousData: "false", 
+      // onSuccess,
     }
   );
 
@@ -137,13 +125,6 @@ const Index = () => {
       refetchInterval: false,
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
-      onSuccess: (data) => {
-        // console.log(
-        //   data,
-        //   "from usequery of state data and should be run just after the first query "
-        // );
-        // setQueryStatus({ ...queryStatus, city: true });
-      },
       enabled: true,
     }
   );
@@ -172,21 +153,13 @@ const Index = () => {
     {
       refetchInterval: false,
       refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
-      onSuccess: (data) => {
-        // console.log(
-        //   data,
-        //   "from usequery of city and should be run after the state query"
-        // );
-      },
-      // enabled: true,
+      keepPreviousData: "false"
     }
   );
 
   const handleModalCancel = () => {
     setIsModalVisibled(false);
   };
-
 
   const onSuccess = (response) => {
     if (response.data?.code !== 201) {
@@ -201,7 +174,6 @@ const Index = () => {
       setIsModalVisibled(false);
     }
   };
-
 
   const mutation = useMutation(
     (countryDetail) => {
@@ -235,7 +207,7 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        toast.error('Please provide valid detail', {
+        toast.error("Please provide valid detail", {
           position: toast.POSITION.TOP_RIGHT,
         });
       },
@@ -260,19 +232,16 @@ const Index = () => {
             {" "}
             Location Updated Successfull{" "}
           </h5>
-
-          {/* <p>{userDetail.name}</p>
-        <p>{userDetail.email}</p> */}
         </div>
       </Modal>
       <Style>
         <div className="main-container">
           <div className="leftSide">
             <Formik
-              initialValues={
-           
-                { ...initialValues, id: spaceData?.data?.result?.id }
-              }
+              initialValues={{
+                ...initialValues,
+                id: spaceData?.data?.result?.id,
+              }}
               // validationSchema={validationSchema}
               onSubmit={onSubmit}
             >
@@ -296,11 +265,11 @@ const Index = () => {
                         flexDirection: "column",
                       }}
                     >
-                      <label htmlFor="name">Location Name</label>
                       <FormControl
                         control="input"
                         type="text"
                         name="name"
+                        label="Location Name"
                         placeholder="Enter location name"
                         className={
                           formik.errors.name && formik.touched.name
@@ -308,43 +277,42 @@ const Index = () => {
                             : "customInput"
                         }
                       />
-                      <label htmlFor="phoneNumber">Country</label>
                       <FormControl
-                        control="select"
+                        control="searchSelect"
                         type="text"
                         name="countryId"
+                        label="Country"
                         options={countryData?.data?.result}
                         placeholder="Please Enter country Name"
                         className={
-                          formik.errors.name && formik.touched.name
+                          formik.errors.countryId && formik.touched.countryId
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
                       />
-                      <label htmlFor="email">State</label>
                       <FormControl
                         control="select"
                         type="text"
+                        label="State"
                         name="stateId"
                         options={stateData?.data?.result}
                         placeholder="Select State"
                         className={
-                          formik.errors.name && formik.touched.name
+                          formik.errors.stateId && formik.touched.stateId
                             ? "is-invalid"
                             : "customInput"
                         }
                       />
-                      {/* {contactId !== "createContact" && ( */}
                       <div>
-                        <label htmlFor="city">City</label>
                         <FormControl
                           control="select"
                           type="text"
                           name="cityId"
+                          label="City"
                           options={cityData?.data?.result}
                           placeholder="Select City"
                           className={
-                            formik.errors.name && formik.touched.name
+                            formik.errors.cityId && formik.touched.cityId
                               ? "is-invalid"
                               : "customInput"
                           }
@@ -352,11 +320,11 @@ const Index = () => {
                       </div>
 
                       <div>
-                        <label htmlFor="address">Address</label>
                         <FormControl
                           control="input"
                           type="text"
                           name="address"
+                          label="Address"
                           placeholder="Enter complete address"
                           className={
                             formik.errors.name && formik.touched.name
@@ -385,6 +353,7 @@ const Index = () => {
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.279909073!2d-74.25987368715491!3d40.69767006458873!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1652178301855!5m2!1sen!2s"
               className="locationMap"
               loading="lazy"
+              title="locationMap"
             ></iframe>
           </div>
         </div>

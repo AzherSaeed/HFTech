@@ -1,63 +1,73 @@
 import React, { useState, useEffect } from "react";
-import {LineItemContainer} from "./styled";
+import { LineItemContainer } from "./styled";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
-import { API_URL, LINE_ITEMS_GET, DELETE_SPACE } from "../../Services/config";
+import { API_URL, LINE_ITEMS_GET, LINEITEM_DELETE } from "../../Services/config";
 
-
-
-
+const columns = [
+  {
+    title: "Id",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Line item Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Line item Type",
+    dataIndex: "type",
+    key: "type",
+  },
+  {
+    title: "Created",
+    dataIndex: "created",
+    key: "created",
+  },
+  {
+    title: "Owner",
+    key: "owner",
+    dataIndex: "owner",
+  },
+  {
+    title: "Action",
+    key: "action",
+    dataIndex: "action",
+  },
+];
 const Index = () => {
   let [detail, setDetail] = useState([]);
-  const onSuccess = (data) => {
-    // console.log(data, "data from api");
-    // setDetail([...data?.data?.data]);
-  };
-  useEffect(() => {
-    // console.log(detail, "useState console");
-  }, [detail]);
+  const onSuccess = (data) => {};
+  useEffect(() => {}, [detail]);
   const onError = (err) => {
     console.log(err, "error while fetching data from api");
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [deleteStatus, setDeleteStatus] = useState({
-  //   id: null,
-  //   shouldDelete: false,
-  // });
-  const [deleteUserDetail, setDeleteUserDetail] = useState({
-    name: "",
-    email: "",
-    id: "",
-  });
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
   const navigate = useNavigate();
-  // const createNew = () => {
-  //   navigate("/locations/create");
-  // };
-  const handleDelete = (id, email, name) => {
-    // alert("handle delte hit");
-    setDeleteUserDetail({ name: name, id: id });
-    setIsModalVisible(true);
 
-    // setDeleteStatus({ ...deleteStatus, id: id });
+  const handleDelete = (lineItem) => {
+    setDetail(lineItem);
+    setIsModalVisible(true);
   };
   const mutation = useMutation(
     (id) => {
       return axios.delete(
-        API_URL + DELETE_SPACE,
-        { params: { spaceId: id } },
+        API_URL + LINEITEM_DELETE,
+        { params: { lineItemId : detail.id} },
         {
           headers: {
             "Content-Type": "application/json",
@@ -78,14 +88,11 @@ const Index = () => {
     }
   );
   const handleIndividualDelete = () => {
-    mutation.mutate(deleteUserDetail.id);
+    mutation.mutate(detail.id);
   };
 
-  const handleEdit = (countryId, id) => {
-    // alert("edit hit");
-    // let data = { countryId, id };
-    navigate(`/locations/${id}`);
-    // alert("handle edit hit");
+  const handleEdit = (lineItem) => {
+    navigate(`/lineItem/${lineItem.id}`);
   };
 
   const { isLoading, isError, refetch, data, error } = useQuery(
@@ -100,44 +107,14 @@ const Index = () => {
     },
     { refetchOnWindowFocus: "always", onSuccess, onError }
   );
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
-      render: (text, record) => (
-        <Link to={`/contact/${record.key}`}> {text} </Link>
-      ),
-    },
-    {
-      title: "Line item Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Line item Type",
-      dataIndex: "type",
-      key: "type",
-    },
-    {
-      title: "Created",
-      dataIndex: "created",
-      key: "created",
-    },
-    {
-      title: "Owner",
-      key: "owner",
-      dataIndex: "owner",
-    }
-  ];
 
-  const contactData = data?.data?.result?.map((space) => {
+  const contactData = data?.data?.result?.map((lineItem) => {
     return {
-      id: space.id,
-      name: space.name,
-      type: space.lineItemType,
-      created: space.insertedDate,
-      owner: space.dtoUser.userName,
+      id: lineItem.id,
+      name: lineItem.name,
+      type: lineItem.lineItemType,
+      created: lineItem.insertedDate,
+      owner: lineItem.dtoUser.userName,
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
           <img
@@ -145,7 +122,7 @@ const Index = () => {
             alt="delete Icon"
             className="action_icons deleteicon"
             onClick={() => {
-              handleDelete(space.id, space.email, space.name);
+              handleDelete(lineItem);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -155,7 +132,7 @@ const Index = () => {
             alt="edit Icon"
             className="action_icons editicon"
             onClick={() => {
-              handleEdit(space.countryId, space.id);
+              handleEdit(lineItem);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -175,12 +152,12 @@ const Index = () => {
             width="130px"
             title="Create new"
             clicked={() => {
-              navigate("/createLineItem");
+              navigate("/lineItem/createLineItem");
             }}
           />
         </div>
 
-        <Table pagination={false} columns={columns} dataSource={contactData} />
+        <Table pagination={true} columns={columns} dataSource={contactData} />
         <Modal
           visible={isModalVisible}
           footer={null}
@@ -189,9 +166,9 @@ const Index = () => {
         >
           <DeleteModal
             handleCancel={handleCancel}
-            userDetail={deleteUserDetail}
+            userDetail={detail}
             deleteUser={handleIndividualDelete}
-            toLocation="/locations"
+            toLocation="/lineItem"
           />
         </Modal>
       </LineItemContainer>

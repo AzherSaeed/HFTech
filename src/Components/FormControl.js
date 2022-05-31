@@ -5,7 +5,8 @@ import Datepicker from './CustomDatePicker/Index';
 import Textarea from './CustomTextArea/Index';
 import InputNumber from './CustomInputNumber'
 // import Checkbox from "./Checkbox";
-import PasswordInput from './CustomPasswordInput/Index'
+import PasswordInput from './CustomPasswordInput/Index';
+import CustomSearchSelect from './CustomSearchSelect'
 const Formickcontroller = (props) => {
   const { control, ...rest } = props;
   // console.log("enter to controller");
@@ -14,6 +15,8 @@ const Formickcontroller = (props) => {
       return <Input {...rest} />;
     case "select":
       return <Select {...rest} />;
+    case "searchSelect":
+      return <CustomSearchSelect {...rest} />;
     // case "checkbox":
     //   return <Checkbox {...rest} />;
     case "password":

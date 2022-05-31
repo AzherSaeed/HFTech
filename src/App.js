@@ -58,7 +58,7 @@ function App() {
           <Route path="/contact" element={<Contacts />} />
           <Route path="/contact/:contactId" element={<USerContact />} />
           <Route path="/lineItem" element={<LineItem />} />
-          <Route path="/createLineItem" element={<CreateLineItem />} />
+          <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
           <Route path="/client" element={<Clients />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
         </Routes>

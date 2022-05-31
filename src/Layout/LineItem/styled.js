@@ -1,8 +1,19 @@
 import styled from "styled-components";
 
 export const LineItemContainer = styled.div`
-  .btn{
+  .btn {
     float: right;
+  }
+
+  .deleteicon {
+    background: #d63229 !important;
+    padding: 4px;
+    border-radius: 3px;
+  }
+  .editicon {
+    background: #007aff !important;
+    padding: 4px;
+    border-radius: 3px;
   }
 `;
 
@@ -13,17 +24,19 @@ export const LineItemDetailContainer = styled.div`
   }
 
   .unitOfMeasure {
-    p{
-        font-weight: 900;
+    p {
+      font-weight: 900;
     }
 
-    .units-detail{
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
+    .units-detail {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
     }
   }
   .lineItemForm {
     width: 50%;
   }
+
+
 `;

@@ -193,7 +193,7 @@ const Index = () => {
             }}
           />
         </div>
-        <Table pagination={false} columns={columns} dataSource={contactData} />
+        <Table pagination={true} columns={columns} dataSource={contactData} />
         <Modal
           visible={isModalVisible}
           footer={null}

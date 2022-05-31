@@ -162,7 +162,7 @@ const Index = () => {
         {isError && <div>{error.message}</div>}
 
         {isSuccess && (
-          <Table pagination={false} columns={columns} dataSource={Data} />
+          <Table pagination={true} columns={columns} dataSource={Data} />
         )}
 
         <Modal

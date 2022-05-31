@@ -20,3 +20,6 @@ export const CREATE_SPACE = "space/addSpace";
 export const CREATE_LINEITEM = 'lineItem/save';
 export const FORGOT_PASSWORD = 'user/forgotPassword';
 export const RESET_PASSWORD = 'user/restPassword';
+export const LINEITEM_DETAIL = 'lineItem/getById'
+export const LINEITEM_UPDATE = 'lineItem/update'
+export const LINEITEM_DELETE = 'lineItem/delate'
