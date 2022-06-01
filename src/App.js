@@ -22,6 +22,7 @@ import CreateLineItem from './Layout/LineItem/CreateLineItem/index.js'
 import Home from "./Layout/Home/Index";
 import Delete from "./Components/Delete/Index";
 import MobileSiderBar from "./Components/Drawer/Drawer";
+import UnitOfMeasurement from './Layout/UnitOfMeasurement'
 
 import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
@@ -60,6 +61,7 @@ function App() {
           <Route path="/lineItem" element={<LineItem />} />
           <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
           <Route path="/client" element={<Clients />} />
+          <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
         </Routes>
       </CollapsedContext.Provider>

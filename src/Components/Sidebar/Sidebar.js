@@ -61,6 +61,10 @@ const Sidebar = ({ children }) => {
               <Link to="/lineItem" />
               LineItems{" "}
             </Menu.Item>
+            <Menu.Item key="/unitOfMeasurement">
+              <Link to="/unitOfMeasurement" />
+              Unit of Measurement{" "}
+            </Menu.Item>
           </Menu>{" "}
           {/* <div className="lgOutButton">
                                               <CustomButton

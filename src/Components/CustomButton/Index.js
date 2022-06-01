@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { CustormButtonContainer } from "./style";
 
-const CustomButton = ({ title, type, bgcolor, width, color, padding , clicked , form , key }) => {
+const CustomButton = ({ title, type, bgcolor, disabled , width, color, padding , clicked , form , key }) => {
   return (
     <CustormButtonContainer
     bgcolor={bgcolor}
@@ -10,7 +10,7 @@ const CustomButton = ({ title, type, bgcolor, width, color, padding , clicked , 
       width={width}
       padding={padding}
     >
-      <Button form={form} key={key} onClick={clicked} htmlType={type}>{title}</Button>
+      <Button disabled={disabled} form={form} key={key} onClick={clicked} htmlType={type}>{title}</Button>
     </CustormButtonContainer>
   );
 };

@@ -23,3 +23,7 @@ export const RESET_PASSWORD = 'user/restPassword';
 export const LINEITEM_DETAIL = 'lineItem/getById'
 export const LINEITEM_UPDATE = 'lineItem/update'
 export const LINEITEM_DELETE = 'lineItem/delate'
+export const UNITOFMEASUREMENT_SAVE = 'setup/saveUnitOfMeasure';
+export const UNITOFMEASUREMENT_GET = 'setup/get';
+export const UNITOFMEASUREMENT_UPDATE = 'setup/updateUnitOfMeasure';
+export const UNITOFMEASUREMENT_DELETE = '/setup/delate'
