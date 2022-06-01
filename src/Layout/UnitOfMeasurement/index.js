@@ -12,6 +12,7 @@ import {
   API_URL,
   UNITOFMEASUREMENT_GET,
   UNITOFMEASUREMENT_UPDATE,
+  UNITOFMEASUREMENT_DELETE,
 } from "../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
@@ -29,28 +30,11 @@ const validationSchema = Yup.object({
 });
 const Index = () => {
   const [unitDetailHandler, setunitDetailHandler] = useState(null);
-  const [unitDeleteDetailHandler, setunitDeleteDetailHandler] = useState(null)
+  const [unitDeleteDetailHandler, setunitDeleteDetailHandler] = useState(null);
   const [unitUpdateInputHandler, setunitUpdateInputHandler] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
 
-
-  const onSuccess = (response) => {
-    if (response.data?.code !== 201) {
-      toast.error(response.data.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    } else {
-      toast.success(response.data.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    }
-  };
-
-
-
-
-  
   const { data, isLoading, refetch } = useQuery(
     "units",
     () => {
@@ -70,23 +54,35 @@ const Index = () => {
     }
   );
 
-  console.log(unitDetailHandler, "unitDetailHandler");
-
   const mutation = useMutation(
     (unitDetail) => {
-      return unitDetailHandler?.id
-        ? axios.put(API_URL + UNITOFMEASUREMENT_UPDATE, unitDetail, {
+      console.log(unitDetail, "unitDetail");
+      if (unitDetailHandler?.id && !unitDeleteDetailHandler) {
+        return axios.put(API_URL + UNITOFMEASUREMENT_UPDATE, unitDetail, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+      } else if (unitDeleteDetailHandler?.id && !unitDetailHandler) {
+        return axios.delete(
+          API_URL + UNITOFMEASUREMENT_DELETE,
+          { params: { unitId: 3 } },
+          {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
             },
-          })
-        : axios.post(API_URL + UNITOFMEASUREMENT_SAVE, unitDetail, {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          });
+          }
+        );
+      } else if (!unitDetailHandler && !unitDeleteDetailHandler) {
+        return axios.post(API_URL + UNITOFMEASUREMENT_SAVE, unitDetail, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+      }
     },
     {
       onSuccess: (response) => {
@@ -95,12 +91,12 @@ const Index = () => {
             position: toast.POSITION.TOP_RIGHT,
           });
         } else {
-          setunitDetailHandler(null)
+          setunitDetailHandler(null);
           toast.success(response.data.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
         }
-        refetch()
+        refetch();
       },
 
       onError: (err, variables, snapshotValue) => {
@@ -127,7 +123,7 @@ const Index = () => {
   };
 
   const unitDeleteHandler = (detail) => {
-    setunitDetailHandler(null)
+    setunitDetailHandler(null);
     setunitDeleteDetailHandler(detail);
     setIsModalVisible(true);
   };
@@ -153,13 +149,12 @@ const Index = () => {
                 data.data.result.map((unit) => {
                   return (
                     <div className="unitOfMeasurementContent-detail-children-input">
-                      <Input.Group compact className="unitOfMeasurementContent-detail-children-input-group" >
+                      <Input.Group
+                        compact
+                        className="unitOfMeasurementContent-detail-children-input-group"
+                      >
                         <Input
-                          style={
-                            unitDetailHandler?.id == unit.id
-                              ? { width: "100%" }
-                              : { width: "100%" }
-                          }
+                          style={{ width: "100%" }}
                           defaultValue={unit.name}
                           disabled={unitDetailHandler?.id !== unit.id}
                           onChange={(e) =>
