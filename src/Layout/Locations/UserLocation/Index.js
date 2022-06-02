@@ -4,7 +4,7 @@ import SideBarContainer from "../../../Components/Sidebar/Sidebar";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Form, Modal } from "antd";
+import { Form, Modal, Select } from "antd";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import ic_logo from "../../..//Assets/icons/ic_logo.svg";
@@ -41,7 +41,9 @@ const validationSchema = Yup.object({
 
 const Index = () => {
   const { locationsId } = useParams();
+  const { Option } = Select;
   const [isModalVisibled, setIsModalVisibled] = useState(false);
+  const [spaceSelectedValue, setspaceSelectedValue] = useState('')
   const regex = /^\d*(\.\d+)?$/;
   const navigate = useNavigate();
 
@@ -69,8 +71,8 @@ const Index = () => {
     {
       enabled: regex.test(locationsId),
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
       onSuccess: (data) => {},
     }
   );
@@ -94,12 +96,15 @@ const Index = () => {
     },
     {
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false", 
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
       // onSuccess,
     }
   );
 
+
+
+  console.log(spaceSelectedValue , 'spaceSelectedValue');
   const {
     data: stateData,
     isSuccess: stateIsSuccess,
@@ -112,7 +117,7 @@ const Index = () => {
     () => {
       return axios.get(
         API_URL + GET_STATE_BY_ID,
-        { params: { countryId: 233 } },
+        { params: { countryId: spaceSelectedValue } },
         {
           headers: {
             "Content-Type": "application/json",
@@ -122,9 +127,10 @@ const Index = () => {
       );
     },
     {
+      enabled: regex.test(spaceSelectedValue),
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
       enabled: true,
     }
   );
@@ -137,11 +143,11 @@ const Index = () => {
     error: cityError,
     isError: cityIsError,
   } = useQuery(
-    "get-User-By-Id",
+    "get-state-By-Id",
     () => {
       return axios.get(
         API_URL + GET_CITY_BY_ID,
-        { params: { stateId: 1399 } },
+        { params: { stateId: spaceSelectedValue } },
         {
           headers: {
             "Content-Type": "application/json",
@@ -151,9 +157,10 @@ const Index = () => {
       );
     },
     {
+      enabled: regex.test(spaceSelectedValue),
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false"
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
     }
   );
 
@@ -214,8 +221,14 @@ const Index = () => {
     }
   );
   const onSubmit = (data) => {
-    mutation.mutate(data);
+    console.log(data);
+    // mutation.mutate(data);
   };
+
+
+  const handleSelectValue = (val) => {
+    setspaceSelectedValue(val)
+  }
   return (
     <SideBarContainer>
       <Modal
@@ -245,7 +258,7 @@ const Index = () => {
               // validationSchema={validationSchema}
               onSubmit={onSubmit}
             >
-              {(formik) => {
+              {(formik , form) => {
                 return (
                   <Form
                     style={{
@@ -271,32 +284,35 @@ const Index = () => {
                         name="name"
                         label="Location Name"
                         placeholder="Enter location name"
+                        
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
                             : "customInput"
                         }
                       />
+
                       <FormControl
                         control="searchSelect"
-                        type="text"
                         name="countryId"
                         label="Country"
                         options={countryData?.data?.result}
-                        placeholder="Please Enter country Name"
+                        placeholder="Select Country"
+                        handleSelectValue={handleSelectValue}
                         className={
                           formik.errors.countryId && formik.touched.countryId
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
                       />
+
                       <FormControl
-                        control="select"
-                        type="text"
+                        control="searchSelect"
                         label="State"
                         name="stateId"
                         options={stateData?.data?.result}
                         placeholder="Select State"
+                        handleSelectValue={handleSelectValue}
                         className={
                           formik.errors.stateId && formik.touched.stateId
                             ? "is-invalid"
@@ -305,12 +321,12 @@ const Index = () => {
                       />
                       <div>
                         <FormControl
-                          control="select"
-                          type="text"
+                          control="searchSelect"
                           name="cityId"
                           label="City"
                           options={cityData?.data?.result}
                           placeholder="Select City"
+                          handleSelectValue={handleSelectValue}
                           className={
                             formik.errors.cityId && formik.touched.cityId
                               ? "is-invalid"
