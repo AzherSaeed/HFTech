@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LoginContainer } from "./style";
 import ic_logo from '../../Assets/icons/ic_logo.svg';
 import GenericService from "../../Services/GenericService";
@@ -9,7 +9,11 @@ import { useNavigate } from "react-router-dom";
 const Index = () => {
   const genericService = new GenericService();
  const navigate=useNavigate();
-
+  useEffect(()=>{
+    setTimeout(()=>{
+     navigate('/login');
+    },1000)
+  })
   return (
     <LoginContainer>
       <div></div>

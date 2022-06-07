@@ -6,17 +6,21 @@ import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import { API_URL, LINE_ITEMS_GET, LINEITEM_DELETE } from "../../Services/config";
+import moment from "moment";
 
 const columns = [
   {
     title: "Id",
     dataIndex: "id",
     key: "id",
+    render: (text, record) => (
+      <Link to={`/lineitems/${record.key}`}> {text} </Link>
+    ),
   },
   {
     title: "Line item Name",
@@ -107,13 +111,12 @@ const Index = () => {
     },
     { refetchOnWindowFocus: "always", onSuccess, onError }
   );
-
   const contactData = data?.data?.result?.map((lineItem) => {
     return {
       id: lineItem.id,
       name: lineItem.name,
       type: lineItem.lineItemType,
-      created: lineItem.insertedDate,
+      created: moment(lineItem.dtoUser.insertedDate).format('l, h:mm:ss a'),
       owner: lineItem.dtoUser.userName,
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -147,7 +150,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="11px 8px"
+            padding="8px 8px"
             type="button"
             width="130px"
             title="Create new"

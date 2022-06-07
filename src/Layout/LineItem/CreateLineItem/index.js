@@ -46,6 +46,14 @@ const validationSchema = Yup.object({
 });
 
 const Index = () => {
+  const[reg1val,setRegval]=useState(0);
+  const[reg1qt,setQt]=useState(0);
+  const[reg2val,setReg2val]=useState(0);
+  const[reg2qt,set2Qt]=useState(0);
+  const[reg3val,set3Regval]=useState(0);
+  const[reg3qt,set3Qt]=useState(0);
+  const[reg4val,set4Regval]=useState(0);
+  const[reg4qt,set4Qt]=useState(0);
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const regex = /^\d*(\.\d+)?$/;
@@ -101,7 +109,7 @@ const Index = () => {
     }
   },[lineItemData])
 
-  console.log(selectedRateType , 'selectedRateType');
+
 
   const mutation = useMutation(
     (lineItemDetail) => {
@@ -133,7 +141,8 @@ const Index = () => {
   const onSubmit = (data) => {
     mutation.mutate(data);
   };
-
+console.log(reg1val,"vvvvv");
+console.log(reg1qt,"vvvvv11");
   return (
     <Sidebar>
       {isFetching ? (
@@ -164,20 +173,13 @@ const Index = () => {
                     autoComplete="off"
                     validateMessages={validationSchema}
                   >
-                    <div
-                      className="login-input-fields "
-                      style={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
+                    <div className="fields_container">
                       <FormControl
                         control="input"
                         type="text"
                         name="name"
                         placeholder=" Name"
-                        label=""
+                        label="Name"
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
@@ -189,7 +191,7 @@ const Index = () => {
                         name="lineItemType"
                         options={lineItemType}
                         placeholder="Please Select Type"
-                        label=""
+                        label="Type"
                         onSelect={(value) => [
                           setselectedRateType(value),
                           formik.setFieldValue("lineItemType", value),
@@ -202,46 +204,193 @@ const Index = () => {
                             : "customPasswordInput"
                         }
                       />
-                      <div>
-                        {selectedRateType === "material" ? (
+                    </div>
+                    <div className="fields_container">
+                      <FormControl
+                        control="input"
+                        type="text"
+                        name="item1"
+                        placeholder="Name"
+                        label="1# items Values"
+                        className={
+                          formik.errors.name && formik.touched.name
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                      />
+                      <div className="rateWrapper">
+                          <div className="input-fields">
                           <div>
-                            <div className="rateWrapper">
-                              <p className="heading">
-                                Regular Time Rate (Per Hour)
-                              </p>
-                              <div className="input-fields">
-                                <InputNumber
-                                  addonBefore="$"
-                                  addonAfter="Rate"
-                                  value={formik.values.regularTimeRatePerHour}
-                                  onChange={(value) =>
-                                    formik.setFieldValue(
-                                      "regularTimeRatePerHour",
-                                      value
-                                    )
-                                  }
-                                />
-                              </div>
-                            </div>{" "}
-                            <div className="rateWrapper">
-                              <p className="heading">
-                                Premium Time Rate (ER) (Per Hour)
-                              </p>
-                              <div className="input-fields">
-                                <InputNumber
-                                  addonBefore="$"
-                                  addonAfter="Rate"
-                                  value={formik.values.premiumRatePerHour}
-                                  onChange={(value) =>
-                                    formik.setFieldValue(
-                                      "premiumRatePerHour",
-                                      value
-                                    )
-                                  }
-                                />
-                              </div>
-                            </div>{" "}
-                            <div className="rateWrapper">
+                          <label for="reg">Regular Value</label>
+                            <InputNumber
+                              addonBefore="$"
+                              addonAfter="Rate"
+                              id="reg"
+                              value={reg1val}
+                              onChange={(e)=>setRegval(e)}
+                            />
+                          </div>
+                          <div>
+                          <label for="quan">Quantity</label><br/>
+                            <InputNumber
+                             id="quan"
+                             style={{width:'100%', marginTop:'8px'}}
+                             value={reg1qt}
+                             onChange={(e)=>setQt(e)}
+                            />
+                            </div>
+                            <div>
+                            <label for="total">Total</label><br/>
+                            <InputNumber
+                             id="total"
+                             style={{width:'100%', marginTop:'8px'}}
+                             readOnly={true}
+                             value={reg1val*reg1qt}
+                            />
+                           </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="fields_container">
+                      <FormControl
+                        control="input"
+                        type="text"
+                        name="item2"
+                        placeholder="Name"
+                        label="2# items Values"
+                        className={
+                          formik.errors.name && formik.touched.name
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                      />
+                      <div className="rateWrapper">
+                          <div className="input-fields">
+                          <div>
+                          <label for="reg">Regular Value</label>
+                            <InputNumber
+                              addonBefore="$"
+                              addonAfter="Rate"
+                              id="reg"
+                              value={reg2val}
+                              onChange={(e)=>setReg2val(e)}
+                            />
+                          </div>
+                          <div>
+                          <label for="quan">Quantity</label><br/>
+                            <InputNumber
+                             id="quan"
+                             style={{width:'100%', marginTop:'9px'}}
+                             value={reg2qt}
+                             onChange={(e)=>set2Qt(e)}
+                            />
+                            </div>
+                            <div>
+                            <label for="total">Total</label><br/>
+                            <InputNumber
+                             id="total"
+                             style={{width:'100%', marginTop:'9px'}}
+                             readOnly={true}
+                             value={reg2val*reg2qt}
+                            />
+                           </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="fields_container">
+                      <FormControl
+                        control="input"
+                        type="text"
+                        name="item3"
+                        placeholder="Name"
+                        label="3# items Values"
+                        className={
+                          formik.errors.name && formik.touched.name
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                      />
+                      <div className="rateWrapper">
+                          <div className="input-fields">
+                          <div>
+                          <label for="reg">Regular Value</label>
+                            <InputNumber
+                              addonBefore="$"
+                              addonAfter="Rate"
+                              id="reg"
+                              value={reg3val}
+                              onChange={(e)=>set3Regval(e)}
+                            />
+                          </div>
+                          <div>
+                          <label for="quan">Quantity</label><br/>
+                            <InputNumber
+                             id="quan"
+                             style={{width:'100%', marginTop:'8px'}}
+                             value={reg3qt}
+                             onChange={(e)=>set3Qt(e)}
+                            />
+                            </div>
+                            <div>
+                            <label for="total">Total</label><br/>
+                            <InputNumber
+                             id="total"
+                             style={{width:'100%', marginTop:'8px'}}
+                             readOnly={true}
+                             value={reg3val*reg3qt}
+                            />
+                           </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="fields_container">
+                      <FormControl
+                        control="input"
+                        type="text"
+                        name="item4"
+                        placeholder="Name"
+                        label="4# items Values"
+                        className={
+                          formik.errors.name && formik.touched.name
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                      />
+                      <div className="rateWrapper">
+                          <div className="input-fields">
+                          <div>
+                          <label for="reg">Regular Value</label>
+                            <InputNumber
+                              addonBefore="$"
+                              addonAfter="Rate"
+                              id="reg"
+                              value={reg4val}
+                              onChange={(e)=>set4Regval(e)}
+                            />
+                          </div>
+                          <div>
+                          <label for="quan">Quantity</label><br/>
+                            <InputNumber
+                             id="quan"
+                             style={{width:'100%', marginTop:'8px'}}
+                             value={reg4qt}
+                             onChange={(e)=>set4Qt(e)}
+                            />
+                            </div>
+                            <div>
+                            <label for="total">Total</label><br/>
+                            <InputNumber
+                             id="total"
+                             style={{width:'100%', marginTop:'8px'}}
+                             readOnly={true}
+                             value={reg4val*reg4qt}
+                            />
+                           </div>
+                          </div>
+                        </div>
+                    </div>
+                            
+                            {/* <div className="rateWrapper">
                               <p className="heading">
                                 Over Time Rate (Per Hour)
                               </p>
@@ -258,10 +407,7 @@ const Index = () => {
                                   }
                                 />
                               </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div>
+                            </div> */}
                             <div className="unitOfMeasure">
                               <p className="heading">Units of Measure</p>
                               <Radio.Group
@@ -281,36 +427,17 @@ const Index = () => {
                                 <Radio.Button value="5">Roll</Radio.Button>
                                 <Radio.Button value="6">Week</Radio.Button>
                               </Radio.Group>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="rateWrapper">
-                        <p className="heading">
-                          Other Rate(not base on an hourly rate)
-                        </p>
-                        <div className="input-fields">
-                          <InputNumber
-                            addonBefore="$"
-                            addonAfter="Rate"
-                            value={formik.values.otherRate}
-                            // defaultValue={12}
-                            onChange={(value) =>
-                              formik.setFieldValue("otherRate", value)
-                            }
-                          />
-                        </div>
-                      </div>
+                             </div>
+                      
                       <CustomButton
                         bgcolor={BasicColor}
                         color="white"
-                        padding="11px 8px"
-                        width="100%"
+                        padding="8px 8px"
+                        width="50%"
                         type="submit"
-                        title="SUBMIT"
+                        title="Save line items"
                         margin="auto"
                       />
-                    </div>
                   </Form>
                 );
               }}

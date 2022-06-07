@@ -87,6 +87,10 @@ const Style = styled.div`
       }
     }
   }
+  .ant-input {
+    padding: 8px 8px !important;
+  }
+
 `;
 
 export default Style;

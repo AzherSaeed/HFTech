@@ -31,7 +31,7 @@ grid-column-end: 2;
   }
   .input-fields {
     display: flex;
-    gap: 5px;
+    gap: 10px;
   }
   .tabWrapper {
     padding: 20px;

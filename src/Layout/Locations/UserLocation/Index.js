@@ -10,6 +10,7 @@ import axios from "axios";
 import ic_logo from "../../..//Assets/icons/ic_logo.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { MapContainer, TileLayer, useMap, Popup,Marker } from 'react-leaflet'
 import {
   API_URL,
   GET_SPACE_BY_ID,
@@ -71,7 +72,9 @@ const Index = () => {
       refetchInterval: false,
       refetchOnWindowFocus: "false",
       keepPreviousData: "false",
-      onSuccess: (data) => {},
+      onSuccess: (data) => {
+        console.log(data, 'data...')
+      },
     }
   );
 
@@ -95,7 +98,7 @@ const Index = () => {
     {
       refetchInterval: false,
       refetchOnWindowFocus: "false",
-      keepPreviousData: "false", 
+      keepPreviousData: "false",
       // onSuccess,
     }
   );
@@ -153,7 +156,7 @@ const Index = () => {
     {
       refetchInterval: false,
       refetchOnWindowFocus: "false",
-      keepPreviousData: "false"
+      keepPreviousData: "false",
     }
   );
 
@@ -278,7 +281,7 @@ const Index = () => {
                         }
                       />
                       <FormControl
-                        control="searchSelect"
+                        control="select"
                         type="text"
                         name="countryId"
                         label="Country"
@@ -336,7 +339,7 @@ const Index = () => {
                       <CustomButton
                         bgcolor="#156985"
                         color="white"
-                        padding="11px 8px"
+                        padding="8px 8px"
                         width="100%"
                         type="submit"
                         title="Save Location"
@@ -349,12 +352,24 @@ const Index = () => {
             </Formik>
           </div>
           <div className="rightSide">
-            <iframe
+            
+          <MapContainer center={[51.505, -0.09]} zoom={7} scrollWheelZoom={false}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={[51.505, -0.09]}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </MapContainer>
+            {/* <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.279909073!2d-74.25987368715491!3d40.69767006458873!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1652178301855!5m2!1sen!2s"
               className="locationMap"
               loading="lazy"
               title="locationMap"
-            ></iframe>
+            ></iframe> */}
           </div>
         </div>
       </Style>

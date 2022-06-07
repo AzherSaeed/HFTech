@@ -12,6 +12,7 @@ import tickIcon from "../../Assets/icons/ic_tick.svg";
 import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL, GET_CONTACT, CONTACT_DELETE } from "../../Services/config";
+import moment from "moment";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
@@ -146,8 +147,8 @@ const Index = () => {
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
-      created: "Not Available",
-      owner: "Not Available",
+      created: moment(contact.insertedDate).format('l, h:mm:ss a'),
+      owner: contact.dtoUser.userName,
       // channel: contact.channel,
       // countryCode: contact.countryCode,
 
@@ -160,7 +161,6 @@ const Index = () => {
             onClick={() => {
               handleDelete(contact.id, contact.email, contact.name);
             }}
-            style={{ cursor: "pointer" }}
           />
 
           <img
@@ -170,7 +170,6 @@ const Index = () => {
             onClick={() => {
               handleEdit(contact.id);
             }}
-            style={{ cursor: "pointer" }}
           />
         </div>
       ),
@@ -184,7 +183,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="6px 8px"
+            padding="8px 8px"
             type="submit"
             width="130px"
             title="Create new"

@@ -171,7 +171,7 @@ const CreateNew = () => {
                       <CustomButton
                       bgcolor="#156985"
                       color="white"
-                      padding="5px 8px"
+                      padding="8px 8px"
                       width="100%"
                       type="submit"
                       title="Save Estimate"

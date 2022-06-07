@@ -13,7 +13,7 @@ import { API_URL, LINE_ITEMS_GET } from "../../../../Services/config";
 
 const { TabPane } = Tabs;
 const Index = () => {
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState('1');
 
 
   const { data  , isLoading, isSuccess, error, isError , refetch } = useQuery(
@@ -67,8 +67,10 @@ const Index = () => {
                         <div className="addItem">
                           {/* <Link to='/estimates/createNew/addItem'> */}
                           <div className="d-none d-sm-block">
+                          <div className="addItem-div">
                             <div>Project Manager</div>
                             <div>&gt;</div>
+                            </div>
                           </div>
 
                           {/* </Link> */}
@@ -78,7 +80,7 @@ const Index = () => {
                 </Tabs>
               </div>
             </div>
-            <div className="col-md-6 col-sm-12 mt-3">
+            <div className="col-md-6 col-sm-12 ">
               <div className="second-table">
                 <div className="d-none d-sm-block">
                   <div className="main-heading">
@@ -177,7 +179,7 @@ const Index = () => {
                           <CustomButton
                             bgcolor="#156985"
                             color="white"
-                            padding="11px 8px"
+                            padding="8px 8px"
                             width="75%"
                             type="submit"
                             title="Save Line Items"

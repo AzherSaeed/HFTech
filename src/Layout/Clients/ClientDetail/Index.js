@@ -213,11 +213,11 @@ const Index = () => {
                         }
                       />
 
-                      <div style={{ marginTop: "auto" }}>
+                      <div style={{ marginTop: "5px"}}>
                         <CustomButton
                           bgcolor="#156985"
                           color="white"
-                          padding="11px 8px"
+                          padding="8px 8px"
                           width="100%"
                           type="submit"
                           title="SUBMIT"

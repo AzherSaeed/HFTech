@@ -36,9 +36,11 @@ export const CustomSelectContainer = styled.div`
        border: 0.5px solid #D6D6E0;
        border-radius: 3px;
        /* height: 48px; */
+       padding: 4px;
        width: 100%;
     }
     .ant-select-selector{
+      /* height: 47px !important; */
         /* border: none !important;   
         padding: 8px !important;
         height: 47px !important;

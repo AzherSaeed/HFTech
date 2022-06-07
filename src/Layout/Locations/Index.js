@@ -15,6 +15,7 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
+import moment from "moment";
 const Index = () => {
   let [detail, setDetail] = useState([]);
   const onSuccess = (data) => {
@@ -162,17 +163,16 @@ const Index = () => {
     },
     
   ];
-
   const contactData = data?.data?.result?.map((space) => {
     return {
       id: space.id,
       address: space.address,
-      cityName: space.cityName,
+      cityName: space.name,
       // name: space.name,
       // channel: space.channel,
       // stateId: space.stateId,
-      created: "Not Available",
-      owner: "Not Available",
+      created: moment(space.dtoUser.insertedDate).format('l, h:mm:ss a'),
+      owner:space.dtoUser.userName ,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -206,7 +206,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="6px 12px"
+            padding="8px 8px"
             type="button"
             width="130px"
             title="Create new"

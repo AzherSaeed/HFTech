@@ -6,7 +6,7 @@ import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
 import { API_URL, CLIENT_DELETE, GET_CLIENT } from "../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
@@ -17,6 +17,9 @@ const columns = [
     title: "Id",
     dataIndex: "id",
     key: "id",
+    render: (text, record) => (
+      <Link to={`/client/${record.key}`}> {text} </Link>
+    ),
   },
   {
     title: "Name",
@@ -123,7 +126,7 @@ const Index = () => {
         channel: client.channel,
         action: (
           <Space size="middle">
-            <div style={{ display: "flex", gap: "4px" }}>
+            <div style={{ display: "flex", gap: "4px", placeItems:'center' }}>
               <img
                 src={deleteIcon}
                 alt="delete Icon"
@@ -149,7 +152,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="11px 8px"
+            padding="8px 8px"
             type="submit"
             width="130px"
             title="Create new"
