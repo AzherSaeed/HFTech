@@ -8,7 +8,21 @@ export const SAVE_CONTACT = "contact/save";
 export const CONTACT_GET_BY_ID = "contact/getById";
 export const CONTACT_UPDATE = "contact/update";
 export const CONTACT_DELETE = "contact/delate";
-export const LINE_ITEMS_GET = 'lineItem/get'
+export const LINE_ITEMS_GET = 'lineItem/get';
+
+// User Line Items
+
+export const LIST_ADMIN_LINE_ITEMS_TYPE_LABOUR = 'lineItem/getLineItemByItemType?lineType=Labor';
+export const LIST_ADMIN_LINE_ITEMS_TYPE_MATERIALS = 'lineItem/getLineItemByItemType?lineType=Materials';
+export const LIST_ADMIN_LINE_ITEMS_BY_ID = 'lineItem/getById?lineItemId=';
+export const LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR = 'userLineItem/getbyUserIdAndType?lineItemType=Labor';
+export const LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS = 'userLineItem/getbyUserIdAndType?lineItemType=Materials';
+export const USER_LINE_ITEM__DETAILS_BY_ID = 'lineItem/getById?lineItemId=';
+export const USER_LINE_ITEM_UPDATE = 'userLineItem/save';
+export const USER_LINE_ITEM_DELETE = 'userLineItem/delate?userLineItemId=';
+
+
+export const USER_LINE_ITEM_SAVE = 'userLineItem/save';
 export const GET_SPACE_DETAIL = "space/get";
 export const GET_SPACE_BY_ID = "space/getById";
 export const GET_STATE_BY_ID = "state/getStateByCountryId";

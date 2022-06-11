@@ -58,8 +58,7 @@ img:first-child{
 background-color:#C7112B;
 }
 img:last-child{
-background-color:#007AFF ;
-    
+background-color:#007AFF ;  
 }    
 }
 }

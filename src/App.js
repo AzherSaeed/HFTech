@@ -52,7 +52,10 @@ function App() {
           <Route path="/estimates/delete" element={<Delete />} />
           <Route path="/estimates/createNew" element={<CreateNew />} />
           <Route path="/estimates/update" element={<UpdateEstiamte />} />
+          <Route path="/estimates/update/:itemId" element={<UpdateEstiamte />} />
+
           <Route path="/estimates/createNew/addItem" element={<AddItem />} />
+          <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />
           <Route path="/estimates/:estimstesId" element={<USerDetail />} />
           <Route path="/locations" element={<Locations />} />
           <Route path="/locations/:locationsId" element={<UserLocation />} />
@@ -63,6 +66,7 @@ function App() {
           <Route path="/client" element={<Clients />} />
           <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
+
         </Routes>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />

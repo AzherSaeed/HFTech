@@ -1,256 +1,253 @@
-import React, { useState } from "react";
 import Style from "./Style";
 import Sidebar from "../../../../Components/Sidebar/Sidebar";
-import { InputNumber } from "antd";
+import { InputNumber, Modal, Spin } from "antd";
 import CustomButton from "../../../../Components/CustomButton/Index";
 import { Tabs, Radio } from "antd";
 import MobileLabourLine from "./MobileLabourLine";
-import MobileMaterialLine from "./MobileMaterialLine";
-import { useMutation, useQuery } from "react-query";
+import { API_URL, LIST_ADMIN_LINE_ITEMS_BY_ID, LIST_ADMIN_LINE_ITEMS_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_TYPE_MATERIALS, USER_LINE_ITEM_SAVE } from "../../../../Services/config";
+import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../../../Components/Loader/Loader";
+import { CustomQueryHookById, CustomQueryHookGet } from "../../../../Components/QueryCustomHook/Index";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL, LINE_ITEMS_GET } from "../../../../Services/config";
-
-
+import ic_logo from "../../../../Assets/icons/ic_logo.svg";
 const { TabPane } = Tabs;
+
+
 const Index = () => {
-  const [tab, setTab] = useState('1');
-
-
-  const { data  , isLoading, isSuccess, error, isError , refetch } = useQuery(
-    "getLineItem",
-    () => {
-      return axios.get(API_URL + LINE_ITEMS_GET, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-    },
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  function callback(key) {
-    setTab(key);
+  const navigate = useNavigate();
+  const { itemId } = useParams();
+  const [oldData, setOldData] = useState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  
+  const fetchData=()=>{
+  axios.get(API_URL+LIST_ADMIN_LINE_ITEMS_BY_ID+itemId).then((response)=>setOldData(response.data.result.dtoLineItemDetails)).catch((error)=>console.log('error'))
   }
+useEffect(() => {
+  fetchData()
+
+}, [itemId]);
+
+
+  // For Labour Data
+  const { data: labourData, isLoading: labourLoading } = CustomQueryHookGet('getLineItemByItemTypeLabour', (API_URL + LIST_ADMIN_LINE_ITEMS_TYPE_LABOUR), true);
+
+  // For Material Data
+
+  const { data: materialsData, isLoading: materialsLoading } = CustomQueryHookGet('getLineItemByItemTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_TYPE_MATERIALS), true);
+
+  // For Load Data by Id
+
+  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('adminListItemById', itemId, (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID), true);
+
+
+  // Id Navigation handler
+  const refetchByIdHandler = (id) => {
+    navigate(`/estimates/createNew/addItem/${id}`);
+    refetchById();
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+
+  // For Change detects in labor or Material details
+
+  const handleItemsDetails = (index, inputName, value) => {
+    if (inputName === 'price') {
+      oldData[index].price = value;
+      oldData[index].total = oldData[index].qty * oldData[index].price;
+    } else {
+      oldData[index].qty = value;
+      oldData[index].total = oldData[index].qty * oldData[index].price;
+    }
+    setOldData([...oldData,]);
+  }
+
+  if (materialsLoading) {
+    return <Loader />
+  }
+
+  const onSubmit = () => {
+    axios.post((API_URL + USER_LINE_ITEM_SAVE), {
+      "channel": itemDetails.data.result.channel,
+      "total": itemDetails.data.result.dtoLineItemDetails[0].total + itemDetails.data.result.dtoLineItemDetails[1].total + itemDetails.data.result.dtoLineItemDetails[2].total + itemDetails.data.result.dtoLineItemDetails[3].total,
+      "isReversed": false,
+      "dtoUnitOfMeasure": itemDetails?.data.result.dtoUnitOfMeasures ? {
+        "id": itemDetails?.data.result.dtoUnitOfMeasures[0].id
+      } : null,
+      "dtoLineItem": {
+        "id": itemDetails.data.result.id
+      },
+      "userLineItemDetails": [
+        {
+          "dtoLineItemDetail": {
+
+            "id": oldData[0].id
+          },
+          "total": oldData[0].total,
+          "quantity": oldData[0].qty,
+          "price": oldData[0].price
+        },
+        {
+          "dtoLineItemDetail": {
+
+            "id": oldData[1].id
+          },
+          "total": oldData[1].total,
+          "quantity": oldData[1].qty,
+          "price": oldData[1].price
+        },
+        {
+          "dtoLineItemDetail": {
+
+            "id": oldData[2].id
+          },
+          "total": oldData[2].total,
+          "quantity": oldData[2].qty,
+          "price": oldData[2].price
+        },
+        {
+          "dtoLineItemDetail": {
+
+            "id": oldData[3].id
+          },
+          "total": oldData[3].total,
+          "quantity": oldData[3].qty,
+          "price": oldData[3].price
+        }
+      ]
+    }).then((res) => {
+      setIsModalVisible(true);
+      setTimeout(() => {
+        setIsModalVisible(false);
+      }, 2000);
+    }).catch((error) => console.log(error, 'error'));
+  }
+
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+      }}
+      spin
+    />
+  );
   return (
     <Sidebar>
       <Style>
+        <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
+          <div className="text-center">
+            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+          </div>
+          <div className="mt-3 text-center" >
+
+            <h5>Item Added Succesfully</h5>
+          </div>
+        </Modal>
         <div className="main-container">
           <div className="row">
             <div className="col-md-6 col-sm-12">
               <div className="first-table">
-                <Tabs defaultActiveKey="1" onChange={callback}>
+                <Tabs defaultActiveKey="1">
                   <TabPane tab="Labor Lineitems" key="1">
-                    {data?.data?.result?.map((item, index) => (
-                        <div className="addItem">
-                          {/* <Link to='/estimates/createNew/addItem'> */}
-
+                    {labourData?.data?.result?.map((item, index) => (
+                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(item.id)}>
+                        <div className="addItem-div">
+                          <div>{item.name}</div>
+                          <div>&gt;</div>
+                        </div>
+                      </div>
+                    ))}
+                  </TabPane>
+                  <TabPane tab="Materials Lineitems" key="2">
+                    {materialsData?.data?.result?.map((item, index) => (
+                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(item.id)}>
+                        <div className="d-none d-sm-block">
                           <div className="addItem-div">
                             <div>{item.name}</div>
                             <div>&gt;</div>
                           </div>
-
-                          {/* </Link> */}
                         </div>
-                      ))}
-                  </TabPane>
-                  <TabPane tab="Materials Lineitems" key="2">
-                    {Array(10)
-                      .fill("")
-                      .map((_, index) => (
-                        <div className="addItem">
-                          {/* <Link to='/estimates/createNew/addItem'> */}
-                          <div className="d-none d-sm-block">
-                          <div className="addItem-div">
-                            <div>Project Manager</div>
-                            <div>&gt;</div>
-                            </div>
-                          </div>
-
-                          {/* </Link> */}
-                        </div>
-                      ))}
+                      </div>
+                    ))}
                   </TabPane>
                 </Tabs>
               </div>
             </div>
             <div className="col-md-6 col-sm-12 ">
-              <div className="second-table">
-                <div className="d-none d-sm-block">
-                  <div className="main-heading">
-                    <p>Project Manager</p>
-                  </div>
-                </div>
-                {tab === "1" ? (
-                  <>
+              {
+                itemDetails && (
+                  <div className="second-table">
+                    <div className="d-none d-sm-block">
+                      <div className="main-heading">
+                        <p>{itemDetails?.data.result.name}</p>
+                      </div>
+                    </div>
                     <div className="d-sm-none">
                       <MobileLabourLine />
                     </div>
                     <div className="d-none d-sm-block">
-                      <div className="tabWrapper">
-                        <div className="rateWrapper">
-                          <h3>Regular Time Rate(Per Hour)</h3>
-                          <div className="input-fields">
-                            <InputNumber
-                              addonBefore="$"
-                              addonAfter="Rate"
-                              defaultValue={20}
-                            />
-                            <InputNumber
-                              addonAfter="Quantity"
-                              defaultValue={20}
-                            />
-                            <InputNumber
-                              addonBefore="Total"
-                              defaultValue={20}
-                            />
-                          </div>
+                      {itemFetching ? (
+                        <div className="d-flex justify-content-center">
+                          <Spin indicator={antIcon} />
                         </div>
-                        <div className="rateWrapper">
-                          <h3>Over Time Rate(Per Hour)</h3>
-                          <div className="input-fields">
-                            <InputNumber
-                              addonBefore="$"
-                              addonAfter="Rate"
-                              defaultValue={100}
-                            />
-                            <InputNumber
-                              addonAfter="Quantity"
-                              defaultValue={100}
-                            />
-                            <InputNumber
-                              addonBefore="Total"
-                              defaultValue={100}
-                              className
-                            />
-                          </div>
-                        </div>
-                        <div className="rateWrapper">
-                          <h3>Premium Time Rate(ER)(Per Hour)</h3>
-                          <div className="input-fields">
-                            <InputNumber
-                              addonBefore="$"
-                              addonAfter="Rate"
-                              defaultValue={100}
-                            />
-                            <InputNumber
-                              addonAfter="Quantity"
-                              defaultValue={100}
-                            />
-                            <InputNumber
-                              addonBefore="Total"
-                              defaultValue={100}
-                              className
-                            />
-                          </div>
-                        </div>
-                        <div className="rateWrapper">
-                          <p className="heading">
-                            Other Rate(not base on an hourly rate)
-                          </p>
-                          <div className="input-fields">
-                            <InputNumber
-                              addonBefore="$"
-                              addonAfter="Rate"
-                              defaultValue={100}
-                            />
-                            <InputNumber
-                              addonAfter="Quantity"
-                              defaultValue={100}
-                            />
-                            <InputNumber
-                              addonBefore="Total"
-                              defaultValue={100}
-                              className
-                            />
-                          </div>
-                        </div>
-                        <div className="totalWrapper">
-                          <div>Total</div>
-                          <div>$1072.50</div>
-                        </div>
-                        <div className="saveLineItems">
-                          <CustomButton
-                            bgcolor="#156985"
-                            color="white"
-                            padding="8px 8px"
-                            width="75%"
-                            type="submit"
-                            title="Save Line Items"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="d-sm-none">
-                      <MobileMaterialLine />
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <>
+                      ) : (
                         <div className="tabWrapper">
-                          <div className="rateWrapper">
-                            <p className="heading">
-                              Other Rate(not base on an hourly rate)
-                            </p>
-                            <div className="input-fields">
-                              <InputNumber
-                                addonBefore="$"
-                                addonAfter="Rate"
-                                defaultValue={100}
-                              />
-                              <InputNumber
-                                addonAfter="Quantity"
-                                defaultValue={100}
-                              />
-                              <InputNumber
-                                addonBefore="Total"
-                                defaultValue={100}
-                                className
-                              />
-                            </div>
-                          </div>
-                          <div className="">
-                            <p className="heading">Units of Measure</p>
-                            <Radio.Group
-                              defaultValue="a"
-                              buttonStyle="solid"
-                              className="flex-wrap"
-                            >
-                              <Radio.Button value="a">Day</Radio.Button>
-                              <Radio.Button value="b">Each</Radio.Button>
-                              <Radio.Button value="c">Pair</Radio.Button>
-                              <Radio.Button value="d">Box</Radio.Button>
-                              <Radio.Button value="e">Roll</Radio.Button>
-                            </Radio.Group>
-                          </div>
-                          <div className="totalWrapper">
-                            <div>Total</div>
-                            <div>$1072.50</div>
-                          </div>
+                          {
+                            itemDetails?.data.result.dtoLineItemDetails.map(({ id, name, qty, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+                              <div className="rateWrapper" key={id}>
+                                <h3>{name}</h3>
+                                <div className="input-fields">
+                                  <InputNumber
+                                    addonBefore="$"
+                                    addonAfter="Rate"
+                                    defaultValue={price}
+                                    controls={false}
+                                    value={oldData ? oldData[index].price : price}
+                                    type='text'
+                                    onChange={(value) => handleItemsDetails(index, 'price', value)}
+                                  />
+                                  <InputNumber
+                                    addonAfter="Quantity"
+                                    defaultValue={qty}
+                                    value={qty}
+                                    controls={false}
+                                    type='text'
+                                    onChange={(value) => handleItemsDetails(index, 'qty', value)}
+                                  />
+                                  <InputNumber
+                                    addonBefore="Total"
+                                    defaultValue={total}
+                                    type='text'
+                                    controls={false}
+                                    value={oldData ? oldData[index].total : (qty * price)}
+                                  />
+                                </div>
+                              </div>
+                            )
+                            )
+                          }
                           <div className="saveLineItems">
                             <CustomButton
                               bgcolor="#156985"
                               color="white"
-                              padding="11px 8px"
+                              padding="8px 8px"
                               width="75%"
                               type="submit"
                               title="Save Line Items"
+                              clicked={onSubmit}
                             />
                           </div>
                         </div>
-                      </>
+                      )
+                      }
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>
