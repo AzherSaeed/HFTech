@@ -1,6 +1,7 @@
 export const API_URL = "https://node01.dagnum.com:8443/hftech/api/";
 export const GET_CONTACT = "contact/get";
 export const GET_CLIENT = "client/get";
+export const GET_CLIENT_DETAIL = 'client/getById'
 export const CLIENT_UPDATE = "client/update";
 export const CLIENT_CREATE = "client/save";
 export const CLIENT_DELETE = 'client/delate'

@@ -28,6 +28,10 @@ import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
 // this is the devTool the react query provides
 import { ReactQueryDevtools } from "react-query/devtools";
+import ContactDetailPage from "./Layout/Contacts/ContactDetailPage";
+import LocationDetailPage from "./Layout/Locations/LocationDetailPage";
+import ClientDetailPage from "./Layout/Clients/ClientDetailPage";
+import LineItemDetailPage from "./Layout/LineItem/LineItemDetailPage";
 const queryClient = new QueryClient();
 export const CollapsedContext = createContext();
 
@@ -56,13 +60,17 @@ function App() {
           <Route path="/estimates/:estimstesId" element={<USerDetail />} />
           <Route path="/locations" element={<Locations />} />
           <Route path="/locations/:locationsId" element={<UserLocation />} />
+          <Route path="/locationsDetail/:locationsId" element={<LocationDetailPage/>} />
           <Route path="/contact" element={<Contacts />} />
           <Route path="/contact/:contactId" element={<USerContact />} />
+          <Route path="/contactDetail/:contactId" element={<ContactDetailPage />} />
           <Route path="/lineItem" element={<LineItem />} />
           <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
+          <Route path="/lineItemDetail/:lineItemId" element={<LineItemDetailPage />} />
           <Route path="/client" element={<Clients />} />
-          <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
           <Route path="/clients/:clientId" element={<ClientDetail />} />
+          <Route path="/clientsDetail/:clientId" element={<ClientDetailPage />} />
+          <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
         </Routes>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />

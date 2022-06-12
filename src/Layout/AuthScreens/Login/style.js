@@ -12,7 +12,7 @@ export const LoginContainer = styled.div`
       background-color: white;
       padding: 20px;
       border-radius: 6px;
-      width: 40%;
+      width: 30%;
       /* margin-left: auto;
       margin-right: auto; */
       margin: auto;
@@ -39,13 +39,13 @@ export const LoginContainer = styled.div`
       justify-content: center;
       margin-bottom: 20px;
       p {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: normal;
       }
       h6 {
         margin-top: -8px;
         padding: 0;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: normal;
         color: ${BasicColor};
       }
@@ -90,7 +90,7 @@ export const LoginContainer = styled.div`
 @media screen and (max-width: 768px) {
   .login-container{
     &-card{
-      width: 60%;
+      width: 50%;
       background-color: #FAFAFA;
 
     }

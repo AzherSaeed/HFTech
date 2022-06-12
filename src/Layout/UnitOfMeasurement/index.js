@@ -20,6 +20,7 @@ import Loader from "../../Components/Loader/Loader";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import DeleteModal from "../../Components/Delete/Index";
+import SuccessfulDeleteModal from "../../Components/Delete/SuccessfullModal";
 
 const initialValues = {
   name: "",
@@ -33,7 +34,7 @@ const Index = () => {
   const [unitDeleteDetailHandler, setunitDeleteDetailHandler] = useState(null);
   const [unitUpdateInputHandler, setunitUpdateInputHandler] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [successDeleteModal, setsuccessDeleteModal] = useState(false)
 
   const { data, isLoading, refetch } = useQuery(
     "units",
@@ -92,9 +93,10 @@ const Index = () => {
           });
         } else {
           setunitDetailHandler(null);
-          toast.success(response.data.message, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          console.log(response.data , 'response.data.messag');
+          if(response.data.status !== 'CREATED'){
+            setsuccessDeleteModal(true)
+          }
         }
         refetch();
       },
@@ -130,6 +132,7 @@ const Index = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setsuccessDeleteModal(false)
   };
   const handleIndividualDelete = () => {
     mutation.mutate(unitDeleteDetailHandler.id);
@@ -153,28 +156,40 @@ const Index = () => {
                         compact
                         className="unitOfMeasurementContent-detail-children-input-group"
                       >
-                        <Input
-                          style={{ width: "100%" }}
-                          defaultValue={unit.name}
-                          disabled={unitDetailHandler?.id !== unit.id}
-                          onChange={(e) =>
-                            setunitUpdateInputHandler(e.target.value)
-                          }
-                        />
-                        {unitDetailHandler?.id == unit.id ? (
-                          <CustomButton
-                            bgcolor="#156985"
-                            color="white"
-                            padding="3px 0px"
-                            width="70px"
-                            type="submit"
-                            title="Update"
-                            clicked={() => unitUpdateHandler(unit)}
+                        <div className="unitOfMeasurementContent-detail-children-input-group-div">
+                          <label>Unit Name</label>
+                          <Input
+                            style={{ width: "100%" }}
+                            defaultValue={unit.name}
+                            disabled={unitDetailHandler?.id !== unit.id}
+                            onChange={(e) =>
+                              setunitUpdateInputHandler(e.target.value)
+                            }
                           />
+                        </div>
+
+                        {unitDetailHandler?.id == unit.id ? (
+                          <div style={{ marginTop: "25px" }}>
+                            <CustomButton
+                              bgcolor="#156985"
+                              color="white"
+                              padding="3px 0px"
+                              width="70px"
+                              type="submit"
+                              title="Update"
+                              clicked={() => unitUpdateHandler(unit)}
+                            />
+                          </div>
                         ) : null}
                       </Input.Group>
 
-                      <div style={{ display: "flex", gap: "10px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          marginTop: "17px",
+                        }}
+                      >
                         <img
                           src={deleteIcon}
                           alt="delete Icon"
@@ -230,7 +245,7 @@ const Index = () => {
                       padding="5px 8px"
                       width="100%"
                       type="submit"
-                      title="Save"
+                      title="Update Unit of Measurement"
                       disabled={unitDetailHandler}
                     />
                   </Form>
@@ -245,6 +260,18 @@ const Index = () => {
             centered={true}
           >
             <DeleteModal
+              handleCancel={handleCancel}
+              userDetail={unitDeleteDetailHandler}
+              deleteUser={handleIndividualDelete}
+            />
+          </Modal>
+          <Modal
+            visible={successDeleteModal}
+            footer={null}
+            onCancel={handleCancel}
+            centered={true}
+          >
+            <SuccessfulDeleteModal
               handleCancel={handleCancel}
               userDetail={unitDeleteDetailHandler}
               deleteUser={handleIndividualDelete}

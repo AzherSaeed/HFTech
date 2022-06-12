@@ -16,8 +16,12 @@ export const CustomDatePickerContainer = styled.div`
 
     .ant-picker.customdatepicker{
         width: 100% !important;
-        padding: 10px;
-        border-radius: 5px;
+        /* padding: 10px; */
+        border-radius: 5px !important; 
         border: 1px solid #C6C6C8;
+        //padding: 8px 8px;
     }
+    .ant-picker {
+    padding: 8px 8px !important;
+}
 `

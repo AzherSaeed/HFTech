@@ -12,7 +12,7 @@ export const LoginContainer = styled.div`
       background-color: white;
       padding: 20px;
       border-radius: 6px;
-      width: 40%;
+      width: 30%;
       margin: auto;
 
       &-logo {
@@ -74,7 +74,7 @@ export const LoginContainer = styled.div`
     margin-bottom: 8px;
   }
   .forget_password {
-    text-align: center;
+    text-align: left;
   }
   .ant-input-suffix {
     margin-left: 30px;
@@ -94,6 +94,8 @@ export const LoginContainer = styled.div`
   .line{
     display:none;
   }
+  .ant-form label {
+    margin-left: 4px;}
   @media screen and (max-width: 925px) {
     .login-container {
       &-card {

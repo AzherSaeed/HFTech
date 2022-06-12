@@ -233,7 +233,7 @@ const Index = () => {
               <CustomButton
                 bgcolor={BasicColor}
                 color="white"
-                padding="6px 8px"
+                padding="8px 8px"
                 type="submit"
                 width="130px"
                 title="Create new"

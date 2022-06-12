@@ -26,14 +26,19 @@ body{
 @font-face {
   font-family: "EnnVisions";
   src: local("SFUIText-Regular"),
-      url("./Assets/fonts/EnnVisions.otf") format("truetype");
+      url("./Assets/fonts/Overpass-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "EnnVisionsBold";
   src: local("SFUIText-Regular"),
-      url("./Assets/fonts/EnnVisionsMedium.otf") format("truetype");
+      url("./Assets/fonts/Overpass-Medium.ttf") format("truetype");
 }
 
 .drawer-menu a{
+  color: black !important;
+}
+
+.ant-input[disabled]{
+  background-color: transparent !important;
   color: black !important;
 }

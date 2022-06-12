@@ -47,7 +47,7 @@ const Sidebar = ({ children }) => {
             </Menu.Item>{" "}
             <Menu.Item key="/locations">
               <Link to="/locations" />
-              Locations{" "}
+              Space{" "}
             </Menu.Item>{" "}
             <Menu.Item key="/contact">
               <Link to="/contact" />

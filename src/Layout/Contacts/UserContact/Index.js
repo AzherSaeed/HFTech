@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
-import { Form, Modal, Spin } from "antd";
+import { Form, Modal } from "antd";
 import Style from "./Style";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
@@ -50,11 +50,7 @@ const Index = () => {
 
   const {
     data: userData,
-    isSuccess,
-    isLoading,
     isFetching,
-    error,
-    isError,
   } = useQuery(
     "get-User-By-Id",
     () => {
@@ -119,13 +115,13 @@ const Index = () => {
     }
   );
 
-  const handleModalSubmit = () => {
-    setIsModalVisibled(true);
-    setTimeout(() => {
-      setIsModalVisibled(false);
-      navigate("/contact");
-    }, 2000);
-  };
+  // const handleModalSubmit = () => {
+  //   setIsModalVisibled(true);
+  //   setTimeout(() => {
+  //     setIsModalVisibled(false);
+  //     navigate("/contact");
+  //   }, 2000);
+  // };
   const handleModalCancel = () => {
     setIsModalVisibled(false);
     navigate("/contact");
@@ -189,7 +185,7 @@ const Index = () => {
                         type="text"
                         name="name"
                         placeholder="Enter location name"
-                        disabled={contactId == "edit"}
+                        disabled={contactId === "edit"}
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
@@ -202,7 +198,7 @@ const Index = () => {
                         type="text"
                         name="phone"
                         maxLength='10'
-                        disabled={contactId == "edit"}
+                        disabled={contactId === "edit"}
                         placeholder="(617)397 - 8483"
                         className={
                           formik.errors.name && formik.touched.name
@@ -215,7 +211,7 @@ const Index = () => {
                         control="input"
                         type="email"
                         name="email"
-                        disabled={contactId == "edit"}
+                        disabled={contactId === "edit"}
                         placeholder="Enter email address"
                         className={
                           formik.errors.name && formik.touched.name
@@ -224,7 +220,7 @@ const Index = () => {
                         }
                       />
                       <div style={{ marginTop: "auto" }}>
-                        {contactId == "edit" ? null : (
+                        {contactId === "edit" ? null : (
                           <CustomButton
                             bgcolor={BasicColor}
                             color="white"

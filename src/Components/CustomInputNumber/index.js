@@ -16,7 +16,7 @@ const InputField = (props) => {
   } = props;
   return (
     <CustomInputContainer>
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={label}>{label}</label>
       <Field name={name} id={name}>
         {({ field }) => (
           <InputNumber
@@ -31,7 +31,6 @@ const InputField = (props) => {
             className={className}
             maxLength={maxLength}
           />
-
         )}
       </Field>
       <ErrorMessage name={name} component={ErrorMsg} />

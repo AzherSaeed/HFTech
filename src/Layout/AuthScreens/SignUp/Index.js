@@ -139,7 +139,7 @@ const Index = () => {
                     </div>
                     <div className="login-input-fields-field">
                       <FormControl
-                        prefix={<img src={ic_flag} alt="ic_flag" />}
+                        // prefix={<img src={ic_flag} alt="ic_flag" />}
                         control="input"
                         type="text"
                         name="phoneNumber"
@@ -155,7 +155,8 @@ const Index = () => {
                     </div>
 
                     <p to="/" className="forget_password">
-                      Agreed with Terms & Conditions Privacy Policy
+                     <input type='checkbox' name="forget_pass" id="forget_pass"/>
+                     <label for="forget_pass">  Agreed with Terms & Conditions Privacy Policy</label>
                     </p>
                     <CustomButton
                       bgcolor={BasicColor}

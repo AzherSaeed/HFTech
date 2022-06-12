@@ -5,24 +5,21 @@ export const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* height: 100vh;
-  background-color: #212121; */
-  .question-text{
+  .question-text {
     font-size: 16px;
     color: #156985;
-    
+
     text-transform: capitalize;
   }
-  .inquiry-delete{
+  .inquiry-delete {
     font-size: 16px !important;
     margin-bottom: 0 !important;
-   .delete-user{
-    color: #156985;
-    
-   } 
-   .delete-by{
-    color: #156985;
-   }
+    .delete-user {
+      color: #156985;
+    }
+    .delete-by {
+      color: #156985;
+    }
   }
   .login-container {
     &-card {
@@ -33,10 +30,10 @@ export const LoginContainer = styled.div`
       margin: auto;
       text-align: center;
       &-logo {
-        margin:  auto;
+        margin: auto;
         text-align: center;
         img {
-          width: 30%;
+          width: 130px;
         }
       }
       h1 {
@@ -88,10 +85,10 @@ export const LoginContainer = styled.div`
     .login-container {
       &-card {
         /* width: 60%; */
-        h1{
+        h1 {
           font-size: 16px;
         }
-        p{
+        p {
           font-size: 16px;
         }
       }
@@ -103,11 +100,10 @@ export const LoginContainer = styled.div`
       &-card {
         /* width: 90%; */
         /* padding: 20px; */
-        h1{
+        h1 {
           font-size: 16px;
-          
         }
-        p{
+        p {
           font-size: 16px;
         }
       }

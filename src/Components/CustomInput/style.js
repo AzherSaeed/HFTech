@@ -12,5 +12,7 @@ export const CustomInputContainer = styled.div`
     margin-bottom: 10px;
     color:#1B283F;
   }
-
+  .ant-input {
+    padding: 8px 8px !important;
+}
 `;

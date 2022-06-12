@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import Style from "./Style";
-import { Tabs, Checkbox } from "antd";
+import { Tabs, Checkbox, Modal } from "antd";
 import {
   CLIENT_CREATE,
   CLIENT_UPDATE,
@@ -17,8 +17,7 @@ import { Formik } from "formik";
 import { Form } from "antd";
 import Loader from "../../../Components/Loader/Loader";
 import { toast } from "react-toastify";
-
-
+import SuccessfullModal from "../../../Components/Delete/SuccessfullModal";
 
 const { TabPane } = Tabs;
 
@@ -26,9 +25,9 @@ const initialValues = {
   name: "",
   phone: "",
   email: "",
-  spaceIds : [],
-  contactIds : [],
-  channel:"IOS"
+  spaceIds: [],
+  contactIds: [],
+  channel: "IOS",
 };
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -47,17 +46,17 @@ const Index = () => {
   const { clientId } = useParams();
 
   const regex = /^\d*(\.\d+)?$/;
-  const {
-    data: userData,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-    isError,
-  } = useQuery(
+
+  const [successModal, setsuccessModal] = useState(false);
+
+  const handleCancel = () => {
+    setsuccessModal(false);
+  };
+
+  const { data: userData, isFetching } = useQuery(
     "get-Client-By-Id",
     () => {
-      return axios.get( API_URL + `client/getById?clientId=${clientId}`, {
+      return axios.get(API_URL + `client/getById?clientId=${clientId}`, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -71,12 +70,10 @@ const Index = () => {
       keepPreviousData: false,
     }
   );
-  const {
-    data: locationData,
-  } = useQuery(
+  const { data: locationData } = useQuery(
     "get-location-By-Id",
     () => {
-      return axios.get( API_URL + "space/get", {
+      return axios.get(API_URL + "space/get", {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -90,18 +87,21 @@ const Index = () => {
     }
   );
 
-
-
   const onSuccess = (response) => {
     if (response.data?.code !== 201) {
       toast.error(response.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
-      toast.success(response.data.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      navigate("/client");
+      setsuccessModal(true)
+      // toast.success(response.data.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+      setTimeout(() => {
+        navigate("/client");
+        setsuccessModal(false)
+      },3000)
+      
     }
   };
 
@@ -125,9 +125,9 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        toast.error('Please provide valid detail', {
+        toast.error("Please provide valid detail", {
           position: toast.POSITION.TOP_RIGHT,
-        });;
+        });
       },
     }
   );
@@ -137,18 +137,15 @@ const Index = () => {
   };
 
   if (isFetching) {
-    return <Loader/>;
+    return <Loader />;
   }
-
 
   return (
     <Sidebar>
       <Style>
         <Formik
           initialValues={
-            userData?.data?.result
-              ? userData?.data?.result
-              : initialValues
+            userData?.data?.result ? userData?.data?.result : initialValues
           }
           // validationSchema={validationSchema}
           onSubmit={onSubmit}
@@ -192,7 +189,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="phone"
-                        maxLength='10'
+                        maxLength="10"
                         placeholder="(617)397 - 8483"
                         className={
                           formik.errors.name && formik.touched.name
@@ -213,11 +210,11 @@ const Index = () => {
                         }
                       />
 
-                      <div style={{ marginTop: "auto" }}>
+                      <div style={{ marginTop: "5px" }}>
                         <CustomButton
                           bgcolor="#156985"
                           color="white"
-                          padding="11px 8px"
+                          padding="8px 8px"
                           width="100%"
                           type="submit"
                           title="SUBMIT"
@@ -229,53 +226,68 @@ const Index = () => {
                   <div className="rightSide">
                     <Tabs defaultActiveKey="1" size="large">
                       <TabPane tab="Locations" key="1">
-                        <Checkbox.Group  defaultValue={[3]}  onChange={(value) =>  formik.setFieldValue('spaceIds' , value )} >
-                          {locationData && locationData?.data.result?.map((data, i) => (
-                            <div key={i} className="details">
-                              <Checkbox value={{ id: data.id }} name='spaceIds'  >
-                                <div className="details-checkbox">
-                                  <div className="details-list">
-                                    <span className="details-list-name">
-                                      Name:
-                                    </span>
-                                    {data.countryName}
+                        <Checkbox.Group
+                          defaultValue={[3]}
+                          onChange={(value) =>
+                            formik.setFieldValue("spaceIds", value)
+                          }
+                        >
+                          {locationData &&
+                            locationData?.data.result?.map((data, i) => (
+                              <div key={i} className="details">
+                                <Checkbox
+                                  value={{ id: data.id }}
+                                  name="spaceIds"
+                                >
+                                  <div className="details-checkbox">
+                                    <div className="details-list">
+                                      <span className="details-list-name">
+                                        Name:
+                                      </span>
+                                      {data.name}
+                                    </div>
+                                    <div className="details-list">
+                                      <span className="details-list-name">
+                                        Owner:
+                                      </span>
+                                      {data.dtoUser.userName}
+                                    </div>
                                   </div>
-                                  <div className="details-list">
-                                    <span className="details-list-name">
-                                      Owner:
-                                    </span>
-                                    {data.name}
-                                  </div>
-                                </div>
-                              </Checkbox>
-                            </div>
-                          ))}
+                                </Checkbox>
+                              </div>
+                            ))}
                         </Checkbox.Group>
                       </TabPane>
                       <TabPane tab="Contacts" key="2">
                         <Checkbox.Group
-                        onChange={(value) =>  formik.setFieldValue('contactIds' , value )}
+                          onChange={(value) =>
+                            formik.setFieldValue("contactIds", value)
+                          }
                         >
-                          {locationData && locationData?.data.result?.map((data, i) => (
-                            <div key={i} className="details">
-                              <Checkbox value={{ id: data.id }} name='contactIds' >
-                                <div className="details-checkbox">
-                                  <div className="details-list">
-                                    <span className="details-list-name">
-                                      Name:
-                                    </span>
-                                    {data.dtoUser.userName}
+                          {locationData &&
+                            locationData?.data.result?.map((data, i) => (
+                              <div key={i} className="details">
+                                <Checkbox
+                                  value={{ id: data.id }}
+                                  name="contactIds"
+                                >
+                                  <div className="details-checkbox">
+                                    <div className="details-list">
+                                      <span className="details-list-name">
+                                        Name:
+                                      </span>
+                                      {data.name}
+                                    </div>
+                                    <div className="details-list">
+                                      <span className="details-list-name">
+                                        Owner:
+                                      </span>
+                                      {data.dtoUser.userName}
+                                    </div>
                                   </div>
-                                  <div className="details-list">
-                                    <span className="details-list-name">
-                                      Owner:
-                                    </span>
-                                    {data.dtoUser.email}
-                                  </div>
-                                </div>
-                              </Checkbox>
-                            </div>
-                          ))}
+                                </Checkbox>
+                              </div>
+                            ))}
                         </Checkbox.Group>
                       </TabPane>
                     </Tabs>
@@ -285,6 +297,17 @@ const Index = () => {
             );
           }}
         </Formik>
+        <Modal
+          visible={successModal}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+        >
+          <SuccessfullModal
+            handleCancel={handleCancel}
+            message="Successfully Added"
+          />
+        </Modal>
       </Style>
     </Sidebar>
   );

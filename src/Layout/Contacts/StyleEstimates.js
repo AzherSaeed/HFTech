@@ -3,10 +3,11 @@ const StyleEstimates =styled.div`
 .btn{
     display: flex;
     justify-content: flex-end;
- 
+    margin-top: -25px;
 }
 .ant-table {
     padding: 10px;
+    height: 70vh;
 }
 .ant-table-thead{
     background-color: #F3F6F9 ;
@@ -29,10 +30,11 @@ border-bottom: none !important;
 }
 .action_icons{
     background:#E1E2E2 ;
-    width:23px;
-    height:22px;
-    padding: 3px;
+    width:30px;
+    height:30px;
+    padding: 6px;
     border-radius: 2px;
+    cursor: pointer;
 }
 .deleteicon{
     background: #D63229 !important;
@@ -41,5 +43,11 @@ border-bottom: none !important;
     background: #007AFF !important;
 }
 `; 
+
+
+export const ContactDetailPageContainer = styled.div`
+    max-width: 50%;
+
+`
 
 export default StyleEstimates;

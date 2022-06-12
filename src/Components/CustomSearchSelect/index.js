@@ -5,7 +5,7 @@ import { Select } from "antd";
 import { CustomSelectContainer } from "./style";
 
 const SelectComp = (props) => {
-  const { name, placeholder, handleSelectValue = null , onSelect, defaultValue, label, options, ...rest } =
+  const { name, placeholder, loading , handleSelectValue = null , onSelect, defaultValue, label, options, ...rest } =
     props;
 
   const OptionsArr = options?.map((option) => {
@@ -44,6 +44,7 @@ const SelectComp = (props) => {
                 onChange={(val) => {
                   form.setFieldValue(name, val);
                 }}
+                loading={loading}
                 onSelect={(value) => handleSelectValue(value)}
               >
                 {OptionsArr}

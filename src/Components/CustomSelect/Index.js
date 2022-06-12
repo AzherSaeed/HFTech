@@ -24,6 +24,7 @@ const SelectComp = (props) => {
             // <Form.Item name={name}>
             <div className="custom-select-inner">
               <Select
+                bordered={false}
                 className="customSelect"
                 name={name}
                 id={name}

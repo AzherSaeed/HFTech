@@ -39,13 +39,13 @@ export const LoginContainer = styled.div`
       justify-content: center;
       margin-bottom: 20px;
       p {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: normal;
       }
       h6 {
         margin-top: -8px;
         padding: 0;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: normal;
         color: ${BasicColor};
       }

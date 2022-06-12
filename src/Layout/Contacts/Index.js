@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Tag, Space, Modal } from "antd";
+import { Table, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import pdfIcon from "../../Assets/icons/ic_pdf.svg";
-import downloadIcon from "../../Assets/icons/ic_download.svg";
-import tickIcon from "../../Assets/icons/ic_tick.svg";
-import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL, GET_CONTACT, CONTACT_DELETE } from "../../Services/config";
+import moment from "moment";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
@@ -66,10 +63,6 @@ const columns = [
 
 const Index = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [deleteStatus, setDeleteStatus] = useState({
-  //   id: null,
-  //   shouldDelete: false,
-  // });
   const [deleteUserDetail, setDeleteUserDetail] = useState({
     name: "",
     email: "",
@@ -142,12 +135,12 @@ const Index = () => {
 
   const contactData = data?.data?.result?.map((contact) => {
     return {
-      id: <Link to={`/contact/edit`}>{contact.id}</Link>,
+      id: <Link to={`/contactDetail/${contact.id}`}>{contact.id}</Link>,
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
-      created: "Not Available",
-      owner: "Not Available",
+      created: moment(contact.insertedDate).format('l, h:mm:ss a'),
+      owner: contact.dtoUser.userName,
       // channel: contact.channel,
       // countryCode: contact.countryCode,
 
@@ -160,7 +153,6 @@ const Index = () => {
             onClick={() => {
               handleDelete(contact.id, contact.email, contact.name);
             }}
-            style={{ cursor: "pointer" }}
           />
 
           <img
@@ -170,7 +162,6 @@ const Index = () => {
             onClick={() => {
               handleEdit(contact.id);
             }}
-            style={{ cursor: "pointer" }}
           />
         </div>
       ),
@@ -184,7 +175,7 @@ const Index = () => {
           <CustomButton
             bgcolor={BasicColor}
             color="white"
-            padding="6px 8px"
+            padding="8px 8px"
             type="submit"
             width="130px"
             title="Create new"

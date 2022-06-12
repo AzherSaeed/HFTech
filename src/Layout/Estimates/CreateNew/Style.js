@@ -32,6 +32,7 @@ const Style = styled.div`
     margin-top: 60px;
   }
   .addItem {
+    /* padding: 8px ; */
     &-label {
     }
     &-div {
@@ -40,8 +41,8 @@ const Style = styled.div`
       background: #f9fbfc;
       border: 0.5px solid #d6d6e0;
       border-radius: 3px;
-      padding: 6px;
-      margin-top: 5px;
+      padding: 8px;
+      margin-top: 8px;
       color: black !important;
     }
   }
