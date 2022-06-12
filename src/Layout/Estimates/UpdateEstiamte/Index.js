@@ -30,37 +30,33 @@ const Index = () => {
   const [isDeleteModal, setIsDeleteModal] = useState(false);
 
   const fetchData = () => {
-    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log('error'))
+    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
   }
 
   useEffect(() => {
     fetchData()
   }, [itemId]);
-  const clickedHandler = () => {
-    navigate("/estimates");
-  }
 
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-      }}
-      spin
-    />
-  );
-
+const antIcon = (
+<LoadingOutlined
+style={{
+  fontSize: 24,
+}}
+spin
+/>
+);
 
   // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading,refetch:labourRefetching } = CustomQueryHookGet('uuserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
 
   // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading,refetch:materialsRefetching } = CustomQueryHookGet('userLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
 
   // For Load Data by Id
 
-  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('userLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
+  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('createUserLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
 
 
   // Item Delete Handler
@@ -114,7 +110,7 @@ const Index = () => {
       "total": itemDetails.data.result.total,
       "isReversed": itemDetails.data.result.isReversed,
       "dtoUnitOfMeasure": {
-        "id": itemDetails.data.result.dtoUnitOfMeasure ? itemDetails.data.result.dtoUnitOfMeasure[0].id : null
+        "id": itemDetails.data.result.dtoUnitOfMeasure ? itemDetails.data.result.dtoUnitOfMeasure.id : null
       },
       "dtoLineItem": {
         "id": itemDetails.data.result?.dtoLineItem ? itemDetails.data.result.dtoLineItem.id : null
@@ -122,35 +118,35 @@ const Index = () => {
       "userLineItemDetails": [
         {
           "dtoLineItemDetail": {
-            "id": itemDetails.data.result.dtoLineItemDetails[0].id
+            "id": itemDetails.data.result.userLineItemDetails[0].id
           },
-          "total": itemDetails.data.result.dtoLineItemDetails[0].total,
-          "quantity": itemDetails.data.result.dtoLineItemDetails[0].quantity,
-          "price": itemDetails.data.result.dtoLineItemDetails[0].price
+          "total": itemDetails.data.result.userLineItemDetails[0].total,
+          "quantity": itemDetails.data.result.userLineItemDetails[0].quantity,
+          "price": itemDetails.data.result.userLineItemDetails[0].price
         },
         {
           "dtoLineItemDetail": {
-            "id": itemDetails.data.result.dtoLineItemDetails[1].id
+            "id": itemDetails.data.result.userLineItemDetails[1].id
           },
-          "total": itemDetails.data.result.dtoLineItemDetails[1].total,
-          "quantity": itemDetails.data.result.dtoLineItemDetails[1].quantity,
-          "price": itemDetails.data.result.dtoLineItemDetails[1].price
+          "total": itemDetails.data.result.userLineItemDetails[1].total,
+          "quantity": itemDetails.data.result.userLineItemDetails[1].quantity,
+          "price": itemDetails.data.result.userLineItemDetails[1].price
         },
         {
           "dtoLineItemDetail": {
-            "id": itemDetails.data.result.dtoLineItemDetails[2].id
+            "id": itemDetails.data.result.userLineItemDetails[2].id
           },
-          "total": itemDetails.data.result.dtoLineItemDetails[2].total,
-          "quantity": itemDetails.data.result.dtoLineItemDetails[2].quantity,
-          "price": itemDetails.data.result.dtoLineItemDetails[2].price
+          "total": itemDetails.data.result.userLineItemDetails[2].total,
+          "quantity": itemDetails.data.result.userLineItemDetails[2].quantity,
+          "price": itemDetails.data.result.userLineItemDetails[2].price
         },
         {
           "dtoLineItemDetail": {
-            "id": itemDetails.data.result.dtoLineItemDetails[3].id
+            "id": itemDetails.data.result.userLineItemDetails[3].id
           },
-          "total": itemDetails.data.result.dtoLineItemDetails[3].total,
-          "quantity": itemDetails.data.result.dtoLineItemDetails[3].quantity,
-          "price": itemDetails.data.result.dtoLineItemDetails[3].price
+          "total": itemDetails.data.result.userLineItemDetails[3].total,
+          "quantity": itemDetails.data.result.userLineItemDetails[3].quantity,
+          "price": itemDetails.data.result.userLineItemDetails[3].price
         }
       ]
     }).then((res) => {
@@ -161,7 +157,6 @@ const Index = () => {
       }, 3000);
     }).catch((error) => console.log(error, 'error'));
   }
-
 
   return (
     <Sidebar>
@@ -231,29 +226,7 @@ const Index = () => {
                 <Option value="jack">Jack (100)</Option>
                 <Option value="lucy">Lucy (101)</Option>
               </Select>
-              <Select
-                labelInValue
-                defaultValue={{ value: "lucy" }}
-                style={{ width: '100% ' }}
-              >
-                <Option value="jack">Jack (100)</Option>
-                <Option value="lucy">Lucy (101)</Option>
-              </Select>
             </div>
-          </div>
-        </div>
-        <div className="grid-container">
-          <div></div>
-          <div style={{ marginTop: '50px', paddingBottom: '0px' }}>
-            <CustomButton
-              bgcolor="#156985"
-              color="white"
-              padding="11px 8px"
-              width="100%"
-              type="submit"
-              title="Update Estimate"
-              clicked={clickedHandler}
-            />
           </div>
         </div>
       </Style>
@@ -261,7 +234,7 @@ const Index = () => {
         <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
           <div className="tabWrapper">
             {
-              oldData?.map(({ id, name, qty, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+              oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
                 <div className="rateWrapper mt-3" key={id}>
                   <h5>{name}</h5>
                   <div className="input-fields d-flex">
@@ -276,18 +249,18 @@ const Index = () => {
                     />
                     <InputNumber
                       addonAfter="Quantity"
-                      defaultValue={qty}
-                      value={qty}
+                      defaultValue={quantity}
+                      value={quantity}
                       controls={false}
                       type='text'
-                      onChange={(value) => handleItemsDetails(index, 'qty', value)}
+                      onChange={(value) => handleItemsDetails(index, 'quantity', value)}
                     />
                     <InputNumber
                       addonBefore="Total"
                       defaultValue={total}
                       type='text'
                       controls={false}
-                      value={oldData ? oldData[index].total : (qty * price)}
+                      value={oldData ? oldData[index].total : (quantity * price)}
                     />
                   </div>
                 </div>
@@ -301,7 +274,7 @@ const Index = () => {
                 padding="8px 8px"
                 width="75%"
                 type="submit"
-                title="Save Line Items"
+                title="Update Line Items"
                 clicked={onSubmit}
               />
             </div>
@@ -314,8 +287,8 @@ const Index = () => {
               <div className="first-table">
                 <Tabs defaultActiveKey="1">
                   <TabPane tab="Labor Lineitems" key="1">
-                    {labourData?.data?.result?.map(({ dtoLineItem: item }, index) => (
-                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(item.id)}>
+                    {labourData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
+                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
                         <div className="addItem-div">
                           <div>{item.name}</div>
                           <div>&gt;</div>
@@ -324,8 +297,8 @@ const Index = () => {
                     ))}
                   </TabPane>
                   <TabPane tab="Materials Lineitems" key="2">
-                    {materialsData?.data?.result?.map(({ dtoLineItem: item }, index) => (
-                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(item.id)}>
+                    {materialsData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
+                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
                         <div className="d-none d-sm-block">
                           <div className="addItem-div">
                             <div>{item.name}</div>
@@ -345,7 +318,7 @@ const Index = () => {
                     <div className="d-none d-sm-block">
                       <div className="inner-section">
                         <div className="main-heading-section d-flex justify-content-between">
-                          <p className="main-heading">{itemDetails?.data.result.name}</p>
+                          <p className="main-heading">{itemDetails?.data.result.dtoLineItem.name}</p>
                           <div className="warn-actions">
                             <div style={{ display: 'flex', gap: '6px' }}>
                               <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
@@ -377,7 +350,7 @@ const Index = () => {
                               </thead>
                               <tbody>
                                 {
-                                  itemDetails?.data.result.dtoLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
+                                  itemDetails?.data.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
                                     <tr key={id}>
                                       <td>{name}</td>
                                       <td>{price}</td>

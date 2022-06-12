@@ -7,6 +7,7 @@ import InputNumber from './CustomInputNumber'
 // import Checkbox from "./Checkbox";
 import PasswordInput from './CustomPasswordInput/Index';
 import CustomSearchSelect from './CustomSearchSelect'
+import CustomMultiSelect from './CustomMultiSelect/Index'
 const Formickcontroller = (props) => {
   const { control, ...rest } = props;
   // console.log("enter to controller");
@@ -17,6 +18,8 @@ const Formickcontroller = (props) => {
       return <Select {...rest} />;
     case "searchSelect":
       return <CustomSearchSelect {...rest} />;
+    case "multiSelect":
+      return <CustomMultiSelect {...rest} />;
     // case "checkbox":
     //   return <Checkbox {...rest} />;
     case "password":

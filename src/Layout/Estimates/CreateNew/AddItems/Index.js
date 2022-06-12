@@ -14,21 +14,18 @@ import axios from "axios";
 import ic_logo from "../../../../Assets/icons/ic_logo.svg";
 const { TabPane } = Tabs;
 
-
 const Index = () => {
   const navigate = useNavigate();
   const { itemId } = useParams();
   const [oldData, setOldData] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
-  const fetchData=()=>{
-  axios.get(API_URL+LIST_ADMIN_LINE_ITEMS_BY_ID+itemId).then((response)=>setOldData(response.data.result.dtoLineItemDetails)).catch((error)=>console.log('error'))
+
+  const fetchData = () => {
+    axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log('error'))
   }
-useEffect(() => {
-  fetchData()
-
-}, [itemId]);
-
+  useEffect(() => {
+    fetchData()
+  }, [itemId]);
 
   // For Labour Data
   const { data: labourData, isLoading: labourLoading } = CustomQueryHookGet('getLineItemByItemTypeLabour', (API_URL + LIST_ADMIN_LINE_ITEMS_TYPE_LABOUR), true);
@@ -51,7 +48,6 @@ useEffect(() => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
 
   // For Change detects in labor or Material details
 
@@ -143,7 +139,6 @@ useEffect(() => {
             <img src={ic_logo} alt="logo" width='120px' className="text-center" />
           </div>
           <div className="mt-3 text-center" >
-
             <h5>Item Added Succesfully</h5>
           </div>
         </Modal>
@@ -183,7 +178,7 @@ useEffect(() => {
                   <div className="second-table">
                     <div className="d-none d-sm-block">
                       <div className="main-heading">
-                        <p>{itemDetails?.data.result.name}</p>
+                        <p>{itemDetails?.data.result.dtoLineItem.name}</p>
                       </div>
                     </div>
                     <div className="d-sm-none">

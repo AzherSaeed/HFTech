@@ -24,29 +24,27 @@ const Index = ({ handleCancel, userDetail, deleteUser, toLocation }) => {
         </div>
         <h5 className="question-text"> Do You Really Want to Delete!! </h5>
         <p className="inquiry-delete">
-        Estimate   
-        {" "} 
+          Estimate
+          {" "}
           <span className="delete-user">
-           Improve Canada Mall 
+            Improve Canada Mall
           </span>
-          {" "} 
-           is delete 
+          {" "}
+          is delete
           <br />
           successfully
-          {" "} 
+          {" "}
           <span className="delete-by">
-          by O'Neil McLean
+            by O'Neil McLean
           </span>
         </p>
-      
+
         {/* <p>{userDetail.name}</p>
         <p>{userDetail.email}</p> */}
         <div className="login-container-card-btn">
           <button
             className="login-container-card-btn-yes"
-            onClick={() => {
-              handleDelete();
-            }}
+            onClick={() => handleDelete() }
           >
             Yes!
           </button>

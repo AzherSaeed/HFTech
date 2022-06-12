@@ -16,111 +16,11 @@ import { Modal } from "antd";
 import DeleteModal from "../../Components/Delete/Index";
 import UpdateModal from "../../Components/Download/Index";
 import { useSelector } from "react-redux";
+import { API_URL, ESTIMATE_TABLE_GET_LIST } from "../../Services/config";
+import { CustomQueryHookGet } from "../../Components/QueryCustomHook/Index";
+import Loader from "../../Components/Loader/Loader";
 
-const data = [
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-  {
-    key: "5678",
-    name: "Mah Adnan Qureshi",
-    address: "Improve Canada, United States",
-    tags: "qureshi786",
-    totalPrice: "$20.00",
-    date: "10/23/2021",
-  },
-];
+
 
 const Index = () => {
   // const userDetail = useSelector((state) => state.fetchUser.user);
@@ -132,7 +32,12 @@ const Index = () => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibled, setIsModalVisibled] = useState(false);
+  const { data: listData, isLoading } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true);
 
+  const data = listData?([
+    ...listData?.data.result.map(({ id, dtoClient, dtoSpace, referenceNumber, date }) => ({ key: id, name: dtoClient.name, address: "ade", totalPrice: '1233', date: date, tags: referenceNumber }))
+
+  ]):[];
   const columns = [
     {
       title: "Id",
@@ -143,7 +48,7 @@ const Index = () => {
       ),
     },
     {
-      title: "Contact",
+      title: "Client",
       dataIndex: "name",
       key: "name",
     },
@@ -201,10 +106,10 @@ const Index = () => {
     //   dataIndex: "address",
     //   key: "locations",
     // },
-   
-  
-  
-   
+
+
+
+
   ];
 
   const showModal = () => {
@@ -240,7 +145,14 @@ const Index = () => {
                 clicked={clickedHandler}
               />
             </div>
-            <Table pagination={false} columns={columns} dataSource={data} />
+            {
+              isLoading ? (
+                <Loader />
+              ) : (
+                <Table pagination={false} columns={columns} dataSource={data} />
+              )
+            }
+
             <Modal
               visible={isModalVisible}
               footer={null}

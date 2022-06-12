@@ -17,9 +17,16 @@ export const LIST_ADMIN_LINE_ITEMS_TYPE_MATERIALS = 'lineItem/getLineItemByItemT
 export const LIST_ADMIN_LINE_ITEMS_BY_ID = 'lineItem/getById?lineItemId=';
 export const LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR = 'userLineItem/getbyUserIdAndType?lineItemType=Labor';
 export const LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS = 'userLineItem/getbyUserIdAndType?lineItemType=Materials';
-export const USER_LINE_ITEM__DETAILS_BY_ID = 'lineItem/getById?lineItemId=';
+export const USER_LINE_ITEM__DETAILS_BY_ID = 'userLineItem/getById?userLineItemId=';
 export const USER_LINE_ITEM_UPDATE = 'userLineItem/save';
 export const USER_LINE_ITEM_DELETE = 'userLineItem/delate?userLineItemId=';
+
+// Estimate Create
+export const ESTIMATE_CLIENTS_DATA_DROPDOWN='client/get';
+export const ESTIMATE_LOCATIONS_DATA_SELECT='space/getByClientId?clientId=';
+export const ESTIMATE_CONTACT_DATA_SELECT='contact/getByClientId?clientId=';
+export const ESTIMATE_CREATED_DATA_SAVE='estimate/save';
+export const ESTIMATE_TABLE_GET_LIST='estimate/get';
 
 
 export const USER_LINE_ITEM_SAVE = 'userLineItem/save';
