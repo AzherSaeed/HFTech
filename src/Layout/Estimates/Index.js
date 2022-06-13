@@ -34,10 +34,10 @@ const Index = () => {
   const [isModalVisibled, setIsModalVisibled] = useState(false);
   const { data: listData, isLoading } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true);
 
-  const data = listData?([
+  const data = listData ? ([
     ...listData?.data.result.map(({ id, dtoClient, dtoSpace, referenceNumber, date }) => ({ key: id, name: dtoClient.name, address: "ade", totalPrice: '1233', date: date, tags: referenceNumber }))
 
-  ]):[];
+  ]) : [];
   const columns = [
     {
       title: "Id",
@@ -66,6 +66,11 @@ const Index = () => {
       title: "Date",
       key: "date",
       dataIndex: "date",
+    },
+    {
+      title: "Address",
+      key: "address",
+      dataIndex: "address",
     },
     {
       title: "Action",

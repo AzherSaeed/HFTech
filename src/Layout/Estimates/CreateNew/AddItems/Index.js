@@ -21,7 +21,7 @@ const Index = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchData = () => {
-    axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log('error'))
+    axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log(error,'error in list admin'))
   }
   useEffect(() => {
     fetchData()
@@ -61,7 +61,7 @@ const Index = () => {
     }
     setOldData([...oldData,]);
   }
-
+console.log(oldData,"old Data");
   if (materialsLoading) {
     return <Loader />
   }
@@ -69,7 +69,7 @@ const Index = () => {
   const onSubmit = () => {
     axios.post((API_URL + USER_LINE_ITEM_SAVE), {
       "channel": itemDetails.data.result.channel,
-      "total": itemDetails.data.result.dtoLineItemDetails[0].total + itemDetails.data.result.dtoLineItemDetails[1].total + itemDetails.data.result.dtoLineItemDetails[2].total + itemDetails.data.result.dtoLineItemDetails[3].total,
+      "total": itemDetails?.data.result.dtoLineItemDetails[0].total + itemDetails?.data.result.dtoLineItemDetails[1].total + itemDetails?.data.result.dtoLineItemDetails[2].total + itemDetails?.data.result.dtoLineItemDetails[3].total,
       "isReversed": false,
       "dtoUnitOfMeasure": itemDetails?.data.result.dtoUnitOfMeasures ? {
         "id": itemDetails?.data.result.dtoUnitOfMeasures[0].id
@@ -178,7 +178,7 @@ const Index = () => {
                   <div className="second-table">
                     <div className="d-none d-sm-block">
                       <div className="main-heading">
-                        <p>{itemDetails?.data.result.dtoLineItem.name}</p>
+                        <p>{itemDetails?.data.result.name}</p>
                       </div>
                     </div>
                     <div className="d-sm-none">
