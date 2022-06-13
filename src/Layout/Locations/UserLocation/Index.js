@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Style from "./Style";
 import SideBarContainer from "../../../Components/Sidebar/Sidebar";
 import CustomButton from "../../../Components/CustomButton/Index";
@@ -10,7 +10,7 @@ import axios from "axios";
 import ic_logo from "../../..//Assets/icons/ic_logo.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { MapContainer, TileLayer, useMap, Popup,Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 import {
   API_URL,
   GET_SPACE_BY_ID,
@@ -21,6 +21,8 @@ import {
   CREATE_SPACE,
 } from "../../../Services/config";
 import FormControl from "../../../Components/FormControl";
+import Loader from "../../../Components/Loader/Loader";
+
 const initialValues = {
   id: 4,
   name: "",
@@ -43,16 +45,17 @@ const validationSchema = Yup.object({
 const Index = () => {
   const { locationsId } = useParams();
   const [isModalVisibled, setIsModalVisibled] = useState(false);
-  const regex = /^\d*(\.\d+)?$/;
+  const [spaceSelectedCountry, setSpaceSelectedCountry] = useState("");
+  const [spaceSelectedState, setSpaceSelectedState] = useState("");
+  const [spaceSelectedCity, setSpaceSelectedCity] = useState("");
+  const [test, settest] = useState(false);
+  const regex = /^\d+$/;
   const navigate = useNavigate();
 
   const {
     data: spaceData,
-    isSuccess,
-    isLoading,
     isFetching,
-    error,
-    isError,
+    isLoading,
   } = useQuery(
     "get-space-By-Id",
     () => {
@@ -70,22 +73,13 @@ const Index = () => {
     {
       enabled: regex.test(locationsId),
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
-      onSuccess: (data) => {
-        console.log(data, 'data...')
-      },
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
+      onSuccess: (data) => {},
     }
   );
 
-  const {
-    data: countryData,
-    isSuccess: countryIsSuccess,
-    isLoading: countryIsLoading,
-    isFetching: countryIsFetching,
-    error: countryError,
-    isError: countryIsError,
-  } = useQuery(
+  const { data: countryData } = useQuery(
     "get-coutnry-data",
     () => {
       return axios.get(API_URL + GET_COUNTRY, {
@@ -97,25 +91,25 @@ const Index = () => {
     },
     {
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
       // onSuccess,
     }
   );
 
+
+
   const {
     data: stateData,
-    isSuccess: stateIsSuccess,
-    isLoading: stateIsLoading,
-    isFetching: stateIsFetching,
-    error: stateError,
-    isError: stateIsError,
+    isFetching: stateFetching,
+    isLoading: stateLoading,
+    refetch,
   } = useQuery(
     "get-state-By-Id",
     () => {
       return axios.get(
         API_URL + GET_STATE_BY_ID,
-        { params: { countryId: 233 } },
+        { params: { countryId: spaceSelectedCountry } },
         {
           headers: {
             "Content-Type": "application/json",
@@ -125,26 +119,26 @@ const Index = () => {
       );
     },
     {
-      refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
-      enabled: true,
+      enabled: regex.test(spaceSelectedCountry),
+      refetchInterval: true,
+      refetchOnWindowFocus: true,
+      keepPreviousData: false,
+      onSuccess: () => {
+        settest(true);
+      },
     }
   );
 
   const {
     data: cityData,
-    isSuccess: cityIsSuccess,
-    isLoading: cityIsLoading,
-    isFetching: cityIsFetching,
-    error: cityError,
-    isError: cityIsError,
+    isFetching: cityFetching,
+    isLoading: cityLoading,
   } = useQuery(
-    "get-User-By-Id",
+    "get-city-By-Id",
     () => {
       return axios.get(
         API_URL + GET_CITY_BY_ID,
-        { params: { stateId: 1399 } },
+        { params: { stateId: spaceSelectedState } },
         {
           headers: {
             "Content-Type": "application/json",
@@ -154,9 +148,10 @@ const Index = () => {
       );
     },
     {
+      enabled: regex.test(spaceSelectedState),
       refetchInterval: false,
-      refetchOnWindowFocus: "false",
-      keepPreviousData: "false",
+      refetchOnWindowFocus: false,
+      keepPreviousData: false,
     }
   );
 
@@ -219,6 +214,20 @@ const Index = () => {
   const onSubmit = (data) => {
     mutation.mutate(data);
   };
+
+  const handleSelectCountry = (val) => {
+    setSpaceSelectedCountry(val);
+    if (test) {
+      refetch();
+    }
+  };
+
+  const handleSelectedState = (val) => {
+    setSpaceSelectedState(val);
+  };
+  const handleSelectedCity = (val) => {
+    setSpaceSelectedCity(val);
+  };
   return (
     <SideBarContainer>
       <Modal
@@ -232,145 +241,158 @@ const Index = () => {
             <img src={ic_logo} alt="ic_logo" className="logo" />
           </div>
           <h5 className="question-text mt-3 fs-5">
-            {" "}
-            Location Updated Successfull{" "}
+            Location Updated Successfull
           </h5>
         </div>
       </Modal>
       <Style>
-        <div className="main-container">
-          <div className="leftSide">
-            <Formik
-              initialValues={{
-                ...initialValues,
-                id: spaceData?.data?.result?.id,
-              }}
-              // validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            >
-              {(formik) => {
-                return (
-                  <Form
-                    style={{
-                      height: "100%",
-                    }}
-                    name="basic"
-                    onFinish={formik.handleSubmit}
-                    // onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                    validateMessages={validationSchema}
-                  >
-                    <div
-                      className="login-input-fields "
-                      style={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <FormControl
-                        control="input"
-                        type="text"
-                        name="name"
-                        label="Location Name"
-                        placeholder="Enter location name"
-                        className={
-                          formik.errors.name && formik.touched.name
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                      />
-                      <FormControl
-                        control="select"
-                        type="text"
-                        name="countryId"
-                        label="Country"
-                        options={countryData?.data?.result}
-                        placeholder="Please Enter country Name"
-                        className={
-                          formik.errors.countryId && formik.touched.countryId
-                            ? "is-invalid"
-                            : "customPasswordInput"
-                        }
-                      />
-                      <FormControl
-                        control="select"
-                        type="text"
-                        label="State"
-                        name="stateId"
-                        options={stateData?.data?.result}
-                        placeholder="Select State"
-                        className={
-                          formik.errors.stateId && formik.touched.stateId
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                      />
-                      <div>
-                        <FormControl
-                          control="select"
-                          type="text"
-                          name="cityId"
-                          label="City"
-                          options={cityData?.data?.result}
-                          placeholder="Select City"
-                          className={
-                            formik.errors.cityId && formik.touched.cityId
-                              ? "is-invalid"
-                              : "customInput"
-                          }
-                        />
-                      </div>
+        <div>
+          {isFetching && isLoading ? (
+            <Loader />
+          ) : (
+            <div className="main-container">
+              <div className="leftSide">
+                <Formik
+                  initialValues={spaceData?.data?.result ? spaceData?.data?.result : initialValues}
+                  // validationSchema={validationSchema}
+                  onSubmit={onSubmit}
+                >
+                  {(formik, form) => {
+                    return (
+                      <Form
+                        style={{
+                          height: "100%",
+                        }}
+                        name="basic"
+                        onFinish={formik.handleSubmit}
+                        // onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                        validateMessages={validationSchema}
+                      >
+                        <div
+                          className="login-input-fields "
+                          style={{
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <FormControl
+                            control="input"
+                            type="text"
+                            name="name"
+                            label="Space Name"
+                            placeholder="Enter location name"
+                            className={
+                              formik.errors.name && formik.touched.name
+                                ? "is-invalid"
+                                : "customInput"
+                            }
+                          />
 
-                      <div>
-                        <FormControl
-                          control="input"
-                          type="text"
-                          name="address"
-                          label="Address"
-                          placeholder="Enter complete address"
-                          className={
-                            formik.errors.name && formik.touched.name
-                              ? "is-invalid"
-                              : "customInput"
-                          }
-                        />
-                      </div>
-                      <CustomButton
-                        bgcolor="#156985"
-                        color="white"
-                        padding="8px 8px"
-                        width="100%"
-                        type="submit"
-                        title="Save Location"
-                        margin="auto"
-                      />
-                    </div>
-                  </Form>
-                );
-              }}
-            </Formik>
-          </div>
-          <div className="rightSide">
-            
-          <MapContainer center={[51.505, -0.09]} zoom={7} scrollWheelZoom={false}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-    </MapContainer>
-            {/* <iframe
+                          <FormControl
+                            control="searchSelect"
+                            name="countryId"
+                            label="Country"
+                            options={countryData?.data?.result}
+                            placeholder="Select Country"
+                            handleSelectValue={handleSelectCountry}
+                            className={
+                              formik.errors.countryId &&
+                              formik.touched.countryId
+                                ? "is-invalid"
+                                : "customPasswordInput"
+                            }
+                            defaultValue={spaceData?.data?.result.countryName}
+                          />
+
+                          <FormControl
+                            control="searchSelect"
+                            label="State"
+                            name="stateId"
+                            loading={stateLoading || stateFetching}
+                            options={stateData?.data?.result}
+                            placeholder="Select State"
+                            handleSelectValue={handleSelectedState}
+                            className={
+                              formik.errors.stateId && formik.touched.stateId
+                                ? "is-invalid"
+                                : "customInput"
+                            }
+                            defaultValue={spaceData?.data?.result.stateName}
+                          />
+                          <div>
+                            <FormControl
+                              control="searchSelect"
+                              name="cityId"
+                              label="City"
+                              options={cityData?.data?.result}
+                              loading={cityLoading || cityFetching}
+                              placeholder="Select City"
+                              handleSelectValue={handleSelectedCity}
+                              className={
+                                formik.errors.cityId && formik.touched.cityId
+                                  ? "is-invalid"
+                                  : "customInput"
+                              }
+                              defaultValue={spaceData?.data?.result.cityName}
+                            />
+                          </div>
+
+                          <div>
+                            <FormControl
+                              control="input"
+                              type="text"
+                              name="address"
+                              label="Address"
+                              placeholder="Enter complete address"
+                              className={
+                                formik.errors.name && formik.touched.name
+                                  ? "is-invalid"
+                                  : "customInput"
+                              }
+                            />
+                          </div>
+                          <CustomButton
+                            bgcolor="#156985"
+                            color="white"
+                            padding="8px 8px"
+                            width="100%"
+                            type="submit"
+                            title="Save Location"
+                            margin="auto"
+                          />
+                        </div>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+              </div>
+              <div className="rightSide">
+                <MapContainer
+                  center={[51.505, -0.09]}
+                  zoom={7}
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={[51.505, -0.09]}>
+                    <Popup>
+                      A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+                {/* <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.279909073!2d-74.25987368715491!3d40.69767006458873!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1652178301855!5m2!1sen!2s"
               className="locationMap"
               loading="lazy"
               title="locationMap"
             ></iframe> */}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       </Style>
     </SideBarContainer>

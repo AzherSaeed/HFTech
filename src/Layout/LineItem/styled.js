@@ -109,3 +109,53 @@ padding: 10px;
     text-align: center;
   }
 `;
+
+
+export const LineItemDetailPageContainer = styled.div`
+
+
+  .lineItemDetail{
+    &-header{
+      background-color: #F9F9F9;
+      color: #232837;
+      padding: 10px;
+      border-radius: 4px;
+      h1{
+        font-size: 15px;
+        margin: 0;
+      }
+    }
+    &-table{
+      max-width: 50%;
+    }
+    &-units{
+      max-width: 50%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #EFEFF4;
+
+      &-value{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+    &-total{
+      max-width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #EFEFF4;
+      padding: 10px 0;
+      h1{
+        font-size: 16px;
+        font-weight: normal;
+      }
+      p{
+        font-weight: 600;
+      }
+    }
+  }
+
+`

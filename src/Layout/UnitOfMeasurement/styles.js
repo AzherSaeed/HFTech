@@ -21,6 +21,14 @@ export const UnitOfMeasurementContainer = styled.div`
           &-group{
               display: flex;
               align-items: center;
+
+              &-div{
+                width: 100%;
+
+                label{
+                  margin-bottom: 6px;
+                }
+              }
           }
         }
 

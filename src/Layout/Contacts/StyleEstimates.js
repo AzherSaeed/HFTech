@@ -44,4 +44,10 @@ border-bottom: none !important;
 }
 `; 
 
+
+export const ContactDetailPageContainer = styled.div`
+    max-width: 50%;
+
+`
+
 export default StyleEstimates;

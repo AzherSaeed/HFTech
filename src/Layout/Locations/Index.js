@@ -16,23 +16,52 @@ import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
 import moment from "moment";
+
+
+const columns = [
+  {
+    title: "Id",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Space Name",
+    dataIndex: "cityName",
+    key: "cityName",
+  },
+  {
+    title: "Address",
+    key: "address",
+    dataIndex: "address",
+  },
+  {
+    title: "Created",
+    key: "created",
+    dataIndex: "created",
+  },
+  {
+    title: "Owner",
+    key: "owner",
+    dataIndex: "owner",
+  },
+  {
+    title: "Action",
+    key: "action",
+    dataIndex: "action",
+  },
+];
+
+
+
 const Index = () => {
   let [detail, setDetail] = useState([]);
-  const onSuccess = (data) => {
-    // console.log(data, "data from api");
-    // setDetail([...data?.data?.data]);
-  };
-  useEffect(() => {
-    // console.log(detail, "useState console");
-  }, [detail]);
+  const onSuccess = (data) => {};
+  useEffect(() => {}, [detail]);
   const onError = (err) => {
     console.log(err, "error while fetching data from api");
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [deleteStatus, setDeleteStatus] = useState({
-  //   id: null,
-  //   shouldDelete: false,
-  // });
+
   const [deleteUserDetail, setDeleteUserDetail] = useState({
     name: "",
     email: "",
@@ -44,15 +73,10 @@ const Index = () => {
   };
 
   const navigate = useNavigate();
-  // const createNew = () => {
-  //   navigate("/locations/create");
-  // };
+
   const handleDelete = (id, email, name) => {
-    // alert("handle delte hit");
     setDeleteUserDetail({ name: name, id: id });
     setIsModalVisible(true);
-
-    // setDeleteStatus({ ...deleteStatus, id: id });
   };
   const mutation = useMutation(
     (id) => {
@@ -83,10 +107,7 @@ const Index = () => {
   };
 
   const handleEdit = (countryId, id) => {
-    // alert("edit hit");
-    // let data = { countryId, id };
     navigate(`/locations/${id}`);
-    // alert("handle edit hit");
   };
 
   const { isLoading, isError, refetch, data, error } = useQuery(
@@ -101,78 +122,14 @@ const Index = () => {
     },
     { refetchOnWindowFocus: "always", onSuccess, onError }
   );
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
-      render: (text, record) => (
-        <Link to={`/contact/${record.key}`}> {text} </Link>
-      ),
-    },
-    {
-      title: "Location Name",
-      dataIndex: "cityName",
-      key: "cityName",
-    },
-    {
-      title: "Address",
-      key: "address",
-      dataIndex: "address",
-    },
-    {
-      title: "Created",
-      key: "created",
-      dataIndex: "created",
-    },
-    {
-      title: "Owner",
-      key: "owner",
-      dataIndex: "owner",
-    },
-    // {
-    //   title: "Name",
-    //   dataIndex: "name",
-    //   key: "name",
-    // },
-    
-    // {
-    //   title: "Channel",
-    //   dataIndex: "channel",
-    //   key: "channel",
-    // },
-    // {
-    //   title: "State Id",
-    //   key: "stateId",
-    //   dataIndex: "stateId",
-    // },
-    // {
-    //   title: "City Id",
-    //   key: "cityId",
-    //   dataIndex: "cityId",
-    // },
-    // {
-    //   title: "Country",
-    //   key: "countryName",
-    //   dataIndex: "countryName",
-    // },
-    {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
-    },
-    
-  ];
+  
   const contactData = data?.data?.result?.map((space) => {
     return {
-      id: space.id,
+      id: <Link to={`/locationsDetail/${space.id}`}> {space.id} </Link>,
       address: space.address,
       cityName: space.name,
-      // name: space.name,
-      // channel: space.channel,
-      // stateId: space.stateId,
-      created: moment(space.dtoUser.insertedDate).format('l, h:mm:ss a'),
-      owner:space.dtoUser.userName ,
+      created: moment(space.dtoUser.insertedDate).format("l, h:mm:ss a"),
+      owner: space.dtoUser.userName,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>

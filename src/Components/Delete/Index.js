@@ -16,31 +16,22 @@ const Index = ({ handleCancel, userDetail, deleteUser, toLocation }) => {
       navigate(toLocation);
     }, 300);
   };
+
+  console.log(userDetail, "userDetail");
   return (
     <LoginContainer>
       <div className="login-container-card">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
         </div>
-        <h5 className="question-text"> Do You Really Want to Delete!! </h5>
-        <p className="inquiry-delete">
-          Estimate
-          {" "}
-          <span className="delete-user">
-            Improve Canada Mall
-          </span>
-          {" "}
-          is delete
+        <h5 className="question-text"> Do You Really Want to Delete! </h5>
+        {/* <p className="inquiry-delete">
+          <span className="delete-user">Improve Canada Mall</span> is delete
           <br />
-          successfully
-          {" "}
-          <span className="delete-by">
-            by O'Neil McLean
-          </span>
-        </p>
+          successfully <span className="delete-by">by O'Neil McLean</span>
+        </p> */}
 
-        {/* <p>{userDetail.name}</p>
-        <p>{userDetail.email}</p> */}
+        <p>{userDetail.name}</p>
         <div className="login-container-card-btn">
           <button
             className="login-container-card-btn-yes"

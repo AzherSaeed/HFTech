@@ -1,25 +1,23 @@
 import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Space , Modal} from "antd";
+import { Table, Space, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import { useNavigate ,Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { API_URL, CLIENT_DELETE, GET_CLIENT } from "../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/Delete/Index";
+import SuccessfullModal from "../../Components/Delete/SuccessfullModal";
 const columns = [
   {
     title: "Id",
     dataIndex: "id",
     key: "id",
-    render: (text, record) => (
-      <Link to={`/client/${record.key}`}> {text} </Link>
-    ),
   },
   {
     title: "Name",
@@ -27,19 +25,24 @@ const columns = [
     key: "name",
   },
   {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
     title: "Phone",
     dataIndex: "phone",
     key: "phone",
   },
   {
-    title: "Channel",
-    key: "channel",
-    dataIndex: "channel",
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+  },
+  {
+    title: "Created",
+    dataIndex: "created",
+    key: "created",
+  },
+  {
+    title: "Owner",
+    key: "owner",
+    dataIndex: "owner",
   },
   {
     title: "Action",
@@ -53,6 +56,7 @@ const Index = () => {
 
   const [clientData, setclientData] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [successModal, setsuccessModal] = useState(false);
 
   const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
     "get-client",
@@ -92,6 +96,11 @@ const Index = () => {
     },
     {
       onSuccess: (data) => {
+        setsuccessModal(true);
+
+        setTimeout(() => {
+          setsuccessModal(false);
+        }, 3000);
         refetch();
       },
       onError: (err) => {
@@ -104,9 +113,8 @@ const Index = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setsuccessModal(false);
   };
-
-
 
   const clientDeleteHandler = (client) => {
     setIsModalVisible(true);
@@ -119,14 +127,15 @@ const Index = () => {
     isSuccess &&
     data.data.result?.map((client) => {
       return {
-        id: client.id,
+        id: <Link to={`/clientsDetail/${client.id}`}> {client.id} </Link>,
         name: client.name,
         email: client.email,
         phone: client.phone,
-        channel: client.channel,
+        owner : client.dtoUser.userName,
+        created : client.insertedDate,
         action: (
           <Space size="middle">
-            <div style={{ display: "flex", gap: "4px", placeItems:'center' }}>
+            <div style={{ display: "flex", gap: "4px", placeItems: "center" }}>
               <img
                 src={deleteIcon}
                 alt="delete Icon"
@@ -177,6 +186,19 @@ const Index = () => {
           <DeleteModal
             handleCancel={handleCancel}
             userDetail={clientData}
+            deleteUser={handleIndividualDelete}
+            toLocation="/client"
+          />
+        </Modal>
+        <Modal
+          visible={successModal}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+        >
+          <SuccessfullModal
+            handleCancel={handleCancel}
+            message="Successfully Deleted"
             deleteUser={handleIndividualDelete}
             toLocation="/client"
           />

@@ -16,7 +16,8 @@ import { InputNumber, Modal, Spin } from "antd";
 import { Tabs, Radio } from "antd";
 import editIcon from '../../../Assets/icons/ic_edit.svg';
 import deleteIcon from '../../../Assets/icons/ic_delete.svg';
-import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LOCATIONS_DATA_SELECT, LIST_ADMIN_LINE_ITEMS_BY_ID, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_SAVE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
+import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LOCATIONS_DATA_SELECT, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
+import ic_logo from "../../../Assets/icons/ic_logo.svg";
 import Loader from '../../../Components/Loader/Loader';
 import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/QueryCustomHook/Index';
 import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
@@ -47,7 +48,7 @@ const CreateNew = () => {
 
     // Save Data by Id to send Update after Changes
 
-    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + clientId).then((response) => setOldData(response.data.result)).catch((error) => console.log('error'));
+    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'));
   }
 
   useEffect(() => {
@@ -112,7 +113,7 @@ const CreateNew = () => {
 
   // Id Navigation handler
   const refetchByIdHandler = (id) => {
-    navigate(`estimates/createNew/addItem/${id}`);
+    navigate(`/estimates/createNew/${id}`);
     refetchById();
   }
 
@@ -235,15 +236,26 @@ const CreateNew = () => {
     contactsRefetch();
     console.log('on slect trigger', value, id, 'id');
   }
-  const onChangeLocations = (value, data) => {
 
-  }
-  const onChangeContacts = () => {
-
-  }
   return (
     <Sidebar>
       <Style>
+      <Modal visible={isUpdateModalVisible} footer={null} onCancel={handleUpdateCancel} centered={true} closable={false}>
+          <div className="text-center">
+            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+          </div>
+          <div className="mt-3 text-center" >
+            <h5>Item Updated Succesfull</h5>
+          </div>
+        </Modal>
+        <Modal visible={isDeleteModal} footer={null} onCancel={cancelDeleteModal} centered={true} closable={false}>
+          <div className="text-center">
+            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+          </div>
+          <div className="mt-3 text-center" >
+            <h5>Item Deleted Succesfull</h5>
+          </div>
+        </Modal>
         <Formik
           initialValues={initialValues}
           // validationSchema={validationSchema}
@@ -431,7 +443,7 @@ const CreateNew = () => {
                 width="75%"
                 type="submit"
                 title="Update Line Items"
-                clicked={onSubmit}
+                clicked={onSubmitUpdate}
               />
             </div>
           </div>

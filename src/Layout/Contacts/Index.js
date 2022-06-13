@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Tag, Space, Modal } from "antd";
+import { Table, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
-import pdfIcon from "../../Assets/icons/ic_pdf.svg";
-import downloadIcon from "../../Assets/icons/ic_download.svg";
-import tickIcon from "../../Assets/icons/ic_tick.svg";
-import emailIcon from "../../Assets/icons/ic_email.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL, GET_CONTACT, CONTACT_DELETE } from "../../Services/config";
 import moment from "moment";
@@ -67,10 +63,6 @@ const columns = [
 
 const Index = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [deleteStatus, setDeleteStatus] = useState({
-  //   id: null,
-  //   shouldDelete: false,
-  // });
   const [deleteUserDetail, setDeleteUserDetail] = useState({
     name: "",
     email: "",
@@ -143,7 +135,7 @@ const Index = () => {
 
   const contactData = data?.data?.result?.map((contact) => {
     return {
-      id: <Link to={`/contact/edit`}>{contact.id}</Link>,
+      id: <Link to={`/contactDetail/${contact.id}`}>{contact.id}</Link>,
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
