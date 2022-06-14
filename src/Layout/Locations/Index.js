@@ -28,21 +28,33 @@ const columns = [
     title: "Space Name",
     dataIndex: "cityName",
     key: "cityName",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Address",
     key: "address",
     dataIndex: "address",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Created",
     key: "created",
     dataIndex: "created",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Owner",
     key: "owner",
     dataIndex: "owner",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Action",
@@ -125,11 +137,11 @@ const Index = () => {
   
   const contactData = data?.data?.result?.map((space) => {
     return {
-      id: <Link to={`/locationsDetail/${space.id}`}> {space.id} </Link>,
-      address: space.address,
-      cityName: space.name,
-      created: moment(space.dtoUser.insertedDate).format("l, h:mm:ss a"),
-      owner: space.dtoUser.userName,
+      id: <Link className="hf-link"  to={`/locationsDetail/${space.id}`}> {space.id} </Link>,
+      address:  <Link  className="hf-link" to={`/locationsDetail/${space.id}`}> {space.address} </Link>,
+      cityName: <Link  className="hf-link" to={`/locationsDetail/${space.id}`}> {space.name} </Link>,
+      created:  <Link  className="hf-link" to={`/locationsDetail/${space.id}`}> {moment(space.dtoUser.insertedDate).format("l, h:mm:ss a")} </Link>,
+      owner:  <Link  className="hf-link" to={`/locationsDetail/${space.id}`}> {space.dtoUser.userName} </Link>,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>

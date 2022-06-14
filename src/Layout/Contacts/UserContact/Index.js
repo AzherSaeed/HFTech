@@ -28,30 +28,22 @@ const initialValues = {
   countryCode: "+1",
 };
 const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Name is required!")
-    .min(5, "Minimun six character is required"),
+  name: Yup.string().required("Name is required!"),
   email: Yup.string()
-    .required("Email is required!")
-    .matches(/^(\S+$)/g, "email cannot contain blankspaces"),
-  number: Yup.number()
-    .required("please enter number!")
-    .min(11, "Minimum six degits are required"),
+    .email("Email should be valid")
+    .required("Email is required"),
+  phone: Yup.number()
+    .required("Phone number is required")
+    .min(10, "Minimum ten degits are required"),
 });
 
 const Index = () => {
   const { contactId } = useParams();
 
-
-
   const [isModalVisibled, setIsModalVisibled] = useState(false);
   const regex = /^\d*(\.\d+)?$/;
 
-
-  const {
-    data: userData,
-    isFetching,
-  } = useQuery(
+  const { data: userData, isFetching } = useQuery(
     "get-User-By-Id",
     () => {
       return axios.get(
@@ -108,7 +100,7 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        toast.error('Please provide valid detail', {
+        toast.error("Please provide valid detail", {
           position: toast.POSITION.TOP_RIGHT,
         });
       },
@@ -156,7 +148,7 @@ const Index = () => {
               initialValues={
                 userData?.data?.result ? userData?.data?.result : initialValues
               }
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema}
               onSubmit={onSubmit}
             >
               {(formik) => {
@@ -197,7 +189,7 @@ const Index = () => {
                         control="input"
                         type="text"
                         name="phone"
-                        maxLength='10'
+                        maxLength="10"
                         disabled={contactId === "edit"}
                         placeholder="(617)397 - 8483"
                         className={

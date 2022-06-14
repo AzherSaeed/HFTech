@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Layout, Menu  } from "antd";
+import { Layout, Menu } from "antd";
 import {
   UploadOutlined,
   UserOutlined,
@@ -35,12 +35,12 @@ const Sidebar = ({ children }) => {
           }}
           breakpoint="lg"
           collapsedWidth="0"
-          onCollapse={(collapsed, type) => {}}
+          onCollapse={(collapsed, type) => { }}
         >
           <div className="logos">
             <img src={logos} alt="Logo" className="logo" />
           </div>{" "}
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item key="/estimates">
               <Link to="/estimates" />
               Estimates{" "}
@@ -67,21 +67,21 @@ const Sidebar = ({ children }) => {
             </Menu.Item>
           </Menu>{" "}
           {/* <div className="lgOutButton">
-                                              <CustomButton
-                                                         bgcolor="#156985"
-                                                          color="white"
-                                                          padding="11px 8px"
-                                                          width="100%"
-                                                          type="submit"
-                                                          title="Log Out"
-                                              />
-                                              </div> */}{" "}
+              <CustomButton
+              bgcolor="#156985"
+              color="white"
+              padding="11px 8px"
+              width="100%"
+              type="submit"
+              title="Log Out"
+              />
+              </div> */}{" "}
         </Sider>{" "}
         <Layout>
           <div className="d-none d-md-block">
             <Header
               className="site-layout-sub-header-background"
-              // style={{ position: "fixed", zIndex: 1, width: "100%" }}
+            // style={{ position: "fixed", zIndex: 1, width: "100%" }}
             >
               <div className="navigation">
                 <div className="right-side">
@@ -105,8 +105,8 @@ const Sidebar = ({ children }) => {
             </div>{" "}
           </Content>{" "}
           {/* <Footer style={{ textAlign: "center" }}>
-                                                Ant Design ©2018 Created by Ant UED
-                                              </Footer> */}{" "}
+          Ant Design ©2018 Created by Ant UED
+          </Footer> */}{" "}
         </Layout>{" "}
       </Layout>{" "}
     </SideBarContainer>

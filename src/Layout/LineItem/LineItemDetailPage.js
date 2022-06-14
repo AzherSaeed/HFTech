@@ -80,7 +80,7 @@ const LineItemDetailPage = () => {
                 <p>Unit of Measurement</p>
               </div>
               <div className="lineItemDetail-units-value">
-                {userData.data.result.dtoUnitOfMeasures.map((data, i) => {
+                {userData.data.result.dtoUnitOfMeasures?.map((data, i) => {
                   return <p key={i}>{data.name}</p>;
                 })}
               </div>

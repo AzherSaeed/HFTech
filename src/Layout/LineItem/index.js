@@ -28,21 +28,33 @@ const columns = [
     title: "Line item Name",
     dataIndex: "name",
     key: "name",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Line item Type",
     dataIndex: "type",
     key: "type",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Created",
     dataIndex: "created",
     key: "created",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Owner",
     key: "owner",
     dataIndex: "owner",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Action",
@@ -122,11 +134,11 @@ const Index = () => {
   );
   const contactData = data?.data?.result?.map((lineItem) => {
     return {
-      id: <Link to={`/lineItemDetail/${lineItem.id}`}> {lineItem.id} </Link>,
-      name: lineItem.name,
-      type: lineItem.lineItemType,
-      created: moment(lineItem.dtoUser.insertedDate).format("l, h:mm:ss a"),
-      owner: lineItem.dtoUser.userName,
+      id: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.id} </Link>,
+      name:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.name} </Link>,
+      type:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.lineItemType} </Link>,
+      created:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {moment(lineItem.dtoUser.insertedDate).format("l, h:mm:ss a")} </Link>,
+      owner:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.dtoUser.userName} </Link>,
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
           <img

@@ -34,7 +34,7 @@ const Index = () => {
   const [unitDeleteDetailHandler, setunitDeleteDetailHandler] = useState(null);
   const [unitUpdateInputHandler, setunitUpdateInputHandler] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [successDeleteModal, setsuccessDeleteModal] = useState(false)
+  const [successDeleteModal, setsuccessDeleteModal] = useState(false);
 
   const { data, isLoading, refetch } = useQuery(
     "units",
@@ -93,9 +93,9 @@ const Index = () => {
           });
         } else {
           setunitDetailHandler(null);
-          console.log(response.data , 'response.data.messag');
-          if(response.data.status !== 'CREATED'){
-            setsuccessDeleteModal(true)
+          console.log(response.data, "response.data.messag");
+          if (response.data.status !== "CREATED") {
+            setsuccessDeleteModal(true);
           }
         }
         refetch();
@@ -132,7 +132,7 @@ const Index = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setsuccessDeleteModal(false)
+    setsuccessDeleteModal(false);
   };
   const handleIndividualDelete = () => {
     mutation.mutate(unitDeleteDetailHandler.id);

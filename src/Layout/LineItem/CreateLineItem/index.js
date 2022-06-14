@@ -51,7 +51,7 @@ const initialValues = {
       total: "",
     },
     {
-      name: "'",
+      name: "",
       qty: "",
       price: "",
       total: "",

@@ -5,7 +5,7 @@ import { Select } from "antd";
 import { CustomSelectContainer } from "./style";
 
 const SelectComp = (props) => {
-  const { name, placeholder, onSelect, defaultValue, label, options, ...rest } = props;
+  const { name, placeholder,onChange, defaultValue, label, options, ...rest } = props;
 
   const OptionsArr = options?.map((option) => {
     return (
@@ -28,14 +28,14 @@ const SelectComp = (props) => {
                 className="customSelect"
                 name={name}
                 id={name}
+                mode='multiple'
                 defaultValue={defaultValue}
                 {...rest}
-                onSelect={((val, event) => onSelect(val, event.key))}
                 placeholder={placeholder}
                 // You have to provide the onChange function and on changing the value you should call
                 // the setFieldValue function provided by the prop of "form"
-                onChange={(val) => {
-                  form.setFieldValue(name, val);
+                onChange={(val,select) => {
+                  form.setFieldValue(name, select);
                 }}
               >
                 {OptionsArr}

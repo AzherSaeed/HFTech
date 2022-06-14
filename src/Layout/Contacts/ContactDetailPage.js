@@ -62,7 +62,7 @@ const ContactDetailPage = () => {
               value="Owner"
             />
             <CustomDetailInput
-              label={userData?.data.result.insertedDate}
+              label={userData?.data.result.insertedDate.substring(0,10)}
               value="Created"
             />
           </div>

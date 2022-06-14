@@ -17,6 +17,7 @@ export const UnitOfMeasurementContainer = styled.div`
           display: flex;
           align-items: center;
           gap: 10px;
+          border-bottom: 2px solid #DBE2ED;
 
           &-group{
               display: flex;
@@ -28,19 +29,22 @@ export const UnitOfMeasurementContainer = styled.div`
                 label{
                   margin-bottom: 6px;
                 }
+                input{
+                  border: none;
+                }
               }
           }
         }
 
         .deleteicon {
           background: #d63229 !important;
-          padding: 4px;
+          padding: 6px;
           border-radius: 3px;
           align-self: center;
         }
         .editicon {
           background: #007aff !important;
-          padding: 4px;
+          padding: 6px;
           border-radius: 3px;
           align-self: center;
         }
@@ -48,6 +52,16 @@ export const UnitOfMeasurementContainer = styled.div`
     }
     &-form {
       width: 49%;
+
+      &-input{
+        display: flex;
+        align-items: center;
+
+      }
+
+      &-button{
+        margin-top: 20px;
+      }
 
       @media screen and (max-width: 700px) {
           width: 100%;

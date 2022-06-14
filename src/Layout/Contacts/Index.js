@@ -22,26 +22,39 @@ const columns = [
     title: "Full Name",
     dataIndex: "name",
     key: "name",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Phone Number",
     key: "phone",
     dataIndex: "phone",
+    
   },
   {
     title: "Email Address",
     dataIndex: "email",
     key: "email",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Created",
     dataIndex: "created",
     key: "created",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Owner",
     dataIndex: "owner",
     key: "owner",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   // {
   //   title: "Channel",
@@ -103,7 +116,6 @@ const Index = () => {
   const handleDelete = (id, email, name) => {
     setDeleteUserDetail({ name: name, email: email, id: id });
     setIsModalVisible(true);
-
   };
 
   const handleEdit = (id) => {
@@ -135,14 +147,12 @@ const Index = () => {
 
   const contactData = data?.data?.result?.map((contact) => {
     return {
-      id: <Link to={`/contactDetail/${contact.id}`}>{contact.id}</Link>,
-      name: contact.name,
-      email: contact.email,
-      phone: contact.phone,
-      created: moment(contact.insertedDate).format('l, h:mm:ss a'),
-      owner: contact.dtoUser.userName,
-      // channel: contact.channel,
-      // countryCode: contact.countryCode,
+      id: <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.id}</Link>,
+      name:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.name}</Link>,
+      email: <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.email}</Link>,
+      phone:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.phone}</Link>,
+      created:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{moment(contact.insertedDate).format("l, h:mm:ss a")}</Link>,
+      owner:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.dtoUser.userName}</Link>,
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>

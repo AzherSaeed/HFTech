@@ -6,6 +6,8 @@ import {
   CLIENT_CREATE,
   CLIENT_UPDATE,
   API_URL,
+  GET_SPACE_DETAIL,
+  GET_CONTACT
 } from "../../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
@@ -30,15 +32,13 @@ const initialValues = {
   channel: "IOS",
 };
 const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Name is required!")
-    .min(5, "Minimun six character is required"),
+  name: Yup.string().required("Name is required!"),
   email: Yup.string()
-    .required("Email is required!")
-    .matches(/^(\S+$)/g, "email cannot contain blankspaces"),
+    .email("Email should be valid")
+    .required("Email is required"),
   phone: Yup.number()
-    .required("please enter number!")
-    .min(11, "Minimum six degits are required"),
+    .required("Phone number is required")
+    .min(10, "Minimum ten degits are required"),
 });
 
 const Index = () => {
@@ -70,10 +70,14 @@ const Index = () => {
       keepPreviousData: false,
     }
   );
+  const spaceApi = axios.get(API_URL + GET_SPACE_DETAIL);
+  const contactApi = axios.get( API_URL + GET_CONTACT) ;
+
+
   const { data: locationData } = useQuery(
     "get-location-By-Id",
     () => {
-      return axios.get(API_URL + "space/get", {
+      return axios.all([spaceApi , contactApi], {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -93,15 +97,14 @@ const Index = () => {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
-      setsuccessModal(true)
+      setsuccessModal(true);
       // toast.success(response.data.message, {
       //   position: toast.POSITION.TOP_RIGHT,
       // });
       setTimeout(() => {
         navigate("/client");
-        setsuccessModal(false)
-      },3000)
-      
+        setsuccessModal(false);
+      }, 3000);
     }
   };
 
@@ -140,6 +143,8 @@ const Index = () => {
     return <Loader />;
   }
 
+  console.log(locationData , 'locationData');
+
   return (
     <Sidebar>
       <Style>
@@ -147,7 +152,7 @@ const Index = () => {
           initialValues={
             userData?.data?.result ? userData?.data?.result : initialValues
           }
-          // validationSchema={validationSchema}
+          validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
           {(formik) => {
@@ -233,7 +238,7 @@ const Index = () => {
                           }
                         >
                           {locationData &&
-                            locationData?.data.result?.map((data, i) => (
+                            locationData[0]?.data.result?.map((data, i) => (
                               <div key={i} className="details">
                                 <Checkbox
                                   value={{ id: data.id }}
@@ -265,7 +270,7 @@ const Index = () => {
                           }
                         >
                           {locationData &&
-                            locationData?.data.result?.map((data, i) => (
+                            locationData[1]?.data.result?.map((data, i) => (
                               <div key={i} className="details">
                                 <Checkbox
                                   value={{ id: data.id }}

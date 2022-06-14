@@ -23,26 +23,41 @@ const columns = [
     title: "Name",
     dataIndex: "name",
     key: "name",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Phone",
     dataIndex: "phone",
     key: "phone",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Created",
     dataIndex: "created",
     key: "created",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Owner",
     key: "owner",
     dataIndex: "owner",
+    ellipsis: {
+      showTitle: false,
+    }
   },
   {
     title: "Action",
@@ -127,12 +142,12 @@ const Index = () => {
     isSuccess &&
     data.data.result?.map((client) => {
       return {
-        id: <Link to={`/clientsDetail/${client.id}`}> {client.id} </Link>,
-        name: client.name,
-        email: client.email,
-        phone: client.phone,
-        owner : client.dtoUser.userName,
-        created : client.insertedDate,
+        id: <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.id} </Link>,
+        name:  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.name} </Link>,
+        email:  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.email} </Link>,
+        phone:  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.phone} </Link>,
+        owner :  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.dtoUser.userName} </Link>,
+        created :  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.insertedDate} </Link>,
         action: (
           <Space size="middle">
             <div style={{ display: "flex", gap: "4px", placeItems: "center" }}>

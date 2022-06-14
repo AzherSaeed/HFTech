@@ -34,12 +34,16 @@ const initialValues = {
   address: "",
 };
 const validationSchema = Yup.object({
-  locationName: Yup.string()
-    .required("Name is required!")
-    .min(5, "Minimun six character is required"),
-  country: Yup.string()
-    .required("country is required!")
-    .matches(/^(\S+$)/g, "email cannot contain blankspaces"),
+  name: Yup.string()
+    .required("Name is required!"),
+    countryId: Yup.string()
+    .required("Country is required!"),
+    cityId: Yup.string()
+    .required("City is required!"),
+    stateId: Yup.string()
+    .required("State is required!"),
+    address: Yup.string()
+    .required("Address is required!"),
 });
 
 const Index = () => {
@@ -254,7 +258,7 @@ const Index = () => {
               <div className="leftSide">
                 <Formik
                   initialValues={spaceData?.data?.result ? spaceData?.data?.result : initialValues}
-                  // validationSchema={validationSchema}
+                  validationSchema={validationSchema}
                   onSubmit={onSubmit}
                 >
                   {(formik, form) => {

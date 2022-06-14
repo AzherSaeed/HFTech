@@ -35,9 +35,7 @@ const Index = ({ handleCancel, userDetail, deleteUser, toLocation }) => {
         <div className="login-container-card-btn">
           <button
             className="login-container-card-btn-yes"
-            onClick={() => {
-              handleDelete();
-            }}
+            onClick={() => handleDelete() }
           >
             Yes!
           </button>
