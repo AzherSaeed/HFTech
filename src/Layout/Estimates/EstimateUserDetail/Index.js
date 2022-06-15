@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Style from "./Style";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import { Modal, Spin, InputNumber, Tabs } from 'antd';
-import { API_URL, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LINE_ITEM_DETAILS, ESTIMATE_TABLE_ITEM_DETAILS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
+import { API_URL, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LINE_ITEM_DETAILS, ESTIMATE_TABLE_ITEM_DETAILS, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
 import { CustomQueryHookById, CustomQueryHookGet } from "../../../Components/QueryCustomHook/Index";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../../Components/Loader/Loader";
@@ -27,7 +27,7 @@ const Index = () => {
   // Save Data by Id to send Update after Changes
 
   const fetchData = () => {
-    axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'));
+    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'));
   }
 
   useEffect(() => {
@@ -35,23 +35,19 @@ const Index = () => {
   }, [itemId]);
 
 
-
   // For Load User Detail by Id
 
-  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS),);
+  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS));
 
-  // For Labour Data
+    // // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
 
-  // For Material Data
+  // // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
 
-  // For Line Item Detail by Id
-
-  const { data: lineItemDetails, isLoading: lineItemDetailsIsLoading, refetch: lineItemDetailsRefech, isRefetching: lineItemDetailsRefecting, } = CustomQueryHookById('estimatelineItemDetails', itemId, (API_URL + ESTIMATE_LINE_ITEM_DETAILS), true);
-
+  const { data: lineItemDetails, isLoading: itemLoading, refetch: lineItemDetailsRefech, isFetching: itemFetching } = CustomQueryHookById('createUserLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -327,10 +323,10 @@ const Index = () => {
                         <div className="main-heading-section d-flex justify-content-between">
                           <p className="main-heading">{lineItemDetails?.data.result.dtoLineItem.name}</p>
                           <div className="warn-actions">
-                            <div style={{ display: 'flex', gap: '6px' }}>
+                            {/* <div style={{ display: 'flex', gap: '6px' }}>
                               <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
                               <img onClick={() => setIsModalVisible(true)} src={editIcon} alt="edit Icon" className="action_icons editicon" />
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -378,17 +374,7 @@ const Index = () => {
               }
             </div>
           </div>
-          <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
-            <CustomButton
-              bgcolor="#156985"
-              color="white"
-              padding="8px 8px"
-              width="100%"
-              type="submit"
-              title="Save Estimate"
-              clicked={onSubmitUpdate}
-            />
-          </div>
+
         </div>
       </CreateEstimateStyled>
     </Sidebar>

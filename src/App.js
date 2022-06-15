@@ -54,7 +54,7 @@ function App() {
           <Route path="/estimates/createNew/:itemId" element={<CreateNew />} />
           <Route path="/estimates/update" element={<UpdateEstiamte />} />
           <Route path="/estimates/update/:estimateId" element={<UpdateEstiamte />} />
-          <Route path="/estimates/update/:itemId/:detailId" element={<UpdateEstiamte />} />
+          <Route path="/estimates/update/:estimateId/:itemId" element={<UpdateEstiamte />} />
           
           <Route path="/estimates/createNew/addItem" element={<AddItem />} />
           <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />

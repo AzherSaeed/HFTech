@@ -12,7 +12,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { LoadingOutlined, RightOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { InputNumber, Modal, Spin } from "antd";
-import { Tabs} from "antd";
+import { Tabs } from "antd";
 import editIcon from '../../../Assets/icons/ic_edit.svg';
 import deleteIcon from '../../../Assets/icons/ic_delete.svg';
 import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LOCATIONS_DATA_SELECT, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
@@ -22,16 +22,22 @@ import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/Que
 import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
 
 const initialValues = {
-  username: "",
-  password: "",
+  client: "",
+  contacts: "",
+  locations: "",
+  referenceNumber: "",
+  description: "",
+  date: "",
+
+
 };
 const validationSchema = Yup.object({
-  username: Yup.string()
-    .required("Username is required!")
-    .matches(/^(\S+$)/g, "Username cannot contain blankspaces"),
-  password: Yup.string()
-    .required("Invalid credentials. Please try again!")
-    .min(6, "Minimum six character is required"),
+  client: Yup.string().required("Client is required!"),
+  contacts: Yup.array().required("Contract is required!"),
+  locations: Yup.array().required("Location is required!"),
+  referenceNumber: Yup.string().required("Reference Number is required!"),
+  description: Yup.string().required("Description is required!"),
+  // date: Yup.string().required("Date is required!"),
 });
 
 const { TabPane } = Tabs;
@@ -44,7 +50,8 @@ const CreateNew = () => {
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [clientId, setClientId] = useState();
   const navigate = useNavigate();
-  
+  const [saveEstimateModal, setSaveEstimateModal] = useState(false);
+
 
   // Save Data by Id to send Update after Changes
 
@@ -55,10 +62,6 @@ const CreateNew = () => {
   useEffect(() => {
     fetchData();
   }, [itemId]);
-
-
-  const genericService = new GenericService();
-
 
   const antIcon = (
     <LoadingOutlined
@@ -106,7 +109,7 @@ const CreateNew = () => {
       }, 3000);
     }).catch((error) => console.log(error));
   }
-  
+
   console.log(itemId, "userId");
   if (materialsLoading) {
     return <Loader />
@@ -124,61 +127,89 @@ const CreateNew = () => {
   const handleUpdateCancel = () => {
     setIsUpdateModalVisible(false);
   };
+  const handleEstimateModalCancel = () => {
+    setSaveEstimateModal(false);
+  };
   const cancelDeleteModal = () => {
     setIsDeleteModal(false);
   };
 
   const onSubmit = (value) => {
-    console.log(value.date,"date in create ");
-    console.log(...value.contacts.map(({ key }) => ({ key })), 'myValues');
-    axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
-      "dtoClient": {
-        "id": clientId
-      },
-      "dtoContact": [
-        ...value.contacts.map(({ key }) => ({ id: key }))
-      ],
-      "dtoSpace": [
-        ...value.locations.map(({ key }) => ({ id: key }))
-      ],
-      "referenceNumber": value.referenceNumber,
-      "date": value.date,
-      "description": value.description,
-      "dtoUserLineItems": [
-        ...materialsData?.data.result.map(({ id }) => ({ id })),
-        ...labourData?.data.result.map(({ id }) => ({ id }))
-      ],
-      "channel": "IOS"
-    }).then((res) => console.log(res, 'response in create estimate')).catch((error) => console.log(error, 'error in estimate create'));
-    genericService
-      .post(`${API_URL}auth/signin`, value)
-      .then((msg) => {
-        if (msg.resultCode == 200) {
-          toast(msg.message, "top-right");
-        } else {
-          toast(msg.message, "top-right");
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-        if (error.response.status == 401) {
-          toast("login credentials is invalid", "top-right");
-        }
-      });
+    if (!labourData && !materialsData) {
+      alert('plz select one line item');
+    } else {
+      axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
+        "dtoClient": {
+          "id": clientId
+        },
+        "dtoContact": [
+          ...value.contacts.map(({ key }) => ({ id: key }))
+        ],
+        "dtoSpace": [
+          ...value.locations.map(({ key }) => ({ id: key }))
+        ],
+        "referenceNumber": value.referenceNumber,
+        "date": value.date,
+        "description": value.description,
 
+        "dtoUserLineItems": labourData ? (
+          [...labourData?.data.result.map(({ id }) => ({ id }))]
+        ) : ([...materialsData?.data.result.map(({ id }) => ({ id }))]),
+
+        "channel": "IOS"
+      }).then((res) => {
+        setSaveEstimateModal(true);
+        setTimeout(() => {
+          setSaveEstimateModal(false);
+          navigate('/estimates')
+
+        }, 20000);
+      }).catch((error) => console.log(error, 'error in estimate create'));
+    }
   };
   const handleItemsDetails = (index, inputName, value) => {
     if (inputName === 'price') {
       oldData[index].price = value;
-      oldData[index].total = oldData[index].qty * oldData[index].price;
+      oldData[index].total = oldData[index].quantity * oldData[index].price;
     } else {
-      oldData[index].qty = value;
-      oldData[index].total = oldData[index].qty * oldData[index].price;
+      oldData[index].quantity = value;
+      oldData[index].total = oldData[index].quantity * oldData[index].price;
     }
     setOldData([...oldData,]);
   }
 
+  // const onCreateSubmit = () => {
+  //   {
+  //     "dtoClient": {
+  //       "id": 
+  //     },
+  //     "dtoContact": [
+  //       {
+  //         "id": 1
+  //       }
+  //     ],
+  //       "dtoSpace": [
+  //         {
+  //           "id": 3
+  //         }
+  //       ],
+  //         "referenceNumber": "asdasdasd",
+  //           "date": "2021/52/21 12:20:20",
+  //             "description": "sdfsdf",
+  //               "dtoUserLineItems": [
+  //                 {
+  //                   "id": 2
+  //                 },
+  //                 {
+  //                   "id": 3
+  //                 }
+  //               ],
+  //                 "channel": "IOS"
+  //   }
+  // }
+
   const onSubmitUpdate = () => {
+
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
       "id": itemDetails.data.result.id,
       "channel": itemDetails.data.result.channel,
@@ -188,13 +219,13 @@ const CreateNew = () => {
         "id": itemDetails.data.result.dtoUnitOfMeasure ? itemDetails.data.result.dtoUnitOfMeasure.id : null
       },
       "dtoLineItem": {
-        "id": itemDetails.data.result?.dtoLineItem ? itemDetails.data.result.dtoLineItem.id : null
+        "id": itemDetails.data.result.dtoLineItem.id
       },
       "userLineItemDetails": [
         ...oldData.map(({ id, total, quantity, price }) => (
           {
             "dtoLineItemDetail": {
-            id
+              id
             },
             total,
             quantity,
@@ -228,6 +259,14 @@ const CreateNew = () => {
             <h5>Item Updated Succesfull</h5>
           </div>
         </Modal>
+        <Modal visible={saveEstimateModal} footer={null} onCancel={handleEstimateModalCancel} centered={true} closable={false}>
+          <div className="text-center">
+            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+          </div>
+          <div className="mt-3 text-center" >
+            <h5>Estimate Created Succesfull</h5>
+          </div>
+        </Modal>
         <Modal visible={isDeleteModal} footer={null} onCancel={cancelDeleteModal} centered={true} closable={false}>
           <div className="text-center">
             <img src={ic_logo} alt="logo" width='120px' className="text-center" />
@@ -238,7 +277,7 @@ const CreateNew = () => {
         </Modal>
         <Formik
           initialValues={initialValues}
-          // validationSchema={validationSchema}
+          validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
           {(formik) => {
@@ -255,11 +294,11 @@ const CreateNew = () => {
                     <FormControl
                       control="select"
                       type="text"
-                      name="username"
+                      name="client"
                       placeholder="Select Client"
                       label="Client"
                       className={
-                        formik.errors.username && formik.touched.username
+                        formik.errors.name && formik.touched.name
                           ? "is-invalid"
                           : "customInput"
                       }
@@ -274,7 +313,7 @@ const CreateNew = () => {
                       placeholder="mm/dd/yy"
                       label="Date"
                       className={
-                        formik.errors.username && formik.touched.username
+                        formik.errors.date && formik.touched.date
                           ? "is-invalid"
                           : "customInput"
                       }
@@ -289,7 +328,7 @@ const CreateNew = () => {
                         placeholder="Select Location"
                         label="Location"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.locations && formik.touched.locations
                             ? "is-invalid"
                             : "customInput"
                         }
@@ -302,7 +341,7 @@ const CreateNew = () => {
                         placeholder="Select Contact"
                         label="Contact"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.contacts && formik.touched.contacts
                             ? "is-invalid"
                             : "customInput"
                         }
@@ -318,7 +357,7 @@ const CreateNew = () => {
                         placeholder="Enter estimate description"
                         label="Estimate Description"
                         className={
-                          formik.errors.username && formik.touched.username
+                          formik.errors.description && formik.touched.description
                             ? "is-invalid"
                             : "customInput"
                         }
@@ -334,7 +373,7 @@ const CreateNew = () => {
                       placeholder="Enter Reference Number"
                       label="Refernece Number"
                       className={
-                        formik.errors.username && formik.touched.username
+                        formik.errors.referenceNumber && formik.touched.referenceNumber
                           ? "is-invalid"
                           : "customInput"
                       }
@@ -350,165 +389,172 @@ const CreateNew = () => {
                     </div>
                   </div>
                 </div>
+                <CreateEstimateStyled>
+                  <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
+                    <div className="tabWrapper">
+                      {
+                        oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+                          <div className="rateWrapper mt-3" key={id}>
+                            <h5>{name}</h5>
+                            <div className="input-fields d-flex">
+                              <InputNumber
+                                addonBefore="$"
+                                addonAfter="Rate"
+                                defaultValue={price}
+                                controls={false}
+                                value={oldData ? oldData[index].price : price}
+                                type='text'
+                                onChange={(value) => handleItemsDetails(index, 'price', value)}
+                              />
+                              <InputNumber
+                                addonAfter="Quantity"
+                                defaultValue={quantity}
+                                value={oldData ? oldData[index].quantity : quantity}
+                                controls={false}
+                                type='text'
+                                onChange={(value) => handleItemsDetails(index, 'quantity', value)}
+                              />
+                              <InputNumber
+                                className='total-input'
+                                addonBefore="Total"
+                                defaultValue={total}
+                                type='text'
+                                disabled
+                                controls={false}
+                                value={oldData ? oldData[index].total : (quantity * price)}
+                              />
+                            </div>
+                          </div>
+                        )
+                        )
+                      }
+                      {oldData && <div className="grand-total-section mt-4 d-flex justify-content-between">
+                        <h6 className="title fw-bold">Total</h6>
+                        <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
+                      </div>}
+                      <div className="saveLineItems mt-3">
+                        <CustomButton
+                          bgcolor="#156985"
+                          color="white"
+                          padding="8px 8px"
+                          width="75%"
+                          type="submit"
+                          title="Update Line Items"
+                          clicked={onSubmitUpdate}
+                        />
+                      </div>
+                    </div>
+                  </Modal>
+
+                  <div className="main-container">
+                    <div className="row">
+                      <div className="col-md-6 col-sm-12">
+                        <div className="first-table">
+                          <Tabs defaultActiveKey="1">
+                            <TabPane tab="Labor Lineitems" key="1">
+                              {labourData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
+                                <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
+                                  <div className="addItem-div">
+                                    <div>{item.name}</div>
+                                    <div>&gt;</div>
+                                  </div>
+                                </div>
+                              ))}
+                            </TabPane>
+                            <TabPane tab="Materials Lineitems" key="2">
+                              {materialsData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
+                                <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
+                                  <div className="d-none d-sm-block">
+                                    <div className="addItem-div">
+                                      <div>{item.name}</div>
+                                      <div>&gt;</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </TabPane>
+                          </Tabs>
+                        </div>
+                      </div>
+                      <div className="col-md-6 col-sm-12 ">
+                        {
+                          itemDetails && (
+                            <div className="second-table">
+                              <div className="d-none d-sm-block">
+                                <div className="inner-section">
+                                  <div className="main-heading-section d-flex justify-content-between">
+                                    <p className="main-heading">{itemDetails?.data.result.dtoLineItem.name}</p>
+                                    <div className="warn-actions">
+                                      <div style={{ display: 'flex', gap: '6px' }}>
+                                        <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
+                                        <img onClick={() => setIsModalVisible(true)} src={editIcon} alt="edit Icon" className="action_icons editicon" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="d-sm-none">
+                              </div>
+                              <div className="d-none d-sm-block">
+                                {itemFetching ? (
+                                  <div className="d-flex justify-content-center">
+                                    <Spin indicator={antIcon} />
+                                  </div>
+                                ) : (
+                                  <div className="tabWrapper">
+                                    <UpdateEstimateRightStyled>
+                                      <table className="table">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Rate</th>
+                                            <th scope="col">QTY</th>
+                                            <th scope="col">Total</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {
+                                            itemDetails?.data.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
+                                              <tr key={id}>
+                                                <td>{name}</td>
+                                                <td>{price}</td>
+                                                <td>{quantity}</td>
+                                                <td>{total}</td>
+                                              </tr>
+                                            )
+                                            )
+                                          }
+                                        </tbody>
+                                      </table>
+                                    </UpdateEstimateRightStyled>
+                                  </div>
+                                )
+                                }
+                              </div>
+                            </div>
+                          )
+                        }
+                      </div>
+                    </div>
+
+                  </div>
+                </CreateEstimateStyled>
+                <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
+                  <CustomButton
+                    bgcolor="#156985"
+                    color="white"
+                    padding="8px 8px"
+                    width="100%"
+                    type="submit"
+                    title="Save Estimate"
+                  />
+                </div>
               </Form>
             );
           }}
         </Formik>
       </Style>
-      <CreateEstimateStyled>
-        <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
-          <div className="tabWrapper">
-            {
-              oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
-                <div className="rateWrapper mt-3" key={id}>
-                  <h5>{name}</h5>
-                  <div className="input-fields d-flex">
-                    <InputNumber
-                      addonBefore="$"
-                      addonAfter="Rate"
-                      defaultValue={price}
-                      controls={false}
-                      value={oldData ? oldData[index].price : price}
-                      type='text'
-                      onChange={(value) => handleItemsDetails(index, 'price', value)}
-                    />
-                    <InputNumber
-                      addonAfter="Quantity"
-                      defaultValue={quantity}
-                      value={quantity}
-                      controls={false}
-                      type='text'
-                      onChange={(value) => handleItemsDetails(index, 'quantity', value)}
-                    />
-                    <InputNumber
-                      addonBefore="Total"
-                      defaultValue={total}
-                      type='text'
-                      controls={false}
-                      value={oldData ? oldData[index].total : (quantity * price)}
-                    />
-                  </div>
-                </div>
-              )
-              )
-            }
-            <div className="saveLineItems mt-3">
-              <CustomButton
-                bgcolor="#156985"
-                color="white"
-                padding="8px 8px"
-                width="75%"
-                type="submit"
-                title="Update Line Items"
-                clicked={onSubmitUpdate}
-              />
-            </div>
-          </div>
-        </Modal>
 
-        <div className="main-container">
-          <div className="row">
-            <div className="col-md-6 col-sm-12">
-              <div className="first-table">
-                <Tabs defaultActiveKey="1">
-                  <TabPane tab="Labor Lineitems" key="1">
-                    {labourData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
-                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
-                        <div className="addItem-div">
-                          <div>{item.name}</div>
-                          <div>&gt;</div>
-                        </div>
-                      </div>
-                    ))}
-                  </TabPane>
-                  <TabPane tab="Materials Lineitems" key="2">
-                    {materialsData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
-                      <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
-                        <div className="d-none d-sm-block">
-                          <div className="addItem-div">
-                            <div>{item.name}</div>
-                            <div>&gt;</div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </TabPane>
-                </Tabs>
-              </div>
-            </div>
-            <div className="col-md-6 col-sm-12 ">
-              {
-                itemDetails && (
-                  <div className="second-table">
-                    <div className="d-none d-sm-block">
-                      <div className="inner-section">
-                        <div className="main-heading-section d-flex justify-content-between">
-                          <p className="main-heading">{itemDetails?.data.result.dtoLineItem.name}</p>
-                          <div className="warn-actions">
-                            <div style={{ display: 'flex', gap: '6px' }}>
-                              <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
-                              <img onClick={() => setIsModalVisible(true)} src={editIcon} alt="edit Icon" className="action_icons editicon" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-sm-none">
-                    </div>
-                    <div className="d-none d-sm-block">
-                      {itemFetching ? (
-                        <div className="d-flex justify-content-center">
-                          <Spin indicator={antIcon} />
-                        </div>
-                      ) : (
-                        <div className="tabWrapper">
-                          <UpdateEstimateRightStyled>
-                            <table className="table">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Name</th>
-                                  <th scope="col">Rate</th>
-                                  <th scope="col">QTY</th>
-                                  <th scope="col">Total</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {
-                                  itemDetails?.data.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
-                                    <tr key={id}>
-                                      <td>{name}</td>
-                                      <td>{price}</td>
-                                      <td>{quantity}</td>
-                                      <td>{total}</td>
-                                    </tr>
-                                  )
-                                  )
-                                }
-                              </tbody>
-                            </table>
-                          </UpdateEstimateRightStyled>
-                        </div>
-                      )
-                      }
-                    </div>
-                  </div>
-                )
-              }
-            </div>
-          </div>
-          <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
-            <CustomButton
-              bgcolor="#156985"
-              color="white"
-              padding="8px 8px"
-              width="100%"
-              type="submit"
-              title="Save Estimate"
-              clicked={onSubmitUpdate}
-            />
-          </div>
-        </div>
-      </CreateEstimateStyled>
     </Sidebar>
   )
 }

@@ -152,6 +152,7 @@ const Index = () => {
         <div className="d-md-none">
           <MobileTable />
         </div>
+        
         <div className="d-none d-md-block">
           <StyleEstimates>
             <div className="btn">
@@ -166,7 +167,7 @@ const Index = () => {
               />
             </div>
             {
-              isLoading ? (
+              isLoading ||  data.length===0? (
                 <Loader />
               ) : (
                 <Table pagination={false} columns={columns} dataSource={data} />

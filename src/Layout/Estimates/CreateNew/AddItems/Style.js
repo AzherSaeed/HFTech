@@ -32,6 +32,9 @@ grid-column-end: 2;
   .input-fields {
     display: flex;
     gap: 10px;
+    .total-input{
+      color: black;
+    }
   }
   .tabWrapper {
     padding: 20px;
