@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 const StyleEstimates =styled.div`
+.table-link{
+ color:#464E5F;
+}
 .btn{
     display: flex;
     justify-content: flex-end;

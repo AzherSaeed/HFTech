@@ -11,9 +11,8 @@ import CustomButton from "../../../Components/CustomButton/Index";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { LoadingOutlined, RightOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import { Select, Table } from 'antd';
 import { InputNumber, Modal, Spin } from "antd";
-import { Tabs, Radio } from "antd";
+import { Tabs} from "antd";
 import editIcon from '../../../Assets/icons/ic_edit.svg';
 import deleteIcon from '../../../Assets/icons/ic_delete.svg';
 import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LOCATIONS_DATA_SELECT, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
@@ -21,6 +20,7 @@ import ic_logo from "../../../Assets/icons/ic_logo.svg";
 import Loader from '../../../Components/Loader/Loader';
 import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/QueryCustomHook/Index';
 import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
+
 const initialValues = {
   username: "",
   password: "",
@@ -44,19 +44,19 @@ const CreateNew = () => {
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [clientId, setClientId] = useState();
   const navigate = useNavigate();
+  
+
+  // Save Data by Id to send Update after Changes
+
   const fetchData = () => {
-
-    // Save Data by Id to send Update after Changes
-
     axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'));
   }
 
   useEffect(() => {
     fetchData();
   }, [itemId]);
-  const values = [1, 2, 3]
 
-  console.log();
+
   const genericService = new GenericService();
 
 
@@ -106,6 +106,7 @@ const CreateNew = () => {
       }, 3000);
     }).catch((error) => console.log(error));
   }
+  
   console.log(itemId, "userId");
   if (materialsLoading) {
     return <Loader />
@@ -128,23 +129,24 @@ const CreateNew = () => {
   };
 
   const onSubmit = (value) => {
-    console.log(  ...value.contacts.map(({key}) => ({ key })), 'myValues');
+    console.log(value.date,"date in create ");
+    console.log(...value.contacts.map(({ key }) => ({ key })), 'myValues');
     axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
       "dtoClient": {
         "id": clientId
       },
       "dtoContact": [
-        ...value.contacts.map(({key}) => ({ id:key }))
+        ...value.contacts.map(({ key }) => ({ id: key }))
       ],
       "dtoSpace": [
-        ...value.locations.map(({key}) => ({ id:key }))
+        ...value.locations.map(({ key }) => ({ id: key }))
       ],
       "referenceNumber": value.referenceNumber,
       "date": value.date,
       "description": value.description,
       "dtoUserLineItems": [
-        ...materialsData?.data.result.map(({id})=>({id})),
-        ...labourData?.data.result.map(({id})=>({id}))
+        ...materialsData?.data.result.map(({ id }) => ({ id })),
+        ...labourData?.data.result.map(({ id }) => ({ id }))
       ],
       "channel": "IOS"
     }).then((res) => console.log(res, 'response in create estimate')).catch((error) => console.log(error, 'error in estimate create'));
@@ -189,38 +191,16 @@ const CreateNew = () => {
         "id": itemDetails.data.result?.dtoLineItem ? itemDetails.data.result.dtoLineItem.id : null
       },
       "userLineItemDetails": [
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[0].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[0].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[0].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[0].price
-        },
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[1].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[1].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[1].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[1].price
-        },
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[2].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[2].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[2].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[2].price
-        },
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[3].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[3].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[3].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[3].price
-        }
+        ...oldData.map(({ id, total, quantity, price }) => (
+          {
+            "dtoLineItemDetail": {
+            id
+            },
+            total,
+            quantity,
+            price
+          }
+        ))
       ]
     }).then((res) => {
       setIsModalVisible(false);
@@ -240,7 +220,7 @@ const CreateNew = () => {
   return (
     <Sidebar>
       <Style>
-      <Modal visible={isUpdateModalVisible} footer={null} onCancel={handleUpdateCancel} centered={true} closable={false}>
+        <Modal visible={isUpdateModalVisible} footer={null} onCancel={handleUpdateCancel} centered={true} closable={false}>
           <div className="text-center">
             <img src={ic_logo} alt="logo" width='120px' className="text-center" />
           </div>
@@ -288,7 +268,7 @@ const CreateNew = () => {
 
                     />
                     <FormControl
-                      control="date"
+                      control="dateTime"
                       type="text"
                       name="date"
                       placeholder="mm/dd/yy"
@@ -359,18 +339,6 @@ const CreateNew = () => {
                           : "customInput"
                       }
                     />
-                    {/* <FormControl
-                        control="select"
-                        type="text"
-                        name="lineItems"
-                        placeholder="Add LineItems"
-                        label="Line Items"
-                        className={
-                          formik.errors.username && formik.touched.username
-                            ? "is-invalid"
-                            : "customInput"
-                        } 
-                      />*/}
                     <div className='addItem'>
                       <div className='addItem-label'>Line Items</div>
                       <Link to='/estimates/createNew/addItem'>
@@ -380,17 +348,6 @@ const CreateNew = () => {
                         </div>
                       </Link>
                     </div>
-                  </div>
-                  <div className='fileds buttons'>
-                    <div></div>
-                    <CustomButton
-                      bgcolor="#156985"
-                      color="white"
-                      padding="8px 8px"
-                      width="100%"
-                      type="submit"
-                      title="Save Estimate"
-                    />
                   </div>
                 </div>
               </Form>
@@ -497,7 +454,6 @@ const CreateNew = () => {
                       </div>
                     </div>
                     <div className="d-sm-none">
-
                     </div>
                     <div className="d-none d-sm-block">
                       {itemFetching ? (
@@ -531,17 +487,6 @@ const CreateNew = () => {
                               </tbody>
                             </table>
                           </UpdateEstimateRightStyled>
-                          <div className="saveLineItems mt-4">
-                            <CustomButton
-                              bgcolor="#156985"
-                              color="white"
-                              padding="8px 8px"
-                              width="75%"
-                              type="submit"
-                              title="Save Estimate"
-                              clicked={onSubmitUpdate}
-                            />
-                          </div>
                         </div>
                       )
                       }
@@ -550,6 +495,17 @@ const CreateNew = () => {
                 )
               }
             </div>
+          </div>
+          <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
+            <CustomButton
+              bgcolor="#156985"
+              color="white"
+              padding="8px 8px"
+              width="100%"
+              type="submit"
+              title="Save Estimate"
+              clicked={onSubmitUpdate}
+            />
           </div>
         </div>
       </CreateEstimateStyled>

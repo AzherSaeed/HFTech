@@ -26,6 +26,7 @@ const SelectComp = (props) => {
               <Select
                 bordered={false}
                 className="customSelect"
+                showArrow
                 name={name}
                 id={name}
                 mode='multiple'

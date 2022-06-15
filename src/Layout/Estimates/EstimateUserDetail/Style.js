@@ -4,6 +4,13 @@ const Style = styled.div`
   background-color: white;
   border-radius: 4px;
   padding: 50px 20px;
+  .grid-span2{
+  grid-template-columns: repeat(2,1fr) !important;
+  grid-template-rows: repeat(2,1fr);
+  .estimate{
+    grid-row: 1 / span 2;
+  }
+  }
   .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

@@ -9,7 +9,7 @@ import Estimates from "./Layout/Estimates/Index";
 import Locations from "./Layout/Locations/Index";
 import Contacts from "./Layout/Contacts/Index";
 import Clients from "./Layout/Clients/Index";
-import USerDetail from "./Layout/Estimates/EstimateUserDetail/Index";
+import UserDetail from "./Layout/Estimates/EstimateUserDetail/Index";
 import UserLocation from "./Layout/Locations/UserLocation/Index";
 import ClientDetail from "./Layout/Clients/ClientDetail/Index";
 import ForgetPassword from "./Layout/AuthScreens/ForgotPassword/Index";
@@ -53,11 +53,13 @@ function App() {
           <Route path="/estimates/createNew" element={<CreateNew />} />
           <Route path="/estimates/createNew/:itemId" element={<CreateNew />} />
           <Route path="/estimates/update" element={<UpdateEstiamte />} />
-          <Route path="/estimates/update/:itemId" element={<UpdateEstiamte />} />
+          <Route path="/estimates/update/:estimateId" element={<UpdateEstiamte />} />
+          <Route path="/estimates/update/:itemId/:detailId" element={<UpdateEstiamte />} />
           
           <Route path="/estimates/createNew/addItem" element={<AddItem />} />
           <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />
-          <Route path="/estimates/:estimstesId" element={<USerDetail />} />
+          <Route path="/estimates/:estimateId" element={<UserDetail />} />
+          <Route path="/estimates/:estimateId/:itemId" element={<UserDetail />} />
           <Route path="/locations" element={<Locations />} />
           <Route path="/locations/:locationsId" element={<UserLocation />} />
           <Route path="/contact" element={<Contacts />} />

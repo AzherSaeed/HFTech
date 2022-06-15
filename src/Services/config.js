@@ -28,6 +28,8 @@ export const ESTIMATE_LOCATIONS_DATA_SELECT='space/getByClientId?clientId=';
 export const ESTIMATE_CONTACT_DATA_SELECT='contact/getByClientId?clientId=';
 export const ESTIMATE_CREATED_DATA_SAVE='estimate/save';
 export const ESTIMATE_TABLE_GET_LIST='estimate/get';
+export const ESTIMATE_TABLE_ITEM_DETAILS='estimate/getById?estimateId=';
+export const ESTIMATE_LINE_ITEM_DETAILS='userLineItem/getById?userLineItemId=';
 
 
 export const USER_LINE_ITEM_SAVE = 'userLineItem/save';

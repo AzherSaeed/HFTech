@@ -2,6 +2,7 @@ import React from "react";
 import Input from "./CustomInput/Index";
 import Select from "./CustomSelect/Index";
 import Datepicker from './CustomDatePicker/Index';
+import CustomDateTimePicker from './CustomDateTimePicker/Index';
 import Textarea from './CustomTextArea/Index';
 import InputNumber from './CustomInputNumber'
 // import Checkbox from "./Checkbox";
@@ -32,6 +33,8 @@ const Formickcontroller = (props) => {
     //   return <Radio {...rest} />;
     case "date":
       return <Datepicker {...rest} />;
+    case "dateTime":
+      return <CustomDateTimePicker {...rest} />;
     default:
       return null;
   }

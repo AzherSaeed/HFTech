@@ -1,21 +1,24 @@
 import React, { useEffect } from "react";
 import Style, { CreateEstimateStyled, UpdateEstimateRightStyled } from "./Style";
+import Styled from '../CreateNew/Style'
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { Select, Table } from 'antd';
-import { useNavigate, useParams } from "react-router-dom";
+import { Form, Select, Table } from 'antd';
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { InputNumber, Modal, Spin } from "antd";
 import { Tabs, Radio } from "antd";
-
-import { LoadingOutlined } from "@ant-design/icons";
+import FormControl from '../../../Components/FormControl';
+import { LoadingOutlined, RightOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import axios from "axios";
 import ic_logo from "../../../Assets/icons/ic_logo.svg";
-import { API_URL, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
+import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, ESTIMATE_LINE_ITEM_DETAILS, ESTIMATE_LOCATIONS_DATA_SELECT, ESTIMATE_TABLE_ITEM_DETAILS, LIST_ADMIN_LINE_ITEMS_BY_ID, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_SAVE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
 import { CustomQueryHookById, CustomQueryHookGet } from "../../../Components/QueryCustomHook/Index";
 import Loader from "../../../Components/Loader/Loader";
 import editIcon from '../../../Assets/icons/ic_edit.svg';
 import deleteIcon from '../../../Assets/icons/ic_delete.svg';
+import { Formik } from "formik";
+import moment from "moment";
 
 
 const { TabPane } = Tabs;
@@ -24,10 +27,11 @@ const { Option } = Select;
 const Index = () => {
   const navigate = useNavigate();
   const [oldData, setOldData] = useState();
-  const { itemId } = useParams();
+  const { estimateId, itemId } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
+  const [clientId, setClientId] = useState();
 
   const fetchData = () => {
     axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
@@ -37,32 +41,65 @@ const Index = () => {
     fetchData()
   }, [itemId]);
 
-const antIcon = (
-<LoadingOutlined
-style={{
-  fontSize: 24,
-}}
-spin
-/>
-);
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+      }}
+      spin
+    />
+  );
 
-  // For Labour Data
+  // For Load Table User default Detail by Id
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
+  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDefaultDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS),);
 
-  // For Material Data
+    // For Labour Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
+    const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true);
 
-  // For Load Data by Id
+    // For Material Data
+  
+    const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true);
 
-  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('createUserLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
+      // For Line Item Detail by Id
+
+  const { data: itemDetails, isLoading: lineItemDetailsIsLoading, refetch: lineItemDetailsRefech, isRefetching: lineItemDetailsRefecting, } = CustomQueryHookById('estimatelineItemDetails', itemId, (API_URL + ESTIMATE_LINE_ITEM_DETAILS), true);
+
+  // // For Labour Data
+
+  // const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
+
+  // // For Material Data
+
+  // const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
+
+  // // For Load Data by Id
+
+  // const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('createUserLineItemGetUserLineItemDetailByUserLineItemId', detailId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
+
+  // For ClientS Fetch Data
+
+  const { data: clientData, isLoading: clientFetchIsLoading, refetch: clientRefetchIsLoading } = CustomQueryHookGet('estimatesClientsDataDropdown', (API_URL + ESTIMATE_CLIENTS_DATA_DROPDOWN), true);
+
+  // For Locations Fetch Data
+
+  const { data: locationsData, isLoading: locationsIsLoading, refetch: locationsRefetch, isRefetching: locationsRefetching } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
+
+  // For Contact Fetch Data
+
+  const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', itemId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
+
+
+
+
+
 
 
   // Item Delete Handler
 
   const itemDeleteHandler = () => {
-    axios.delete(API_URL + USER_LINE_ITEM_DELETE + itemId).then((res) => {
+    axios.delete(API_URL + USER_LINE_ITEM_DELETE + estimateId).then((res) => {
       setIsDeleteModal(true);
       labourRefetching();
       materialsRefetching();
@@ -71,15 +108,15 @@ spin
       }, 3000);
     }).catch((error) => console.log(error));
   }
-  console.log(itemId, "userId");
+  console.log(estimateId, "userId");
   if (materialsLoading) {
     return <Loader />
   }
 
   // Id Navigation handler
   const refetchByIdHandler = (id) => {
-    navigate(`/estimates/update/${id}`);
-    refetchById();
+    navigate(`/estimates/update/${estimateId}/${id}`);
+    lineItemDetailsRefech();
   }
 
   const handleCancel = () => {
@@ -116,38 +153,16 @@ spin
         "id": itemDetails.data.result?.dtoLineItem ? itemDetails.data.result.dtoLineItem.id : null
       },
       "userLineItemDetails": [
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[0].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[0].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[0].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[0].price
-        },
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[1].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[1].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[1].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[1].price
-        },
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[2].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[2].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[2].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[2].price
-        },
-        {
-          "dtoLineItemDetail": {
-            "id": itemDetails.data.result.userLineItemDetails[3].id
-          },
-          "total": itemDetails.data.result.userLineItemDetails[3].total,
-          "quantity": itemDetails.data.result.userLineItemDetails[3].quantity,
-          "price": itemDetails.data.result.userLineItemDetails[3].price
-        }
+        ...oldData.map(({ id, total, quantity, price }) => (
+          {
+            "dtoLineItemDetail": {
+              id
+            },
+            total,
+            quantity,
+            price
+          }
+        ))
       ]
     }).then((res) => {
       setIsModalVisible(false);
@@ -157,10 +172,21 @@ spin
       }, 3000);
     }).catch((error) => console.log(error, 'error'));
   }
+  const initialValues = {
+    username: "",
+    password: "",
+  };
+  const onSelectClient = (value, id) => {
+    setClientId(id);
+    locationsRefetch();
+    contactsRefetch();
+    console.log('on slect trigger', value, id, 'id');
+  }
+
 
   return (
     <Sidebar>
-      <Style>
+      <Styled>
         <Modal visible={isUpdateModalVisible} footer={null} onCancel={handleUpdateCancel} centered={true} closable={false}>
           <div className="text-center">
             <img src={ic_logo} alt="logo" width='120px' className="text-center" />
@@ -177,59 +203,145 @@ spin
             <h5>Item Deleted Succesfull</h5>
           </div>
         </Modal>
-        <div className="grid-container">
-          <div className="data">
-            <p className="title">Muhammad Adnan Qureshi</p>
-            <p className="identity">Client</p>
-          </div>
-          <div className="data ">
-            <p className="title">Saturday, May 7, 2022</p>
-            <p className="identity">Date</p>
-          </div>
-        </div>
-        <div className="grid-container">
-          <div>
-            <div className="data ">
-              <p className="title">Improve Canada, United State</p>
-              <p className="identity">Location</p>
-            </div>
-            <div className="data ">
-              <p className="title">Jamen Tabesh</p>
-              <p className="identity">Contact</p>
-            </div>
-          </div>
-          <div className="data ">
-            <p className="title">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et justo duo
-              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
-              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-              amet, consetetur sadipscing elitr, sed diam nonumy
-            </p>
-            <p className="identity">Estimate Description</p>
-          </div>
-        </div>
-        <div className="grid-container">
-          <div className="data " style={{ marginBottom: '10px' }}>
-            <p className="title " >Jamen13</p>
-            <p className="identity">Reference Number</p>
-          </div>
-          <div className="data ">
-            <p className="title">Line items</p>
-            <div style={{ display: 'flex', gap: "10px" }}>
-              <Select
-                labelInValue
-                defaultValue={{ value: "lucy" }}
-                style={{ width: '100%' }}
+        <Formik
+          initialValues={initialValues}
+          // validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {(formik) => {
+            return (
+              <Form
+                name="basic"
+                onFinish={formik.handleSubmit}
+                // onFinishFailed={onFinishFailed}
+                autoComplete="off"
+              // validateMessages={validationSchema}
               >
-                <Option value="jack">Jack (100)</Option>
-                <Option value="lucy">Lucy (101)</Option>
-              </Select>
-            </div>
-          </div>
-        </div>
-      </Style>
+
+                {/* userDetails?.data.result.dtoClient.phone
+
+                  {userDetails?.data.result.date}
+
+                   {userDetails?.data.result.dtoClient.email */}
+
+                <div div className='grid-container'>
+                  <div className='fileds'>
+                    <FormControl
+                      control="select"
+                      type="text"
+                      name="username"
+                      placeholder="Select Client"
+                      label="Client"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                      options={clientData?.data.result}
+                      defaultValue={{
+                        value: userDetails?.data.result.dtoClient.name,
+                        label: userDetails?.data.result.dtoClient.name,
+                      }}
+                      onSelect={onSelectClient}
+
+                    />
+                    <FormControl
+                      control="dateTime"
+                      type="text"
+                      name="date"
+                      placeholder="mm/dd/yy"
+                      defaultValue={moment('01/01/2015', 'MM/DD/YYYY')}
+                      label="Date"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                    />
+                  </div>
+                  <div className='fileds'>
+                    <div>
+                      <FormControl
+                        control="multiSelect"
+                        type="text"
+                        name="locations"
+                        placeholder="Select Location"
+                        defaultValue={
+                          userDetails?.data.result.dtoSpace.map((({ name }) => (name)))
+                        }
+                        label="Location"
+                        className={
+                          formik.errors.username && formik.touched.username
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                        options={locationsData?.data.result}
+                      />
+                      <FormControl
+                        control="multiSelect"
+                        type="text"
+                        name="contacts"
+                        placeholder="Select Contact"
+                        label="Contact"
+                        defaultValue={userDetails?.data.result.dtoContact.map(({ name }) => (name))}
+                        className={
+                          formik.errors.username && formik.touched.username
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                        options={contactsData?.data.result}
+                      />
+                    </div>
+
+                    <div className='textarea'>
+                      <FormControl
+                        control="textarea"
+                        type="text"
+                        name="description"
+                        placeholder="Enter estimate description"
+                        label="Estimate Description"
+                        defaultValue={userDetails?.data.result.description
+                        }
+                        className={
+                          formik.errors.username && formik.touched.username
+                            ? "is-invalid"
+                            : "customInput"
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className='fileds'>
+                    <FormControl
+                      control="input"
+                      type="text"
+                      name="referenceNumber"
+                      placeholder="Enter Reference Number"
+                      label="Refernece Number"
+                      className={
+                        formik.errors.username && formik.touched.username
+                          ? "is-invalid"
+                          : "customInput"
+                      }
+                      defaultValue={userDetails?.data.result.referenceNumber}
+                    />
+                    <div className='addItem'>
+                      <div className='addItem-label'>Line Items</div>
+                      <Link to='/estimates/createNew/addItem'>
+                        <div className='addItem-div'>
+                          <div>Add LineItems</div>
+                          <div><RightOutlined /></div>
+                        </div>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
+      </Styled>
+
       <CreateEstimateStyled>
         <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
           <div className="tabWrapper">
@@ -332,7 +444,7 @@ spin
 
                     </div>
                     <div className="d-none d-sm-block">
-                      {itemFetching ? (
+                      {lineItemDetailsRefecting ? (
                         <div className="d-flex justify-content-center">
                           <Spin indicator={antIcon} />
                         </div>
@@ -385,7 +497,7 @@ spin
           </div>
         </div>
       </CreateEstimateStyled>
-    </Sidebar>
+    </Sidebar >
   );
 };
 

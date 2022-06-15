@@ -35,42 +35,57 @@ const Index = () => {
   const { data: listData, isLoading } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true);
 
   const data = listData ? ([
-    ...listData?.data.result.map(({ id, dtoClient, dtoSpace, referenceNumber, date }) => ({ key: id, name: dtoClient.name, address: "ade", totalPrice: '1233', date: date, tags: referenceNumber }))
+    ...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))
 
   ]) : [];
   const columns = [
     {
       title: "Id",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "id",
+      key: "id",
       render: (text, record) => (
-        <Link to={`/estimates/${record.key}`}> {text} </Link>
+        <Link to={`/estimates/${record.id}`}> {text} </Link>
       ),
     },
     {
       title: "Client",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "client",
+      key: "client",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Reference",
-      dataIndex: "tags",
+      dataIndex: "reference",
       key: "reference",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Total Price",
       key: "totalPrice",
       dataIndex: "totalPrice",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Date",
       key: "date",
       dataIndex: "date",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
-      title: "Address",
-      key: "address",
-      dataIndex: "address",
+      title: "Owner",
+      key: "owner",
+      dataIndex: "owner",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Action",
@@ -95,7 +110,7 @@ const Index = () => {
               className="action_icons deleteicon"
               onClick={showModal}
             />
-            <Link to="/estimates/update">
+            <Link to={`/estimates/update/${record.id}`}>
               <img
                 src={editIcon}
                 alt="edit Icon"
