@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import Style from "./Style";
 import { Tabs, Checkbox, Modal } from "antd";
@@ -48,12 +48,19 @@ const Index = () => {
   const regex = /^\d*(\.\d+)?$/;
 
   const [successModal, setsuccessModal] = useState(false);
+  const [contactIds, setcontactIds] = useState([])
+  const [spaceIds, setspaceIds] = useState([])
+  const [editContactIds, seteditContactIds] = useState([])
+  const [editSpaceIds, seteditSpaceIds] = useState([])
+
+
+  
 
   const handleCancel = () => {
     setsuccessModal(false);
   };
 
-  const { data: userData, isFetching } = useQuery(
+  const { data: userData, isFetching , isLoading } = useQuery(
     "get-Client-By-Id",
     () => {
       return axios.get(API_URL + `client/getById?clientId=${clientId}`, {
@@ -70,6 +77,24 @@ const Index = () => {
       keepPreviousData: false,
     }
   );
+
+
+  
+  useEffect(() => {
+    if(userData?.data.result){
+      console.log('loop in useEffect');
+      for(let i = 0 ; i < userData?.data.result.contactIds.length ; i++){
+        editContactIds.push(userData?.data.result.contactIds[i].id)
+      }
+      for(let i = 0 ; i < userData?.data.result.spaceIds.length ; i++){
+        editSpaceIds.push(userData?.data.result.spaceIds[i].id)
+      }
+    }
+  }, [userData])
+
+
+
+
   const spaceApi = axios.get(API_URL + GET_SPACE_DETAIL);
   const contactApi = axios.get( API_URL + GET_CONTACT) ;
 
@@ -136,21 +161,40 @@ const Index = () => {
   );
 
   const onSubmit = (data1) => {
-    mutation.mutate(data1);
+    const finalData = {...data1 , contactIds : contactIds , spaceIds : spaceIds}
+    mutation.mutate(finalData);
   };
 
-  if (isFetching) {
+  if (isFetching && isLoading) {
     return <Loader />;
   }
 
-  console.log(locationData , 'locationData');
+
+  const spaceValueHandler = (value) => {
+    const fianlValue = []
+    for(let i = 0 ; i < value.length ; i++){
+      const val = {id : value[i]}
+      fianlValue.push(val)
+    }
+    setspaceIds(fianlValue);
+  }
+
+  const contactValueHandler = (value) => {
+    const fianlValue = []
+    for(let i = 0 ; i < value.length ; i++){
+      const val = {id : value[i]}
+      fianlValue.push(val)
+    }
+    setcontactIds(fianlValue);
+  }
+  
 
   return (
     <Sidebar>
       <Style>
         <Formik
           initialValues={
-            userData?.data?.result ? userData?.data?.result : initialValues
+            clientId !== 'createClient' && userData?.data?.result ? userData?.data?.result : initialValues
           }
           validationSchema={validationSchema}
           onSubmit={onSubmit}
@@ -165,7 +209,6 @@ const Index = () => {
                 onFinish={formik.handleSubmit}
                 // onFinishFailed={onFinishFailed}
                 autoComplete="off"
-                validateMessages={validationSchema}
               >
                 <div className="main-container">
                   <div className="leftSide">
@@ -232,16 +275,14 @@ const Index = () => {
                     <Tabs defaultActiveKey="1" size="large">
                       <TabPane tab="Locations" key="1">
                         <Checkbox.Group
-                          defaultValue={[3]}
-                          onChange={(value) =>
-                            formik.setFieldValue("spaceIds", value)
-                          }
+                          defaultValue={ clientId !== 'createClient' && editSpaceIds}
+                          onChange={spaceValueHandler}
                         >
                           {locationData &&
                             locationData[0]?.data.result?.map((data, i) => (
                               <div key={i} className="details">
                                 <Checkbox
-                                  value={{ id: data.id }}
+                                  value={data.id}
                                   name="spaceIds"
                                 >
                                   <div className="details-checkbox">
@@ -265,15 +306,14 @@ const Index = () => {
                       </TabPane>
                       <TabPane tab="Contacts" key="2">
                         <Checkbox.Group
-                          onChange={(value) =>
-                            formik.setFieldValue("contactIds", value)
-                          }
+                          onChange={contactValueHandler}
+                          defaultValue={ clientId !== 'createClient' &&  editContactIds}
                         >
                           {locationData &&
                             locationData[1]?.data.result?.map((data, i) => (
                               <div key={i} className="details">
                                 <Checkbox
-                                  value={{ id: data.id }}
+                                  value={data.id}
                                   name="contactIds"
                                 >
                                   <div className="details-checkbox">

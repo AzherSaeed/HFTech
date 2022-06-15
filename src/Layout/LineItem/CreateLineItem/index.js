@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LineItemDetailContainer } from "../styled";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
-import { InputNumber, Radio , Modal} from "antd";
+import { InputNumber, Radio, Modal } from "antd";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { Formik } from "formik";
 import { Form } from "antd";
@@ -12,13 +12,14 @@ import axios from "axios";
 import FormControl from "../../../Components/FormControl";
 import { toast } from "react-toastify";
 import SuccessfulDeleteModal from "../../../Components/Delete/SuccessfullModal";
-
+import Loader from "../../../Components/Loader/Loader";
 import {
   API_URL,
   CREATE_LINEITEM,
   LINEITEM_DETAIL,
   LINEITEM_UPDATE,
 } from "../../../Services/config";
+
 
 const lineItemType = [
   { id: "Materials", name: "Materials" },
@@ -59,20 +60,19 @@ const initialValues = {
   ],
 };
 
+
+
 const Index = () => {
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const regex = /^\d*(\.\d+)?$/;
 
   const [selectedRateType, setselectedRateType] = useState("labour");
-  const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false)
+  const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
 
   const handleCancel = () => {
-    setsuccessfullDeleteModal(false)
+    setsuccessfullDeleteModal(false);
   };
-
-
-
 
   const onSuccess = (response) => {
     if (response.data?.code !== 201) {
@@ -80,22 +80,16 @@ const Index = () => {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
-      setsuccessfullDeleteModal(true)
-      
+      setsuccessfullDeleteModal(true);
+
       setTimeout(() => {
-        setsuccessfullDeleteModal(false)
+        setsuccessfullDeleteModal(false);
         navigate("/lineItem");
-      },3000)
+      }, 3000);
     }
   };
 
-  const {
-    data: lineItemData,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-    isError,
+  const {data: lineItemData,isLoading,isFetching
   } = useQuery(
     "get-lineItem-By-Id",
     () => {
@@ -113,7 +107,7 @@ const Index = () => {
     {
       enabled: regex.test(lineItemId),
       refetchInterval: false,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
       keepPreviousData: false,
     }
   );
@@ -123,6 +117,7 @@ const Index = () => {
       setselectedRateType(lineItemData?.data?.result?.lineItemType);
     }
   }, [lineItemData]);
+
 
   const mutation = useMutation(
     (lineItemDetail) => {
@@ -153,7 +148,10 @@ const Index = () => {
 
   const onSubmit = (data) => {
     const finalData = {
-      ...data,
+      channel : data.channel,
+      dtoUnitOfMeasure : data.dtoUnitOfMeasure,
+      lineItemType : data.lineItemType,
+      name : data.name,
       dtoLineItemDetails: [
         {
           name: data.dtoLineItemDetails[0].name,
@@ -185,21 +183,23 @@ const Index = () => {
         },
       ],
     };
-    console.log(finalData, "finalData");
     mutation.mutate(finalData);
   };
 
   return (
     <Sidebar>
-      {isFetching ? (
-        <h1>Loading</h1>
+      {isFetching && isLoading ? (
+        <Loader/>
       ) : (
         <LineItemDetailContainer>
           <div className="lineItemBar">Create Line Items</div>
           <div className="lineItemForm">
-            {isFetching && <h1>Loading</h1>}
             <Formik
-              initialValues={initialValues}
+              initialValues={
+                lineItemId !== "createLineItem" && lineItemData?.data.result
+                  ? lineItemData?.data.result
+                  : initialValues
+              }
               // validationSchema={validationSchema}
               onSubmit={onSubmit}
             >
@@ -269,6 +269,10 @@ const Index = () => {
                               addonAfter="Rate"
                               id="reg"
                               name="dtoLineItemDetails[0].price"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[0]
+                                  .price
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[0].price",
@@ -278,12 +282,15 @@ const Index = () => {
                             />
                           </div>
                           <div>
-                      
                             <label for="reg">Quantity</label>
                             <InputNumber
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[0].qty"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[0]
+                                  .qty
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[0].qty",
@@ -331,6 +338,10 @@ const Index = () => {
                               addonAfter="Rate"
                               id="reg"
                               name="dtoLineItemDetails[1].price"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[1]
+                                  .price
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[1].price",
@@ -346,6 +357,10 @@ const Index = () => {
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[1].qty"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[1]
+                                  .qty
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[1].qty",
@@ -392,6 +407,10 @@ const Index = () => {
                               addonAfter="Rate"
                               id="reg"
                               name="dtoLineItemDetails[2].price"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[2]
+                                  .price
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[2].price",
@@ -407,6 +426,10 @@ const Index = () => {
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[2].qty"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[2]
+                                  .qty
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[2].qty",
@@ -453,6 +476,10 @@ const Index = () => {
                               addonAfter="Rate"
                               id="reg"
                               name="dtoLineItemDetails[3].price"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[3]
+                                  .price
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[3].price",
@@ -468,6 +495,10 @@ const Index = () => {
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[3].qty"
+                              value={
+                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[3]
+                                  .qty
+                              }
                               onChange={(value) =>
                                 formik.setFieldValue(
                                   "dtoLineItemDetails[3].qty",

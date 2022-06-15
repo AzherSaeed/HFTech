@@ -53,4 +53,4 @@ export const LINEITEM_DELETE = 'lineItem/delate'
 export const UNITOFMEASUREMENT_SAVE = 'setup/saveUnitOfMeasure';
 export const UNITOFMEASUREMENT_GET = 'setup/get';
 export const UNITOFMEASUREMENT_UPDATE = 'setup/updateUnitOfMeasure';
-export const UNITOFMEASUREMENT_DELETE = '/setup/delate'
+export const UNITOFMEASUREMENT_DELETE = 'setup/delate'

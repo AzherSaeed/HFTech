@@ -68,7 +68,7 @@ const Index = () => {
       } else if (unitDeleteDetailHandler?.id && !unitDetailHandler) {
         return axios.delete(
           API_URL + UNITOFMEASUREMENT_DELETE,
-          { params: { unitId: 3 } },
+          { params: { unitId: unitDeleteDetailHandler.id } },
           {
             headers: {
               "Content-Type": "application/json",

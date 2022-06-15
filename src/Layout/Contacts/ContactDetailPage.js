@@ -7,6 +7,7 @@ import { API_URL, CONTACT_GET_BY_ID } from "../../Services/config";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
+import moment from "moment";
 
 const ContactDetailPage = () => {
   const { contactId } = useParams();
@@ -62,7 +63,7 @@ const ContactDetailPage = () => {
               value="Owner"
             />
             <CustomDetailInput
-              label={userData?.data.result.insertedDate.substring(0,10)}
+              label={userData?.data.result.insertedDate + '----' +  '2016-03-12 13:00:00'}
               value="Created"
             />
           </div>
