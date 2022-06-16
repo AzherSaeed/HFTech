@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import StyleEstimates from "./StyleEstimates";
+import LocationDetailPageContainer from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Tag, Space, Modal } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
@@ -16,7 +16,7 @@ import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
 import moment from "moment";
-
+import MobileTableCard from "../../Components/CustomMobileCard";
 
 const columns = [
   {
@@ -63,8 +63,6 @@ const columns = [
   },
 ];
 
-
-
 const Index = () => {
   let [detail, setDetail] = useState([]);
   const onSuccess = (data) => {};
@@ -86,8 +84,8 @@ const Index = () => {
 
   const navigate = useNavigate();
 
-  const handleDelete = (id, email, name) => {
-    setDeleteUserDetail({ name: name, id: id });
+  const handleDelete = (data) => {
+    setDeleteUserDetail({ name: data.name, id: data.id });
     setIsModalVisible(true);
   };
   const mutation = useMutation(
@@ -118,8 +116,8 @@ const Index = () => {
     mutation.mutate(deleteUserDetail.id);
   };
 
-  const handleEdit = (countryId, id) => {
-    navigate(`/locations/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/locations/${data.id}`);
   };
 
   const { isLoading, isError, refetch, data, error } = useQuery(
@@ -134,7 +132,7 @@ const Index = () => {
     },
     { refetchOnWindowFocus: "always", onSuccess, onError }
   );
-  
+
   const contactData = data?.data?.result?.map((space) => {
     return {
       id: <Link className="hf-link"  to={`/locationsDetail/${space.id}`}> {space.id} </Link>,
@@ -150,7 +148,7 @@ const Index = () => {
             alt="delete Icon"
             className="action_icons deleteicon"
             onClick={() => {
-              handleDelete(space.id, space.email, space.name);
+              handleDelete(space);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -160,7 +158,7 @@ const Index = () => {
             alt="edit Icon"
             className="action_icons editicon"
             onClick={() => {
-              handleEdit(space.countryId, space.id);
+              handleEdit(space);
             }}
             style={{ cursor: "pointer" }}
           />
@@ -170,7 +168,7 @@ const Index = () => {
   });
   return (
     <Sidebar>
-      <StyleEstimates>
+      <LocationDetailPageContainer>
         <div className="btn">
           <CustomButton
             bgcolor={BasicColor}
@@ -185,7 +183,10 @@ const Index = () => {
           />
         </div>
 
-        <Table pagination={true} columns={columns} dataSource={contactData} />
+        <MobileTableCard  data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit}  />
+        <div className="content-table-main">
+          <Table pagination={true} columns={columns} dataSource={contactData} />
+        </div>
         <Modal
           visible={isModalVisible}
           footer={null}
@@ -199,7 +200,7 @@ const Index = () => {
             toLocation="/locations"
           />
         </Modal>
-      </StyleEstimates>
+      </LocationDetailPageContainer>
     </Sidebar>
   );
 };

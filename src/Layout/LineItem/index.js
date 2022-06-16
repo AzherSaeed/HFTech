@@ -11,6 +11,7 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfulDeleteModal from "../../Components/Delete/SuccessfullModal";
+import MobileTableCard from '../../Components/CustomMobileCard'
 import {
   API_URL,
   LINE_ITEMS_GET,
@@ -181,7 +182,10 @@ const Index = () => {
           />
         </div>
 
-        <Table pagination={true} columns={columns} dataSource={contactData} />
+        <MobileTableCard  data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit}  />
+          <div className="content-table-main">
+            <Table pagination={true} columns={columns} dataSource={contactData} />
+          </div>
         <Modal
           visible={isModalVisible}
           footer={null}

@@ -13,6 +13,7 @@ import axios from "axios";
 import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfullModal from "../../Components/Delete/SuccessfullModal";
+import MobileTableCard from '../../Components/CustomMobileCard'
 const columns = [
   {
     title: "Id",
@@ -92,8 +93,8 @@ const Index = () => {
     }
   );
 
-  const editIconHandler = (id) => {
-    navigate(`/clients/${id}`);
+  const editIconHandler = (data) => {
+    navigate(`/clients/${data.id}`);
   };
 
   const mutation = useMutation(
@@ -161,7 +162,7 @@ const Index = () => {
                 src={editIcon}
                 alt="edit Icon"
                 className="action_icons editicon"
-                onClick={() => editIconHandler(client.id)}
+                onClick={() => editIconHandler(client)}
               />
             </div>
           </Space>
@@ -189,7 +190,13 @@ const Index = () => {
         {isError && <div>{error.message}</div>}
 
         {isSuccess && (
-          <Table pagination={true} columns={columns} dataSource={Data} />
+          // <Table pagination={true} columns={columns} dataSource={Data} />
+          <div>
+              <MobileTableCard  data={data?.data?.result} deleteHandler={clientDeleteHandler} editHandler={editIconHandler}  />
+          <div className="content-table-main">
+            <Table pagination={true} columns={columns} dataSource={Data} />
+          </div>
+          </div>
         )}
 
         <Modal

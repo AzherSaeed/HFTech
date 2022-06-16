@@ -186,6 +186,9 @@ const Index = () => {
     mutation.mutate(finalData);
   };
 
+
+  console.log(lineItemData?.data.result , 'lineItemData?.data.result');
+
   return (
     <Sidebar>
       {isFetching && isLoading ? (
@@ -247,7 +250,7 @@ const Index = () => {
                         }
                       />
                     </div>
-                    <div className="fields_container">
+                    {/* <div className="fields_container">
                       <FormControl
                         control="input"
                         type="text"
@@ -522,7 +525,7 @@ const Index = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="unitOfMeasure">
                       <p className="heading">Units of Measure</p>
                       <Radio.Group

@@ -12,6 +12,9 @@ import moment from "moment";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
+import MobileTableCard from '../../Components/CustomMobileCard'
+
+
 const columns = [
   {
     title: "Id",
@@ -113,13 +116,13 @@ const Index = () => {
 
   const navigate = useNavigate();
 
-  const handleDelete = (id, email, name) => {
-    setDeleteUserDetail({ name: name, email: email, id: id });
+  const handleDelete = (data) => {
+    setDeleteUserDetail({ name: data.name, email: data.email, id: data.id });
     setIsModalVisible(true);
   };
 
-  const handleEdit = (id) => {
-    navigate(`/contact/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/contact/${data.id}`);
   };
 
   const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
@@ -161,7 +164,7 @@ const Index = () => {
             alt="delete Icon"
             className="action_icons deleteicon"
             onClick={() => {
-              handleDelete(contact.id, contact.email, contact.name);
+              handleDelete(contact);
             }}
           />
 
@@ -170,7 +173,7 @@ const Index = () => {
             alt="edit Icon"
             className="action_icons editicon"
             onClick={() => {
-              handleEdit(contact.id);
+              handleEdit(contact);
             }}
           />
         </div>
@@ -194,7 +197,10 @@ const Index = () => {
             }}
           />
         </div>
-        <Table pagination={true} columns={columns} dataSource={contactData} />
+        <MobileTableCard  data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit}  />
+        <div className="content-table-main">
+          <Table pagination={true} columns={columns} dataSource={contactData} />
+        </div>
         <Modal
           visible={isModalVisible}
           footer={null}

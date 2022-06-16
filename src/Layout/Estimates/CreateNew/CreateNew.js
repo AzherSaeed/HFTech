@@ -250,6 +250,7 @@ const CreateNew = () => {
           onSubmit={onSubmit}
         >
           {(formik) => {
+            console.log(formik.values , 'valuesvaluesvalues');
             return (
               <Form
                 name="basic"
