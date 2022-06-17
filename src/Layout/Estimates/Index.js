@@ -16,9 +16,12 @@ import { Modal } from "antd";
 import DeleteModal from "../../Components/Delete/Index";
 import UpdateModal from "../../Components/Download/Index";
 import { useSelector } from "react-redux";
-import { API_URL, ESTIMATE_TABLE_GET_LIST } from "../../Services/config";
+import { API_URL, ESTIMATE_LIST_ITEM_DELETE, ESTIMATE_TABLE_GET_LIST } from "../../Services/config";
 import { CustomQueryHookGet } from "../../Components/QueryCustomHook/Index";
 import Loader from "../../Components/Loader/Loader";
+import ic_logo from "../../Assets/icons/ic_logo.svg";
+import { Button } from "react-bootstrap";
+import axios from "axios";
 
 
 
@@ -32,40 +35,64 @@ const Index = () => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibled, setIsModalVisibled] = useState(false);
-  const { data: listData, isLoading } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState();
 
-  const data = listData?([
-    ...listData?.data.result.map(({ id, dtoClient, dtoSpace, referenceNumber, date }) => ({ key: id, name: dtoClient.name, address: "ade", totalPrice: '1233', date: date, tags: referenceNumber }))
 
-  ]):[];
+  const { data: listData, isLoading,refetch:refetchEstimateList,isRefetching } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true,true);
+
+  // const data = !listData.data.result === null ? ([
+  //   ...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))
+
+  // ]) : [];
   const columns = [
     {
       title: "Id",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "id",
+      key: "id",
       render: (text, record) => (
-        <Link to={`/estimates/${record.key}`}> {text} </Link>
+        <Link to={`/estimates/${record.id}`}> {text} </Link>
       ),
     },
     {
       title: "Client",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "client",
+      key: "client",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Reference",
-      dataIndex: "tags",
+      dataIndex: "reference",
       key: "reference",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Total Price",
       key: "totalPrice",
       dataIndex: "totalPrice",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Date",
       key: "date",
       dataIndex: "date",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
+    },
+    {
+      title: "Owner",
+      key: "owner",
+      dataIndex: "owner",
+      render: (text, record) => (
+        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+      ),
     },
     {
       title: "Action",
@@ -88,9 +115,11 @@ const Index = () => {
               src={deleteIcon}
               alt="delete Icon"
               className="action_icons deleteicon"
-              onClick={showModal}
+              onClick={() => {setShowDeleteModal(true)
+                setDeleteId(record.id);
+              }}
             />
-            <Link to="/estimates/update">
+            <Link to={`/estimates/update/${record.id}`}>
               <img
                 src={editIcon}
                 alt="edit Icon"
@@ -112,12 +141,13 @@ const Index = () => {
 
   ];
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  const handleDelete = () => {
+    axios.delete(API_URL+ESTIMATE_LIST_ITEM_DELETE+deleteId).then((res) => console.log(res)).catch((error) => console.log(error));
+    refetchEstimateList();
+
+  }
   const handleCancel = () => {
-    setIsModalVisible(false);
-    setIsModalVisibled(false);
+    setShowDeleteModal(false);
   };
   const showModald = () => {
     setIsModalVisibled(true);
@@ -126,12 +156,32 @@ const Index = () => {
   const clickedHandler = () => {
     navigate("/estimates/createNew");
   };
+
+  const handleOk = () => {
+    handleDelete();
+    setShowDeleteModal(false);
+  };
+
   return (
     <Sidebar>
+
+      <Modal visible={showDeleteModal} footer={null} centered={true} closable={false}>
+        <div className="text-center">
+          <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+        </div>
+        <div className="mt-3 text-center" >
+          <h6>Do you Want to Delete?</h6>
+        </div>
+        <div className="d-flex justify-content-center">
+          <Button className="btn btn-sm bg-primary" onClick={handleCancel}>Cancel</Button>
+          <Button className="btn btn-sm bg-danger ms-3 px-3" onClick={ handleOk}>Ok</Button>
+        </div>
+      </Modal>
       <div>
         <div className="d-md-none">
           <MobileTable />
         </div>
+
         <div className="d-none d-md-block">
           <StyleEstimates>
             <div className="btn">
@@ -146,10 +196,10 @@ const Index = () => {
               />
             </div>
             {
-              isLoading ? (
+              isLoading && isRefetching? (
                 <Loader />
               ) : (
-                <Table pagination={false} columns={columns} dataSource={data} />
+                <Table pagination={false} columns={columns} dataSource={!listData?.data.result ? [] : [...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))]} />
               )
             }
 

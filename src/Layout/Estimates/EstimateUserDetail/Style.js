@@ -4,6 +4,27 @@ const Style = styled.div`
   background-color: white;
   border-radius: 4px;
   padding: 50px 20px;
+  .grid-container-areas{
+  display: grid;
+  grid-template-areas: 
+  "a b" 
+  "a c";
+  .a{
+    grid-area: a;
+  }
+  .b{
+    grid-area: b;
+  }
+  .c{
+    grid-area: c;
+  }
+  
+  column-gap: 40px;
+
+  .estimate{
+    grid-row: 1 / span 2;
+  }
+  }
   .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

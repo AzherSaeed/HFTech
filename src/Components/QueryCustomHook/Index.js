@@ -1,9 +1,15 @@
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+
+
+console.log(useSelector, "use selector in custom components");
 
 // Custom Query component for data get
 
-export const CustomQueryHookGet = (name, url, enable) => {
+export const CustomQueryHookGet = (name, url, enable, OnWindow) => {
+    // const {userId,token}=useSelector((state)=>state.authReducer.user.result);
+    // console.log(userId,token,'date in reducer');
     return useQuery(
         name,
         () => {
@@ -11,6 +17,7 @@ export const CustomQueryHookGet = (name, url, enable) => {
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
+
                 },
             });
         },
@@ -23,15 +30,21 @@ export const CustomQueryHookGet = (name, url, enable) => {
                 console.log(error)
             },
             refetchInterval: false,
-            refetchOnWindowFocus: false,
+            refetchOnWindowFocus: OnWindow ? true : false,
         }
     );
 }
 
 // Custom Query components for get by Id
 
-export const CustomQueryHookById = (name, id, url, enable) => {
-    return useQuery([name, id], () => axios.get(url + id), {
+export const CustomQueryHookById = (name, id, url, enable, OnWindow) => {
+    return useQuery([name, id], async () => await axios.get((url + id), {
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+
+        },
+    }), {
         onSuccess: (data) => {
             console.log(data);
         },
@@ -40,7 +53,7 @@ export const CustomQueryHookById = (name, id, url, enable) => {
             console.log(error)
         },
         refetchInterval: false,
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus: OnWindow ? true : false,
     });
 }
 
@@ -54,6 +67,8 @@ export const CustomQueryHookPost = (name, url, enable) => {
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
+                    userId: '',
+                    token: '',
                 },
             });
         },

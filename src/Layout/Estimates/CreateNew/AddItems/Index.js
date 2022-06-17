@@ -12,6 +12,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ic_logo from "../../../../Assets/icons/ic_logo.svg";
+import { Next } from "react-bootstrap/esm/PageItem";
 const { TabPane } = Tabs;
 
 const Index = () => {
@@ -21,7 +22,7 @@ const Index = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchData = () => {
-    axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log('error'))
+    axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log(error, 'error in list admin'))
   }
   useEffect(() => {
     fetchData()
@@ -69,7 +70,8 @@ const Index = () => {
   const onSubmit = () => {
     axios.post((API_URL + USER_LINE_ITEM_SAVE), {
       "channel": itemDetails.data.result.channel,
-      "total": itemDetails.data.result.dtoLineItemDetails[0].total + itemDetails.data.result.dtoLineItemDetails[1].total + itemDetails.data.result.dtoLineItemDetails[2].total + itemDetails.data.result.dtoLineItemDetails[3].total,
+
+      "total": oldData.reduce((prev, current) => prev + current.total, 0),
       "isReversed": false,
       "dtoUnitOfMeasure": itemDetails?.data.result.dtoUnitOfMeasures ? {
         "id": itemDetails?.data.result.dtoUnitOfMeasures[0].id
@@ -78,42 +80,16 @@ const Index = () => {
         "id": itemDetails.data.result.id
       },
       "userLineItemDetails": [
-        {
-          "dtoLineItemDetail": {
-
-            "id": oldData[0].id
-          },
-          "total": oldData[0].total,
-          "quantity": oldData[0].qty,
-          "price": oldData[0].price
-        },
-        {
-          "dtoLineItemDetail": {
-
-            "id": oldData[1].id
-          },
-          "total": oldData[1].total,
-          "quantity": oldData[1].qty,
-          "price": oldData[1].price
-        },
-        {
-          "dtoLineItemDetail": {
-
-            "id": oldData[2].id
-          },
-          "total": oldData[2].total,
-          "quantity": oldData[2].qty,
-          "price": oldData[2].price
-        },
-        {
-          "dtoLineItemDetail": {
-
-            "id": oldData[3].id
-          },
-          "total": oldData[3].total,
-          "quantity": oldData[3].qty,
-          "price": oldData[3].price
-        }
+        ...oldData.map(({ id, total, qty, price }) => (
+          {
+            "dtoLineItemDetail": {
+              id
+            },
+            total,
+            quantity:qty,
+            price
+          }
+        ))
       ]
     }).then((res) => {
       setIsModalVisible(true);
@@ -178,7 +154,7 @@ const Index = () => {
                   <div className="second-table">
                     <div className="d-none d-sm-block">
                       <div className="main-heading">
-                        <p>{itemDetails?.data.result.dtoLineItem.name}</p>
+                        <p>{itemDetails?.data.result.name}</p>
                       </div>
                     </div>
                     <div className="d-sm-none">
@@ -208,22 +184,30 @@ const Index = () => {
                                   <InputNumber
                                     addonAfter="Quantity"
                                     defaultValue={qty}
-                                    value={qty}
+                                    value={oldData ? oldData[index].qty : qty}
                                     controls={false}
                                     type='text'
                                     onChange={(value) => handleItemsDetails(index, 'qty', value)}
                                   />
                                   <InputNumber
+                                    className="total-input"
                                     addonBefore="Total"
                                     defaultValue={total}
                                     type='text'
+                                    disabled
                                     controls={false}
                                     value={oldData ? oldData[index].total : (qty * price)}
                                   />
                                 </div>
+
                               </div>
                             )
                             )
+                          }
+                          {oldData && <div className="grand-total-section mt-4 d-flex justify-content-between">
+                            <h6 className="title fw-bold">Total</h6>
+                            <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
+                          </div>
                           }
                           <div className="saveLineItems">
                             <CustomButton

@@ -1,6 +1,41 @@
 import styled from "styled-components";
 
 const Style = styled.div`
+
+  .filter-btns .filter> label {
+  color:#363636;
+  font-style: normal;
+  font-weight: 400;
+  font-family: 'EnnVisionsBold';
+  font-size: 14px;
+  color:white;
+  border-radius: 7px;
+  text-align: center;
+padding:4px 10px;
+  cursor: pointer;
+
+}
+.filter-btns .filter >label:first-child{
+margin-left:0 !important;   
+}
+.filter-btns .filter  input[type="checkbox"]+label{
+border-radius:6px;
+border:1px solid #363636;
+color:#363636;
+margin-left:15px;  
+}
+.filter-btns .filter  input[type="checkbox"]:checked+label { 
+  background-color:#ED1C24;
+  color:white;
+  border:1px solid #ED1C24;
+}
+
+.filter-btns .filter > input{
+display: none;
+}
+
+
+
   .grid-container {
     background-color: white;
     padding: 20px;
