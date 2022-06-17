@@ -39,7 +39,7 @@ const Index = () => {
 
   const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS));
 
-    // // For Labour Data
+  // // For Labour Data
 
   const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
 
@@ -198,31 +198,36 @@ const Index = () => {
               </div>
 
             </div>
-            <div className="grid-container grid-span2">
-              <div className="data estimate">
+            <div className="grid-container-areas">
+              <div className="data a d-flex justify-content-center flex-column">
                 <p className="title">
                   {userDetails?.data.result.description}
                 </p>
                 <p className="identity">Estimate Description</p>
               </div>
-              <div className="data">
+              <div className="data b">
                 <p className="title">{userDetails?.data.result.dtoClient.email}</p>
                 <p className="identity">Email</p>
               </div>
-              <div className="grid-container">
-                <div className="data ">
-                  <p className="title">{(userDetails?.data.result.dtoContact.map(({ name }) => (`${name} ,`))).toString()}</p>
-                  <p className="identity">Contacts</p>
-                </div>
 
+              <div className="data c">
+                <p className="title">{(userDetails?.data.result.dtoContact.map(({ name }) => (`${name} ,`))).toString()}</p>
+                <p className="identity">Contacts</p>
               </div>
+
             </div>
-            <div className="grid-container">
+            <div >
               {
-                userDetails?.data.result.dtoSpace.map(({ name }, index) => (
-                  <div className="data" key={index}>
-                    <p className="title">{name}</p>
-                    <p className="identity">Location</p>
+                userDetails?.data.result.dtoSpace.map(({ name, address }, index) => (
+                  <div className="grid-container">
+                    <div className="data" key={index}>
+                      <p className="title">{name}</p>
+                      <p className="identity">Space</p>
+                    </div>
+                    <div className="data" key={index}>
+                      <p className="title">{address}</p>
+                      <p className="identity">Address</p>
+                    </div>
                   </div>
                 )
                 )

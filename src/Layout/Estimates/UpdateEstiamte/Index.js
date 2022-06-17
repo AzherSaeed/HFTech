@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Style, { CreateEstimateStyled, UpdateEstimateRightStyled } from "./Style";
 import Styled from '../CreateNew/Style'
 import Sidebar from "../../../Components/Sidebar/Sidebar";
@@ -20,7 +20,9 @@ import deleteIcon from '../../../Assets/icons/ic_delete.svg';
 import { Formik } from "formik";
 import moment from "moment";
 import * as Yup from "yup";
+import GenericService from "../../../Services/GenericService";
 
+const generaticService = new GenericService();
 
 
 const { TabPane } = Tabs;
@@ -34,14 +36,16 @@ const Index = () => {
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [clientId, setClientId] = useState();
+  const [contacts, setContact] = useState()
+  const [locations, setLocations] = useState()
+  const [oneTime, setOneTime] = useState(false);
 
-  const fetchData = () => {
-    axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
+console.log('one time','one Time in update estimate',oneTime)
+  const fetchData = (id) => {
+    axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + id).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
   }
 
-  useEffect(() => {
-    fetchData()
-  }, [itemId]);
+
 
   const antIcon = (
     <LoadingOutlined
@@ -54,19 +58,19 @@ const Index = () => {
 
   // For Load Table User default Detail by Id
 
-  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDefaultDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS),);
+  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDefaultDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS),true,true);
 
   // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true,true);
 
   // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true,true);
 
   // For Line Item Detail by Id
 
-  const { data: itemDetails, isLoading: lineItemDetailsIsLoading, refetch: lineItemDetailsRefech, isRefetching: lineItemDetailsRefecting, } = CustomQueryHookById('estimatelineItemDetails', itemId, (API_URL + ESTIMATE_LINE_ITEM_DETAILS), true);
+  const { data: itemDetails, isLoading: lineItemDetailsIsLoading, refetch: lineItemDetailsRefech, isRefetching: lineItemDetailsRefecting, } = CustomQueryHookById('estimatelineItemDetails', itemId, (API_URL + ESTIMATE_LINE_ITEM_DETAILS), false);
 
 
   // For ClientS Fetch Data
@@ -75,11 +79,11 @@ const Index = () => {
 
   // For Locations Fetch Data
 
-  const { data: locationsData, isLoading: locationsIsLoading, refetch: locationsRefetch, isRefetching: locationsRefetching } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
+  // const { data: locationsData, isLoading: locationsIsLoading, refetch: locationsRefetch, isRefetching: locationsRefetching } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
 
-  // For Contact Fetch Data
+  // // For Contact Fetch Data
 
-  const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', itemId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
+  // const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', itemId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
 
 
 
@@ -107,6 +111,7 @@ const Index = () => {
   // Id Navigation handler
   const refetchByIdHandler = (id) => {
     navigate(`/estimates/update/${estimateId}/${id}`);
+    fetchData(id);
     lineItemDetailsRefech();
   }
 
@@ -146,15 +151,21 @@ const Index = () => {
       "referenceNumber": value.referenceNumber,
       "date": value.date,
       "description": value.description,
-      "dtoUserLineItems": [
-        ...materialsData?.data.result.map(({ id }) => ({ id })),
-        ...labourData?.data.result.map(({ id }) => ({ id }))
-      ],
+      "dtoUserLineItems":materialsData== null && labourData ? [
+        ...labourData?.data.result.map(({ id }) => ({ id })),
+        ...materialsData?.data.result.map(({ id }) => ({ id }))
+      ] : labourData.data ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
       "channel": "IOS"
-    }).then((res) => console.log(res, 'response in create estimate')).catch((error) => console.log(error, 'error in estimate create'));
+    }).then((res) =>{
+      setIsUpdateModalVisible(true);
+      setTimeout(() => {
+        setIsUpdateModalVisible(false)
+      }, 2000);
+    }).catch((error) => console.log(error, 'error in estimate create'));
 
 
   };
+  console.log(oldData, 'old data old');
   const onSubmitUpdate = () => {
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
       "id": itemDetails.data.result.id,
@@ -168,7 +179,7 @@ const Index = () => {
         "id": itemDetails.data.result?.dtoLineItem ? itemDetails.data.result.dtoLineItem.id : null
       },
       "userLineItemDetails": [
-        ...oldData.map(({ id, total, quantity, price }) => (
+        ...oldData.map(({ dtoLineItemDetail: { id }, total, quantity, price }) => (
           {
             "dtoLineItemDetail": {
               id
@@ -181,6 +192,7 @@ const Index = () => {
       ]
     }).then((res) => {
       setIsModalVisible(false);
+      navigate(`/estimates/update/${estimateId}`);
       setIsUpdateModalVisible(true);
       setTimeout(() => {
         setIsUpdateModalVisible(false);
@@ -191,11 +203,11 @@ const Index = () => {
     client: "",
     contacts: "",
     locations: "",
-    referenceNumber: "",
-    description: "",
+    referenceNumber: userDetails?.data.result.referenceNumber,
+    description: userDetails?.data.result.description,
     date: "",
-  
-  
+
+
   };
   const validationSchema = Yup.object({
     client: Yup.string().required("Client is required!"),
@@ -207,12 +219,19 @@ const Index = () => {
   });
   const onSelectClient = (value, id) => {
     setClientId(id);
-    locationsRefetch();
-    contactsRefetch();
+    setOneTime(true);
+    generaticService
+      .get((API_URL + ESTIMATE_CONTACT_DATA_SELECT + id))
+      .then((response) => setContact(response.result))
+      .catch((error) => console.log(error, 'contact error in data'));
+    generaticService
+      .get((API_URL + ESTIMATE_LOCATIONS_DATA_SELECT + id))
+      .then((response) => setLocations(response.result))
+      .catch((error) => console.log(error, 'location error in data'));
     console.log('on slect trigger', value, id, 'id');
   }
 
-  
+
   return (
     <Sidebar>
       <Styled>
@@ -236,6 +255,7 @@ const Index = () => {
           initialValues={initialValues}
           // validationSchema={validationSchema}
           onSubmit={onSubmit}
+          enableReinitialize={true}
         >
           {(formik) => {
             return (
@@ -260,7 +280,7 @@ const Index = () => {
                           : "customInput"
                       }
                       options={clientData?.data.result}
-                      defaultValue={{
+                      defaultValue={ {
                         value: userDetails?.data.result.dtoClient.name,
                         label: userDetails?.data.result.dtoClient.name,
                       }}
@@ -272,7 +292,6 @@ const Index = () => {
                       type="text"
                       name="date"
                       placeholder="mm/dd/yy"
-                      defaultValue={moment('01/01/2015', 'MM/DD/YYYY')}
                       label="Date"
                       className={
                         formik.errors.date && formik.touched.date
@@ -289,7 +308,7 @@ const Index = () => {
                         name="locations"
                         placeholder="Select Location"
                         defaultValue={
-                          userDetails?.data.result.dtoSpace.map((({ name }) => (name)))
+                          oneTime ? [{id:"",value:""}]:userDetails?.data.result.dtoSpace.map((({ name }) => (name)))
                         }
                         label="Location"
                         className={
@@ -297,7 +316,7 @@ const Index = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={locationsData?.data.result}
+                        options={locations}
                       />
                       <FormControl
                         control="multiSelect"
@@ -305,13 +324,13 @@ const Index = () => {
                         name="contacts"
                         placeholder="Select Contact"
                         label="Contact"
-                        defaultValue={userDetails?.data.result.dtoContact.map(({ name }) => (name))}
+                        defaultValue={ oneTime ? [{id:"",value:""}] :userDetails?.data.result.dtoContact.map(({ name }) => (name))}
                         className={
                           formik.errors.contacts && formik.touched.contacts
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={contactsData?.data.result}
+                        options={contacts}
                       />
                     </div>
 
@@ -322,8 +341,7 @@ const Index = () => {
                         name="description"
                         placeholder="Enter estimate description"
                         label="Estimate Description"
-                        defaultValue={userDetails?.data.result.description
-                        }
+                        
                         className={
                           formik.errors.description && formik.touched.description
                             ? "is-invalid"
@@ -340,12 +358,14 @@ const Index = () => {
                       name="referenceNumber"
                       placeholder="Enter Reference Number"
                       label="Refernece Number"
+                      defaultValue={ userDetails?.data.result.referenceNumber
+                      }
                       className={
                         formik.errors.referenceNumber && formik.touched.referenceNumber
                           ? "is-invalid"
                           : "customInput"
                       }
-                      defaultValue={userDetails?.data.result.referenceNumber}
+                      
                     />
                     <div className='addItem'>
                       <div className='addItem-label'>Line Items</div>
@@ -397,13 +417,13 @@ const Index = () => {
                         )
                         )
                       }
-                    {  oldData&&(
+                      {oldData && (
                         <div className="grand-total-section mt-4 d-flex justify-content-between">
-                        <h6 className="title fw-bold">Total</h6>
-                        <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
-                      </div>
+                          <h6 className="title fw-bold">Total</h6>
+                          <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
+                        </div>
                       )}
-                   
+
                       <div className="saveLineItems mt-3">
                         <CustomButton
                           bgcolor="#156985"
@@ -450,7 +470,7 @@ const Index = () => {
                       </div>
                       <div className="col-md-6 col-sm-12 ">
                         {
-                          itemDetails && (
+                          oldData && (
                             <div className="second-table">
                               <div className="d-none d-sm-block">
                                 <div className="inner-section">
@@ -487,7 +507,7 @@ const Index = () => {
                                         </thead>
                                         <tbody>
                                           {
-                                            itemDetails?.data.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
+                                            oldData.map(({ id, name, price, total, quantity }, index) => (
                                               <tr key={id}>
                                                 <td>{name}</td>
                                                 <td>{price}</td>

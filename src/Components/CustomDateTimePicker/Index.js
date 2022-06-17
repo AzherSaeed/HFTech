@@ -6,12 +6,7 @@ import ErrorMsg from '../ErrorMessage';
 import dateIcon from '../../Assets/icons/ic_calendar.svg';
 
 const Index = (props) => {
-  const { name, placeholder, label, options, title,defaultValue,...rest } = props;
-
-  const onChange = (value, dateString) => {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
-  };
+  const { name, placeholder, label, options, title,defaultValue,onChange,...rest } = props;
 
   const onOk = (value) => {
     console.log('onOk: ', value);
@@ -26,7 +21,7 @@ const Index = (props) => {
             // <Form.Item name={name}>
             <div>
               <DatePicker showTime
-                format="MM-DD-YYYY HH:mm"
+                format="YYYY-DD-MM HH:mm"
                 onChange={onChange}
                 name={name}
                 id={name}

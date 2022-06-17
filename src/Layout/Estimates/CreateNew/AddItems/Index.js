@@ -71,7 +71,7 @@ const Index = () => {
     axios.post((API_URL + USER_LINE_ITEM_SAVE), {
       "channel": itemDetails.data.result.channel,
 
-      "total": itemDetails?.data.result.dtoLineItemDetails.reduce((prev, current) => prev + current.total, 0),
+      "total": oldData.reduce((prev, current) => prev + current.total, 0),
       "isReversed": false,
       "dtoUnitOfMeasure": itemDetails?.data.result.dtoUnitOfMeasures ? {
         "id": itemDetails?.data.result.dtoUnitOfMeasures[0].id
@@ -80,13 +80,13 @@ const Index = () => {
         "id": itemDetails.data.result.id
       },
       "userLineItemDetails": [
-        ...oldData.map(({ id, total, quantity, price }) => (
+        ...oldData.map(({ id, total, qty, price }) => (
           {
             "dtoLineItemDetail": {
               id
             },
             total,
-            quantity,
+            quantity:qty,
             price
           }
         ))

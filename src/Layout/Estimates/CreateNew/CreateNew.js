@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Style from './Style';
 import GenericService from "../../../Services/GenericService";
 import Sidebar from '../../../Components/Sidebar/Sidebar';
 import FormControl from '../../../Components/FormControl';
 import * as Yup from "yup";
-import { Form } from "antd";
+import { Form, Radio } from "antd";
 import { toast } from "react-toastify";
 import { Formik } from "formik";
 import CustomButton from "../../../Components/CustomButton/Index";
@@ -40,29 +40,34 @@ const validationSchema = Yup.object({
   // date: Yup.string().required("Date is required!"),
 });
 
+const generaticService = new GenericService();
+
+
 const { TabPane } = Tabs;
 
 const CreateNew = () => {
   const [oldData, setOldData] = useState();
-  const { itemId } = useParams();
+  const { itemId, clientId } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
-  const [clientId, setClientId] = useState();
   const navigate = useNavigate();
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
+  const firstUpdate = useRef(true);
+  const [contacts, setContact] = useState()
+  const [locations, setLocations] = useState();
+  const [dateAndTime, setDateAndTime] = useState();
 
 
   // Save Data by Id to send Update after Changes
 
-  const fetchData = () => {
-    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + itemId).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'));
+  const fetchData = (id) => {
+    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + id).then((response) => setOldData(response.data)).catch((error) => console.log('error', error));
   }
 
-  useEffect(() => {
-    fetchData();
-  }, [itemId]);
-
+  const handleChange = (value) => {
+    document.getElementById('process-default-btn').style = null;
+  }
   const antIcon = (
     <LoadingOutlined
       style={{
@@ -75,27 +80,27 @@ const CreateNew = () => {
 
   // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('uuserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('uuserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true,true);
 
   // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('userLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('userLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true,true);
 
   // For ClientS Fetch Data
 
-  const { data: clientData, isLoading: clientFetchIsLoading, refetch: clientRefetchIsLoading } = CustomQueryHookGet('estimatesClientsDataDropdown', (API_URL + ESTIMATE_CLIENTS_DATA_DROPDOWN), true);
+  const { data: clientData } = CustomQueryHookGet('estimatesClientsDataDropdown', (API_URL + ESTIMATE_CLIENTS_DATA_DROPDOWN), true);
 
   // For Locations Fetch Data
 
-  const { data: locationsData, isLoading: locationsIsLoading, refetch: locationsRefetch, isRefetching: locationsRefetching } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
+  const { data: locationsData, refetch: locationsRefetch, } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), false);
 
   // For Contact Fetch Data
 
-  const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', clientId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
+  const { data: contactsData, refetch: contactsRefetch } = CustomQueryHookById('estimateContactDataSelect', clientId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), false);
 
   // For Load Data by Id
 
-  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('userLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
+  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('userLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), false);
 
   // Item Delete Handler
 
@@ -106,6 +111,7 @@ const CreateNew = () => {
       materialsRefetching();
       setTimeout(() => {
         setIsDeleteModal(false);
+        fetchData();
       }, 3000);
     }).catch((error) => console.log(error));
   }
@@ -117,7 +123,8 @@ const CreateNew = () => {
 
   // Id Navigation handler
   const refetchByIdHandler = (id) => {
-    navigate(`/estimates/createNew/${id}`);
+    navigate(`/estimates/createNew/${clientId}/${id}`);
+    fetchData(id);
     refetchById();
   }
 
@@ -135,9 +142,12 @@ const CreateNew = () => {
   };
 
   const onSubmit = (value) => {
-    if (!labourData && !materialsData) {
+    if (!labourData.data.result && !materialsData.data.result) {
       alert('plz select one line item');
-    } else {
+    } else if (!dateAndTime) {
+      alert('plz select date and time');
+    }
+    else {
       axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
         "dtoClient": {
           "id": clientId
@@ -149,13 +159,13 @@ const CreateNew = () => {
           ...value.locations.map(({ key }) => ({ id: key }))
         ],
         "referenceNumber": value.referenceNumber,
-        "date": value.date,
+        "date": dateAndTime,
         "description": value.description,
 
-        "dtoUserLineItems": labourData ? (
-          [...labourData?.data.result.map(({ id }) => ({ id }))]
-        ) : ([...materialsData?.data.result.map(({ id }) => ({ id }))]),
-
+        "dtoUserLineItems": !materialsData == null && !labourData == null ? [
+          ...labourData?.data.result.map(({ id }) => ({ id })),
+          ...materialsData?.data.result.map(({ id }) => ({ id }))
+        ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
         "channel": "IOS"
       }).then((res) => {
         setSaveEstimateModal(true);
@@ -163,51 +173,23 @@ const CreateNew = () => {
           setSaveEstimateModal(false);
           navigate('/estimates')
 
-        }, 20000);
+        }, 2000);
       }).catch((error) => console.log(error, 'error in estimate create'));
     }
   };
   const handleItemsDetails = (index, inputName, value) => {
+    console.log('handle change in update')
     if (inputName === 'price') {
-      oldData[index].price = value;
-      oldData[index].total = oldData[index].quantity * oldData[index].price;
+      oldData.result.userLineItemDetails[index].price = value;
+      oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
     } else {
-      oldData[index].quantity = value;
-      oldData[index].total = oldData[index].quantity * oldData[index].price;
+      oldData.result.userLineItemDetails[index].quantity = value;
+      oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
     }
-    setOldData([...oldData,]);
+    setOldData({ ...oldData });
   }
 
-  // const onCreateSubmit = () => {
-  //   {
-  //     "dtoClient": {
-  //       "id": 
-  //     },
-  //     "dtoContact": [
-  //       {
-  //         "id": 1
-  //       }
-  //     ],
-  //       "dtoSpace": [
-  //         {
-  //           "id": 3
-  //         }
-  //       ],
-  //         "referenceNumber": "asdasdasd",
-  //           "date": "2021/52/21 12:20:20",
-  //             "description": "sdfsdf",
-  //               "dtoUserLineItems": [
-  //                 {
-  //                   "id": 2
-  //                 },
-  //                 {
-  //                   "id": 3
-  //                 }
-  //               ],
-  //                 "channel": "IOS"
-  //   }
-  // }
-
+  const brands = ['Day', 'Each', 'Pair', 'Box', 'Roll', 'Week'];
   const onSubmitUpdate = () => {
 
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
@@ -222,7 +204,7 @@ const CreateNew = () => {
         "id": itemDetails.data.result.dtoLineItem.id
       },
       "userLineItemDetails": [
-        ...oldData.map(({ id, total, quantity, price }) => (
+        ...oldData.result.userLineItemDetails.map(({ dtoLineItemDetail: { id }, total, quantity, price }) => (
           {
             "dtoLineItemDetail": {
               id
@@ -238,16 +220,27 @@ const CreateNew = () => {
       setIsUpdateModalVisible(true);
       setTimeout(() => {
         setIsUpdateModalVisible(false);
-      }, 3000);
+      }, 2000);
     }).catch((error) => console.log(error, 'error'));
   }
   const onSelectClient = (value, id) => {
-    setClientId(id);
-    locationsRefetch();
-    contactsRefetch();
-    console.log('on slect trigger', value, id, 'id');
+    console.log('data called')
+    navigate(`/estimates/createNew/${id}`);
+    generaticService
+      .get((API_URL + ESTIMATE_CONTACT_DATA_SELECT + id))
+      .then((response) => setContact(response.result))
+      .catch((error) => console.log(error, 'contact error in data'));
+    generaticService
+      .get((API_URL + ESTIMATE_LOCATIONS_DATA_SELECT + id))
+      .then((response) => setLocations(response.result))
+      .catch((error) => console.log(error, 'location error in data'));
   }
 
+  // Handle Time and date in
+  const onchangeDateTime = (value, timeandDate) => {
+    setDateAndTime(timeandDate);
+    console.log(timeandDate)
+  };
   return (
     <Sidebar>
       <Style>
@@ -317,6 +310,7 @@ const CreateNew = () => {
                           ? "is-invalid"
                           : "customInput"
                       }
+                      onChange={onchangeDateTime}
                     />
                   </div>
                   <div className='fileds'>
@@ -332,7 +326,7 @@ const CreateNew = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={locationsData?.data.result}
+                        options={locations}
                       />
                       <FormControl
                         control="multiSelect"
@@ -345,7 +339,7 @@ const CreateNew = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={contactsData?.data.result}
+                        options={contacts}
                       />
                     </div>
 
@@ -393,7 +387,7 @@ const CreateNew = () => {
                   <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
                     <div className="tabWrapper">
                       {
-                        oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+                        oldData?.result.userLineItemDetails.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
                           <div className="rateWrapper mt-3" key={id}>
                             <h5>{name}</h5>
                             <div className="input-fields d-flex">
@@ -402,14 +396,14 @@ const CreateNew = () => {
                                 addonAfter="Rate"
                                 defaultValue={price}
                                 controls={false}
-                                value={oldData ? oldData[index].price : price}
+                                value={price}
                                 type='text'
                                 onChange={(value) => handleItemsDetails(index, 'price', value)}
                               />
                               <InputNumber
                                 addonAfter="Quantity"
                                 defaultValue={quantity}
-                                value={oldData ? oldData[index].quantity : quantity}
+                                value={quantity}
                                 controls={false}
                                 type='text'
                                 onChange={(value) => handleItemsDetails(index, 'quantity', value)}
@@ -421,7 +415,7 @@ const CreateNew = () => {
                                 type='text'
                                 disabled
                                 controls={false}
-                                value={oldData ? oldData[index].total : (quantity * price)}
+                                value={total}
                               />
                             </div>
                           </div>
@@ -430,7 +424,7 @@ const CreateNew = () => {
                       }
                       {oldData && <div className="grand-total-section mt-4 d-flex justify-content-between">
                         <h6 className="title fw-bold">Total</h6>
-                        <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
+                        <h6 className="amount fw-bold">{oldData.result.userLineItemDetails.reduce((prev, current) => prev + current.total, 0)}</h6>
                       </div>}
                       <div className="saveLineItems mt-3">
                         <CustomButton
@@ -478,7 +472,7 @@ const CreateNew = () => {
                       </div>
                       <div className="col-md-6 col-sm-12 ">
                         {
-                          itemDetails && (
+                          oldData && (
                             <div className="second-table">
                               <div className="d-none d-sm-block">
                                 <div className="inner-section">
@@ -514,7 +508,7 @@ const CreateNew = () => {
                                         </thead>
                                         <tbody>
                                           {
-                                            itemDetails?.data.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
+                                            oldData?.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
                                               <tr key={id}>
                                                 <td>{name}</td>
                                                 <td>{price}</td>
@@ -526,6 +520,20 @@ const CreateNew = () => {
                                           }
                                         </tbody>
                                       </table>
+                                      <div className="unitOfMeasure">
+                                        <p className="heading">Units of Measure</p>
+                                        <div className='filter-btns d-flex justify-content-between'>
+                                          {
+                                            brands.map((title, index) => (
+                                              <div className='filter' key={index}>
+                                                <input type="checkbox" id={title} name="brand" onClick={(e) => handleChange(e.target.value)} value="{title}" />
+                                                <label htmlFor={title}>{title}</label>
+                                              </div>
+                                            ))
+                                          }
+                                        </div>
+
+                                      </div>
                                     </UpdateEstimateRightStyled>
                                   </div>
                                 )

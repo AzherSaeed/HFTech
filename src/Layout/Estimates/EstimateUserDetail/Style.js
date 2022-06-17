@@ -4,9 +4,23 @@ const Style = styled.div`
   background-color: white;
   border-radius: 4px;
   padding: 50px 20px;
-  .grid-span2{
-  grid-template-columns: repeat(2,1fr) !important;
-  grid-template-rows: repeat(2,1fr);
+  .grid-container-areas{
+  display: grid;
+  grid-template-areas: 
+  "a b" 
+  "a c";
+  .a{
+    grid-area: a;
+  }
+  .b{
+    grid-area: b;
+  }
+  .c{
+    grid-area: c;
+  }
+  
+  column-gap: 40px;
+
   .estimate{
     grid-row: 1 / span 2;
   }
