@@ -74,7 +74,7 @@ const Index = () => {
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const regex = /^\d*(\.\d+)?$/;
-
+  
   const [selectedRateType, setselectedRateType] = useState("Select Type");
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
   const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
@@ -177,33 +177,56 @@ const Index = () => {
   );
 
   const onSubmit = (data) => {
-    const finalData = {
-      channel: data.channel,
-      dtoUnitOfMeasure: dtoUnitOfMeasures,
-      lineItemType: data.lineItemType,
-      name: data.name,
-      dtoLineItemDetails: [
-        ...data.dtoLineItemDetails.filter(({ name, qty, price }) => {
-          if (name !== "" && qty !== "" && price !== "") {
-            console.log(name, qty * price, 'name, qty, price');
-            return {
-              name,
-              qty,
-              price,
-              total: 7,
-            };
-          }
-        }),
-      ],
-    };
 
-    console.log(finalData, "finalData");
-    // mutation.mutate(finalData);
+    if ([
+      ...data.dtoLineItemDetails.filter(({ name, qty, price, total }) => {
+        if (name !== "") {
+          return {
+            name,
+            qty,
+            price,
+            total,
+          };
+        }
+      }),
+    ].length === 0) {
+      alert("plz select at least on line item");
+    } else {
+      data.dtoLineItemDetails[0].total = data.dtoLineItemDetails[0].qty * data.dtoLineItemDetails[0].price;
+      data.dtoLineItemDetails[1].total = data.dtoLineItemDetails[1].qty * data.dtoLineItemDetails[1].price;
+      data.dtoLineItemDetails[2].total = data.dtoLineItemDetails[2].qty * data.dtoLineItemDetails[2].price;
+      data.dtoLineItemDetails[3].total = data.dtoLineItemDetails[3].qty * data.dtoLineItemDetails[3].price;
+      const finalData = {
+        channel: data.channel,
+        dtoUnitOfMeasure: dtoUnitOfMeasures,
+        lineItemType: data.lineItemType,
+        name: data.name,
+
+
+        dtoLineItemDetails: [
+          ...data.dtoLineItemDetails.filter(({ name, qty, price, total }) => {
+            if (name !== "" && qty !== "" && price !== "") {
+              return {
+                name,
+                qty,
+                price,
+                total: 24,
+              };
+            }
+          }),
+        ],
+      };
+
+      mutation.mutate(finalData);
+    }
+
+
+
   };
 
   const handleChange = (value) => {
 
-    var index = dtoUnitOfMeasures.findIndex(object=>object.id===value.id);
+    var index = dtoUnitOfMeasures.findIndex(object => object.id === value.id);
     if (index !== -1) {
       dtoUnitOfMeasures.splice(index, 1)
     } else {
@@ -289,8 +312,9 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
+                              disabled={formik.getFieldProps('dtoLineItemDetails[0].name').value ? false : true}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
@@ -310,9 +334,10 @@ const Index = () => {
                           <div>
                             <label for="reg">Quantity</label>
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="qty"
+                              disabled={formik.getFieldProps('dtoLineItemDetails[0].name').value ? false : true}
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[0].qty"
                               value={
@@ -331,16 +356,23 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "8px" }}
                               readOnly={true}
                               name="dtoLineItemDetails[0].total"
                               value={
-                                formik.values.dtoLineItemDetails.length > 0 &&
-                                formik.values.dtoLineItemDetails[0].price *
-                                formik.values.dtoLineItemDetails[0].qty
+                                formik.getFieldProps('dtoLineItemDetails[0].price').value * formik.getFieldProps('dtoLineItemDetails[0].qty').value
+                                // formik.values.dtoLineItemDetails.length > 0 &&
+                                // formik.values.dtoLineItemDetails[0].price *
+                                // formik.values.dtoLineItemDetails[0].qty
+                              }
+                              onChange={(value) =>
+                                formik.setFieldValue(
+                                  "dtoLineItemDetails[0].total",
+                                  value
+                                )
                               }
                             />
                           </div>
@@ -365,18 +397,21 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
+                              disabled={formik.getFieldProps('dtoLineItemDetails[1].name').value ? false : true}
                               name="dtoLineItemDetails[1].price"
                               value={
-                                lineItemId !== "createLineItem" &&
-                                lineItemData?.data.result.dtoLineItemDetails
-                                  .length > 1 &&
-                                lineItemData?.data.result.dtoLineItemDetails[1]
+                                lineItemData?.data.result?.dtoLineItemDetails[1]
                                   .price
+                                // lineItemId !== "createLineItem" &&
+                                // lineItemData?.data.result.dtoLineItemDetails
+                                //   .length > 1 &&
+                                // lineItemData?.data.result.dtoLineItemDetails[1]
+                                //   .price
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -390,17 +425,20 @@ const Index = () => {
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
+                              disabled={formik.getFieldProps('dtoLineItemDetails[1].name').value ? false : true}
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[1].qty"
                               value={
-                                lineItemId !== "createLineItem" &&
-                                lineItemData?.data.result.dtoLineItemDetails
-                                  .length > 1 &&
-                                lineItemData?.data.result.dtoLineItemDetails[1]
+                                lineItemData?.data.result?.dtoLineItemDetails[1]
                                   .qty
+                                // lineItemId !== "createLineItem" &&
+                                // lineItemData?.data.result.dtoLineItemDetails
+                                //   .length > 1 &&
+                                // lineItemData?.data.result.dtoLineItemDetails[1]
+                                //   .qty
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -414,15 +452,23 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "9px" }}
                               readOnly={true}
+                              name="dtoLineItemDetails[1].total"
                               value={
-                                formik.values.dtoLineItemDetails.length > 1 &&
-                                formik.values.dtoLineItemDetails[1].price *
-                                formik.values.dtoLineItemDetails[1].qty
+                                formik.getFieldProps('dtoLineItemDetails[1].price').value * formik.getFieldProps('dtoLineItemDetails[1].qty').value
+                                // formik.values.dtoLineItemDetails.length > 1 &&
+                                // formik.values.dtoLineItemDetails[1].price *
+                                // formik.values.dtoLineItemDetails[1].qty
+                              }
+                              onChange={(value) =>
+                                formik.setFieldValue(
+                                  "dtoLineItemDetails[1].total",
+                                  value
+                                )
                               }
                             />
                           </div>
@@ -436,6 +482,7 @@ const Index = () => {
                         name="dtoLineItemDetails[2].name"
                         placeholder="Name"
                         label="3# items Values"
+
                         className={
                           formik.errors.name && formik.touched.name
                             ? "is-invalid"
@@ -447,18 +494,21 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
+                              disabled={formik.getFieldProps('dtoLineItemDetails[2].name').value ? false : true}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
                               name="dtoLineItemDetails[2].price"
                               value={
-                                lineItemId !== "createLineItem" &&
-                                lineItemData?.data.result.dtoLineItemDetails
-                                  .length > 2 &&
-                                lineItemData?.data.result.dtoLineItemDetails[2]
+                                lineItemData?.data.result?.dtoLineItemDetails[2]
                                   .price
+                                // lineItemId !== "createLineItem" &&
+                                // lineItemData?.data.result.dtoLineItemDetails
+                                //   .length > 2 &&
+                                // lineItemData?.data.result.dtoLineItemDetails[2]
+                                //   .price
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -472,17 +522,20 @@ const Index = () => {
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="qty"
+                              disabled={formik.getFieldProps('dtoLineItemDetails[2].name').value ? false : true}
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[2].qty"
                               value={
-                                lineItemId !== "createLineItem" &&
-                                lineItemData?.data.result.dtoLineItemDetails
-                                  .length > 2 &&
-                                lineItemData?.data.result.dtoLineItemDetails[2]
+                                lineItemData?.data.result?.dtoLineItemDetails[2]
                                   .qty
+                                // lineItemId !== "createLineItem" &&
+                                // lineItemData?.data.result.dtoLineItemDetails
+                                //   .length > 2 &&
+                                // lineItemData?.data.result.dtoLineItemDetails[2]
+                                //   .qty
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -496,15 +549,23 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "8px" }}
-                              readOnly={true}
+                              name="dtoLineItemDetails[2].total"
                               value={
-                                formik.values.dtoLineItemDetails.length > 2 &&
-                                formik.values.dtoLineItemDetails[2].price *
-                                formik.values.dtoLineItemDetails[2].qty
+                                formik.getFieldProps('dtoLineItemDetails[2].price').value * formik.getFieldProps('dtoLineItemDetails[2].qty').value
+                                // formik.values.dtoLineItemDetails.length > 2 &&
+                                // formik.values.dtoLineItemDetails[2].price *
+                                // formik.values.dtoLineItemDetails[2].qty
+                              }
+
+                              onChange={(value) =>
+                                formik.setFieldValue(
+                                  "dtoLineItemDetails[2].total",
+                                  value
+                                )
                               }
                             />
                           </div>
@@ -529,18 +590,21 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
+                              disabled={formik.getFieldProps('dtoLineItemDetails[3].name').value ? false : true}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
                               name="dtoLineItemDetails[3].price"
                               value={
-                                lineItemId !== "createLineItem" &&
-                                lineItemData?.data.result.dtoLineItemDetails
-                                  .length > 3 &&
-                                lineItemData?.data.result.dtoLineItemDetails[3]
+                                lineItemData?.data.result?.dtoLineItemDetails[3]
                                   .price
+                                // lineItemId !== "createLineItem" &&
+                                // lineItemData?.data.result.dtoLineItemDetails
+                                //   .length > 3 &&
+                                // lineItemData?.data.result.dtoLineItemDetails[3]
+                                //   .price
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -554,17 +618,20 @@ const Index = () => {
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="qty"
+                              disabled={formik.getFieldProps('dtoLineItemDetails[3].name').value ? false : true}
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[3].qty"
                               value={
-                                lineItemId !== "createLineItem" &&
-                                lineItemData?.data.result.dtoLineItemDetails
-                                  .length > 3 &&
-                                lineItemData?.data.result.dtoLineItemDetails[3]
-                                  .qty
+                                lineItemData?.data.result?.dtoLineItemDetails[3]
+                                  .price
+                                // lineItemId !== "createLineItem" &&
+                                // lineItemData?.data.result.dtoLineItemDetails
+                                //   .length > 3 &&
+                                // lineItemData?.data.result.dtoLineItemDetails[3]
+                                //   .qty
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -578,15 +645,23 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
-                            type='number'
-                            controls={false}
+                              type='number'
+                              controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "8px" }}
-                              readOnly={true}
+                              name="dtoLineItemDetails[3].total"
                               value={
-                                formik.values.dtoLineItemDetails.length > 3 &&
-                                formik.values.dtoLineItemDetails[3].price *
-                                formik.values.dtoLineItemDetails[3].qty
+                                formik.getFieldProps('dtoLineItemDetails[3].price').value * formik.getFieldProps('dtoLineItemDetails[3].qty').value
+                                // formik.values.dtoLineItemDetails.length > 3 &&
+                                // formik.values.dtoLineItemDetails[3].price *
+                                // formik.values.dtoLineItemDetails[3].qty
+                              }
+
+                              onChange={(value) =>
+                                formik.setFieldValue(
+                                  "dtoLineItemDetails[3].total",
+                                  formik.getFieldProps('dtoLineItemDetails[3].price').value * formik.getFieldProps('dtoLineItemDetails[3].qty')
+                                )
                               }
                             />
                           </div>
