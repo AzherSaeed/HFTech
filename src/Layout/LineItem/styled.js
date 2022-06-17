@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { PrimaryColor } from "../../Components/GlobalStyle";
 
 export const LineItemContainer = styled.div`
   .btn {
@@ -49,15 +50,49 @@ export const LineItemContainer = styled.div`
 `;
 
 export const LineItemDetailContainer = styled.div`
-background-color: white;
-padding: 10px;
+  background-color: white;
+  padding: 10px;
   .lineItemBar {
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     padding: 10px;
-
   }
 
   .unitOfMeasure {
+    width: 50%;
+    .filter-btns .filter > label {
+      color: #363636;
+      font-style: normal;
+      font-weight: 400;
+      font-family: "EnnVisionsBold";
+      font-size: 14px;
+      color: white;
+      border-radius: 7px;
+      text-align: center;
+      padding: 4px 10px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    .filter-btns .filter > label:first-child {
+      margin-left: 0 !important;
+    }
+    .filter-btns .filter input[type="checkbox"] + label {
+      border-radius: 6px;
+      border: 1px solid #363636;
+      color: #363636;
+      padding: 7px 20px;
+      font-size: 16px;
+    }
+    .filter-btns .filter input[type="checkbox"]:checked + label {
+      background-color: ${PrimaryColor};
+      color: white;
+     
+      border: 1px solid ${PrimaryColor};
+    }
+
+    .filter-btns .filter > input {
+      display: none;
+    }
+
     margin-bottom: 10px;
     p {
       font-weight: 900;
@@ -79,7 +114,7 @@ padding: 10px;
     column-gap: 16px;
     margin-top: 5px;
     @media (max-width: 520px) {
-     grid-template-columns :1fr ;
+      grid-template-columns: 1fr;
     }
   }
   .label {
@@ -110,52 +145,48 @@ padding: 10px;
   }
 `;
 
-
 export const LineItemDetailPageContainer = styled.div`
-
-
-  .lineItemDetail{
-    &-header{
-      background-color: #F9F9F9;
+  .lineItemDetail {
+    &-header {
+      background-color: #f9f9f9;
       color: #232837;
       padding: 10px;
       border-radius: 4px;
-      h1{
+      h1 {
         font-size: 15px;
         margin: 0;
       }
     }
-    &-table{
+    &-table {
       max-width: 50%;
     }
-    &-units{
+    &-units {
       max-width: 50%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #EFEFF4;
+      border-bottom: 1px solid #efeff4;
 
-      &-value{
+      &-value {
         display: flex;
         align-items: center;
         gap: 10px;
       }
     }
-    &-total{
+    &-total {
       max-width: 50%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #EFEFF4;
+      border-bottom: 1px solid #efeff4;
       padding: 10px 0;
-      h1{
+      h1 {
         font-size: 16px;
         font-weight: normal;
       }
-      p{
+      p {
         font-weight: 600;
       }
     }
   }
-
-`
+`;

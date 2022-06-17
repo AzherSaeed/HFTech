@@ -215,8 +215,9 @@ const Index = () => {
       },
     }
   );
-  const onSubmit = (data) => {
+  const onSubmit = (data , {resetForm} ) => {
     mutation.mutate(data);
+    resetForm()
   };
 
   const handleSelectCountry = (val) => {
@@ -224,6 +225,7 @@ const Index = () => {
     if (test) {
       refetch();
     }
+
   };
 
   const handleSelectedState = (val) => {
@@ -257,7 +259,7 @@ const Index = () => {
             <div className="main-container">
               <div className="leftSide">
                 <Formik
-                  initialValues={spaceData?.data?.result ? spaceData?.data?.result : initialValues}
+                  initialValues={ locationsId !== "createNew" && spaceData?.data?.result ? spaceData?.data?.result : initialValues}
                   validationSchema={validationSchema}
                   onSubmit={onSubmit}
                 >
@@ -307,7 +309,7 @@ const Index = () => {
                                 ? "is-invalid"
                                 : "customPasswordInput"
                             }
-                            defaultValue={spaceData?.data?.result.countryName}
+                            defaultValue={locationsId !== "createNew" && spaceData?.data?.result.countryName}
                           />
 
                           <FormControl
@@ -323,7 +325,7 @@ const Index = () => {
                                 ? "is-invalid"
                                 : "customInput"
                             }
-                            defaultValue={spaceData?.data?.result.stateName}
+                            defaultValue={locationsId !== "createNew" && spaceData?.data?.result.stateName}
                           />
                           <div>
                             <FormControl
@@ -339,7 +341,7 @@ const Index = () => {
                                   ? "is-invalid"
                                   : "customInput"
                               }
-                              defaultValue={spaceData?.data?.result.cityName}
+                              defaultValue={locationsId !== "createNew" && spaceData?.data?.result.cityName}
                             />
                           </div>
 

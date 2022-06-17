@@ -146,7 +146,7 @@ const Index = () => {
           <div className="leftSide">
             <Formik
               initialValues={
-                userData?.data?.result ? userData?.data?.result : initialValues
+                contactId !== "createContact" && userData?.data?.result ? userData?.data?.result : initialValues
               }
               validationSchema={validationSchema}
               onSubmit={onSubmit}

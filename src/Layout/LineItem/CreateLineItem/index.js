@@ -4,6 +4,7 @@ import Sidebar from "../../../Components/Sidebar/Sidebar";
 import { InputNumber, Radio, Modal } from "antd";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { Formik } from "formik";
+import * as Yup from "yup";
 import { Form } from "antd";
 import { BasicColor } from "../../../Components/GlobalStyle";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +21,6 @@ import {
   LINEITEM_UPDATE,
 } from "../../../Services/config";
 
-
 const lineItemType = [
   { id: "Materials", name: "Materials" },
   { id: "Labor", name: "Labor" },
@@ -29,9 +29,6 @@ const initialValues = {
   name: "",
   lineItemType: "Labor",
   channel: "IOS",
-  dtoUnitOfMeasure: {
-    id: 4,
-  },
   dtoLineItemDetails: [
     {
       name: "",
@@ -59,9 +56,17 @@ const initialValues = {
     },
   ],
 };
-
-
-
+const validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  dtoLineItemDetails: Yup.array(
+    Yup.object({
+      name: Yup.string(),
+      qty: Yup.string(),
+      price: Yup.string(),
+    })
+  ),
+});
+const brands = ["Day", "Each", "Pair", "Box", "Roll", "Week"];
 const Index = () => {
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
@@ -69,6 +74,7 @@ const Index = () => {
 
   const [selectedRateType, setselectedRateType] = useState("labour");
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
+  const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
 
   const handleCancel = () => {
     setsuccessfullDeleteModal(false);
@@ -89,7 +95,10 @@ const Index = () => {
     }
   };
 
-  const {data: lineItemData,isLoading,isFetching
+  const {
+    data: lineItemData,
+    isLoading,
+    isFetching,
   } = useQuery(
     "get-lineItem-By-Id",
     () => {
@@ -117,7 +126,6 @@ const Index = () => {
       setselectedRateType(lineItemData?.data?.result?.lineItemType);
     }
   }, [lineItemData]);
-
 
   const mutation = useMutation(
     (lineItemDetail) => {
@@ -148,51 +156,37 @@ const Index = () => {
 
   const onSubmit = (data) => {
     const finalData = {
-      channel : data.channel,
-      dtoUnitOfMeasure : data.dtoUnitOfMeasure,
-      lineItemType : data.lineItemType,
-      name : data.name,
+      channel: data.channel,
+      dtoUnitOfMeasure: dtoUnitOfMeasures,
+      lineItemType: data.lineItemType,
+      name: data.name,
       dtoLineItemDetails: [
-        {
-          name: data.dtoLineItemDetails[0].name,
-          qty: data.dtoLineItemDetails[0].qty,
-          price: data.dtoLineItemDetails[0].price,
-          total:
-            data.dtoLineItemDetails[0].qty * data.dtoLineItemDetails[0].price,
-        },
-        {
-          name: data.dtoLineItemDetails[1].name,
-          qty: data.dtoLineItemDetails[1].qty,
-          price: data.dtoLineItemDetails[1].price,
-          total:
-            data.dtoLineItemDetails[1].qty * data.dtoLineItemDetails[0].price,
-        },
-        {
-          name: data.dtoLineItemDetails[2].name,
-          qty: data.dtoLineItemDetails[2].qty,
-          price: data.dtoLineItemDetails[2].price,
-          total:
-            data.dtoLineItemDetails[2].qty * data.dtoLineItemDetails[0].price,
-        },
-        {
-          name: data.dtoLineItemDetails[3].name,
-          qty: data.dtoLineItemDetails[3].qty,
-          price: data.dtoLineItemDetails[3].price,
-          total:
-            data.dtoLineItemDetails[3].qty * data.dtoLineItemDetails[0].price,
-        },
+        ...data.dtoLineItemDetails.filter(({ name, qty, price }) => {
+          if (name !== "" && qty !== "" && price !== "") {
+            console.log(name, qty * price , 'name, qty, price');
+            return {
+              name,
+              qty,
+              price,
+              total: 7,
+            };
+          }
+        }),
       ],
     };
-    mutation.mutate(finalData);
+
+    console.log(finalData, "finalData");
+    // mutation.mutate(finalData);
   };
 
-
-  console.log(lineItemData?.data.result , 'lineItemData?.data.result');
+  const handleChange = (value) => {
+    dtoUnitOfMeasures.push(value);
+  };
 
   return (
     <Sidebar>
       {isFetching && isLoading ? (
-        <Loader/>
+        <Loader />
       ) : (
         <LineItemDetailContainer>
           <div className="lineItemBar">Create Line Items</div>
@@ -203,7 +197,7 @@ const Index = () => {
                   ? lineItemData?.data.result
                   : initialValues
               }
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema}
               onSubmit={onSubmit}
             >
               {(formik) => {
@@ -250,7 +244,7 @@ const Index = () => {
                         }
                       />
                     </div>
-                    {/* <div className="fields_container">
+                    <div className="fields_container">
                       <FormControl
                         control="input"
                         type="text"
@@ -273,7 +267,7 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[0].price"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[0]
+                                lineItemData?.data.result?.dtoLineItemDetails[0]
                                   .price
                               }
                               onChange={(value) =>
@@ -291,7 +285,7 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[0].qty"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[0]
+                                lineItemData?.data.result.dtoLineItemDetails[0]
                                   .qty
                               }
                               onChange={(value) =>
@@ -311,8 +305,9 @@ const Index = () => {
                               readOnly={true}
                               name="dtoLineItemDetails[0].total"
                               value={
+                                formik.values.dtoLineItemDetails.length > 0 &&
                                 formik.values.dtoLineItemDetails[0].price *
-                                formik.values.dtoLineItemDetails[0].qty
+                                  formik.values.dtoLineItemDetails[0].qty
                               }
                             />
                           </div>
@@ -342,7 +337,10 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[1].price"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[1]
+                                lineItemId !== "createLineItem" &&
+                                lineItemData?.data.result.dtoLineItemDetails
+                                  .length > 1 &&
+                                lineItemData?.data.result.dtoLineItemDetails[1]
                                   .price
                               }
                               onChange={(value) =>
@@ -361,7 +359,10 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[1].qty"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[1]
+                                lineItemId !== "createLineItem" &&
+                                lineItemData?.data.result.dtoLineItemDetails
+                                  .length > 1 &&
+                                lineItemData?.data.result.dtoLineItemDetails[1]
                                   .qty
                               }
                               onChange={(value) =>
@@ -380,8 +381,9 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "9px" }}
                               readOnly={true}
                               value={
+                                formik.values.dtoLineItemDetails.length > 1 &&
                                 formik.values.dtoLineItemDetails[1].price *
-                                formik.values.dtoLineItemDetails[1].qty
+                                  formik.values.dtoLineItemDetails[1].qty
                               }
                             />
                           </div>
@@ -411,7 +413,10 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[2].price"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[2]
+                                lineItemId !== "createLineItem" &&
+                                lineItemData?.data.result.dtoLineItemDetails
+                                  .length > 2 &&
+                                lineItemData?.data.result.dtoLineItemDetails[2]
                                   .price
                               }
                               onChange={(value) =>
@@ -430,7 +435,10 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[2].qty"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[2]
+                                lineItemId !== "createLineItem" &&
+                                lineItemData?.data.result.dtoLineItemDetails
+                                  .length > 2 &&
+                                lineItemData?.data.result.dtoLineItemDetails[2]
                                   .qty
                               }
                               onChange={(value) =>
@@ -449,8 +457,9 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               readOnly={true}
                               value={
+                                formik.values.dtoLineItemDetails.length > 2 &&
                                 formik.values.dtoLineItemDetails[2].price *
-                                formik.values.dtoLineItemDetails[2].qty
+                                  formik.values.dtoLineItemDetails[2].qty
                               }
                             />
                           </div>
@@ -480,7 +489,10 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[3].price"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[3]
+                                lineItemId !== "createLineItem" &&
+                                lineItemData?.data.result.dtoLineItemDetails
+                                  .length > 3 &&
+                                lineItemData?.data.result.dtoLineItemDetails[3]
                                   .price
                               }
                               onChange={(value) =>
@@ -499,7 +511,10 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[3].qty"
                               value={
-                                lineItemId !== "createLineItem" && lineItemData?.data.result.dtoLineItemDetails[3]
+                                lineItemId !== "createLineItem" &&
+                                lineItemData?.data.result.dtoLineItemDetails
+                                  .length > 3 &&
+                                lineItemData?.data.result.dtoLineItemDetails[3]
                                   .qty
                               }
                               onChange={(value) =>
@@ -518,16 +533,33 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               readOnly={true}
                               value={
+                                formik.values.dtoLineItemDetails.length > 3 &&
                                 formik.values.dtoLineItemDetails[3].price *
-                                formik.values.dtoLineItemDetails[3].qty
+                                  formik.values.dtoLineItemDetails[3].qty
                               }
                             />
                           </div>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                     <div className="unitOfMeasure">
-                      <p className="heading">Units of Measure</p>
+                      <div className="filter-btns d-flex justify-content-between">
+                        {brands.map((title, index) => (
+                          <div className="filter" key={index}>
+                            <input
+                              type="checkbox"
+                              id={title}
+                              name="brand"
+                              onClick={(e) =>
+                                handleChange({ id: e.target.value })
+                              }
+                              value={title}
+                            />
+                            <label htmlFor={title}>{title}</label>
+                          </div>
+                        ))}
+                      </div>
+                      {/* <p className="heading">Units of Measure</p>
                       <Radio.Group
                         defaultValue={
                           !isFetching
@@ -548,7 +580,7 @@ const Index = () => {
                         <Radio.Button value="4">Box</Radio.Button>
                         <Radio.Button value="5">Roll</Radio.Button>
                         <Radio.Button value="6">Week</Radio.Button>
-                      </Radio.Group>
+                      </Radio.Group> */}
                     </div>
 
                     <CustomButton
