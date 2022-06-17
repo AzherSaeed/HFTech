@@ -19,7 +19,9 @@ import {
   CREATE_LINEITEM,
   LINEITEM_DETAIL,
   LINEITEM_UPDATE,
+  UNITOFMEASUREMENT_GET,
 } from "../../../Services/config";
+
 
 const lineItemType = [
   { id: "Materials", name: "Materials" },
@@ -66,19 +68,39 @@ const validationSchema = Yup.object({
     })
   ),
 });
-const brands = ["Day", "Each", "Pair", "Box", "Roll", "Week"];
+
+
 const Index = () => {
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const regex = /^\d*(\.\d+)?$/;
 
-  const [selectedRateType, setselectedRateType] = useState("labour");
+  const [selectedRateType, setselectedRateType] = useState("Select Type");
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
   const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
 
   const handleCancel = () => {
     setsuccessfullDeleteModal(false);
   };
+
+  const { data: unitsData, isLoading: unitsIsLoading, refetch } = useQuery(
+    "units",
+    () => {
+      return axios.get(API_URL + UNITOFMEASUREMENT_GET, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      refetchInterval: false,
+      refetchOnWindowFocus: true,
+    }
+  );
 
   const onSuccess = (response) => {
     if (response.data?.code !== 201) {
@@ -131,17 +153,17 @@ const Index = () => {
     (lineItemDetail) => {
       return lineItemId !== "createLineItem"
         ? axios.put(API_URL + LINEITEM_UPDATE, lineItemDetail, {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          })
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        })
         : axios.post(API_URL + CREATE_LINEITEM, lineItemDetail, {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          });
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
     },
     {
       onSuccess,
@@ -163,7 +185,7 @@ const Index = () => {
       dtoLineItemDetails: [
         ...data.dtoLineItemDetails.filter(({ name, qty, price }) => {
           if (name !== "" && qty !== "" && price !== "") {
-            console.log(name, qty * price , 'name, qty, price');
+            console.log(name, qty * price, 'name, qty, price');
             return {
               name,
               qty,
@@ -180,9 +202,14 @@ const Index = () => {
   };
 
   const handleChange = (value) => {
-    dtoUnitOfMeasures.push(value);
-  };
 
+    var index = dtoUnitOfMeasures.findIndex(object=>object.id===value.id);
+    if (index !== -1) {
+      dtoUnitOfMeasures.splice(index, 1)
+    } else {
+      dtoUnitOfMeasures.push(value);
+    };
+  }
   return (
     <Sidebar>
       {isFetching && isLoading ? (
@@ -210,7 +237,7 @@ const Index = () => {
                     onFinish={formik.handleSubmit}
                     // onFinishFailed={onFinishFailed}
                     autoComplete="off"
-                    // validateMessages={validationSchema}
+                  // validateMessages={validationSchema}
                   >
                     <div className="fields_container">
                       <FormControl
@@ -238,7 +265,7 @@ const Index = () => {
                         value={selectedRateType}
                         className={
                           formik.errors.lineItemType &&
-                          formik.touched.lineItemType
+                            formik.touched.lineItemType
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
@@ -262,6 +289,8 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
+                            type='number'
+                            controls={false}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
@@ -281,6 +310,8 @@ const Index = () => {
                           <div>
                             <label for="reg">Quantity</label>
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[0].qty"
@@ -300,6 +331,8 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "8px" }}
                               readOnly={true}
@@ -307,7 +340,7 @@ const Index = () => {
                               value={
                                 formik.values.dtoLineItemDetails.length > 0 &&
                                 formik.values.dtoLineItemDetails[0].price *
-                                  formik.values.dtoLineItemDetails[0].qty
+                                formik.values.dtoLineItemDetails[0].qty
                               }
                             />
                           </div>
@@ -332,6 +365,8 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
+                            type='number'
+                            controls={false}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
@@ -355,6 +390,8 @@ const Index = () => {
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[1].qty"
@@ -377,13 +414,15 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "9px" }}
                               readOnly={true}
                               value={
                                 formik.values.dtoLineItemDetails.length > 1 &&
                                 formik.values.dtoLineItemDetails[1].price *
-                                  formik.values.dtoLineItemDetails[1].qty
+                                formik.values.dtoLineItemDetails[1].qty
                               }
                             />
                           </div>
@@ -408,6 +447,8 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
+                            type='number'
+                            controls={false}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
@@ -431,6 +472,8 @@ const Index = () => {
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[2].qty"
@@ -453,13 +496,15 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "8px" }}
                               readOnly={true}
                               value={
                                 formik.values.dtoLineItemDetails.length > 2 &&
                                 formik.values.dtoLineItemDetails[2].price *
-                                  formik.values.dtoLineItemDetails[2].qty
+                                formik.values.dtoLineItemDetails[2].qty
                               }
                             />
                           </div>
@@ -484,6 +529,8 @@ const Index = () => {
                           <div>
                             <label for="reg">Regular Value</label>
                             <InputNumber
+                            type='number'
+                            controls={false}
                               addonBefore="$"
                               addonAfter="Rate"
                               id="reg"
@@ -507,6 +554,8 @@ const Index = () => {
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="qty"
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[3].qty"
@@ -529,13 +578,15 @@ const Index = () => {
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
+                            type='number'
+                            controls={false}
                               id="total"
                               style={{ width: "100%", marginTop: "8px" }}
                               readOnly={true}
                               value={
                                 formik.values.dtoLineItemDetails.length > 3 &&
                                 formik.values.dtoLineItemDetails[3].price *
-                                  formik.values.dtoLineItemDetails[3].qty
+                                formik.values.dtoLineItemDetails[3].qty
                               }
                             />
                           </div>
@@ -543,21 +594,26 @@ const Index = () => {
                       </div>
                     </div>
                     <div className="unitOfMeasure">
-                      <div className="filter-btns d-flex justify-content-between">
-                        {brands.map((title, index) => (
-                          <div className="filter" key={index}>
-                            <input
-                              type="checkbox"
-                              id={title}
-                              name="brand"
-                              onClick={(e) =>
-                                handleChange({ id: e.target.value })
-                              }
-                              value={title}
-                            />
-                            <label htmlFor={title}>{title}</label>
-                          </div>
-                        ))}
+                      <div className="filter-btns d-flex justify-content-evenly">
+                        {unitsIsLoading ? (
+                          <Loader />
+                        ) : (
+                          unitsData?.data.result.map(({ id, name }, index) => (
+                            <div className="filter" key={index}>
+                              <input
+                                type="checkbox"
+                                id={id}
+                                name="brand"
+                                onClick={(e) =>
+                                  handleChange({ id: e.target.value })
+                                }
+                                value={name}
+                              />
+                              <label htmlFor={id}>{name}</label>
+                            </div>
+                          ))
+                        )
+                        }
                       </div>
                       {/* <p className="heading">Units of Measure</p>
                       <Radio.Group

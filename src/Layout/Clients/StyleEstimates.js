@@ -50,7 +50,13 @@ export const ClientDetailPageContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 30px;
-
+ 
+    .ant-tabs-nav-list{
+      padding: 8px;
+    }
+    .ant-tabs-nav{
+      margin-bottom:0;
+    }
     &-form {
     }
     &-table {

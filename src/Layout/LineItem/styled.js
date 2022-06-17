@@ -79,14 +79,17 @@ export const LineItemDetailContainer = styled.div`
       border-radius: 6px;
       border: 1px solid #363636;
       color: #363636;
-      padding: 7px 20px;
+      padding: 2px 20px;
       font-size: 16px;
     }
     .filter-btns .filter input[type="checkbox"]:checked + label {
-      background-color: ${PrimaryColor};
-      color: white;
-     
-      border: 1px solid ${PrimaryColor};
+      background: #F9FBFC;
+      border: 1px solid #156985;
+border-radius: 4px;
+color: #156985;
+font-family: 'EnnVisionsBold';
+font-weight: 700;
+
     }
 
     .filter-btns .filter > input {

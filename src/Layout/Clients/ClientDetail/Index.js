@@ -280,12 +280,12 @@ const Index = () => {
                         >
                           {locationData &&
                             locationData[0]?.data.result?.map((data, i) => (
-                              <div key={i} className="details">
+                              <div key={i} className="details mt-2">
                                 <Checkbox
                                   value={data.id}
                                   name="spaceIds"
                                 >
-                                  <div className="details-checkbox">
+                                  <div className="details-checkbox py-2">
                                     <div className="details-list">
                                       <span className="details-list-name">
                                         Name:
@@ -311,12 +311,12 @@ const Index = () => {
                         >
                           {locationData &&
                             locationData[1]?.data.result?.map((data, i) => (
-                              <div key={i} className="details">
+                              <div key={i} className="details mt-2">
                                 <Checkbox
                                   value={data.id}
                                   name="contactIds"
                                 >
-                                  <div className="details-checkbox">
+                                  <div className="details-checkbox py-2">
                                     <div className="details-list">
                                       <span className="details-list-name">
                                         Name:

@@ -17,7 +17,12 @@ import ResetPassword from "./Layout/AuthScreens/ResetPassword/Index";
 import USerContact from "./Layout/Contacts/UserContact/Index";
 import CreateNew from "./Layout/Estimates/CreateNew/CreateNew";
 import AddItem from "./Layout/Estimates/CreateNew/AddItems/Index";
-import LineItem from './Layout/LineItem'
+import LineItem from './Layout/LineItem';
+
+
+import ContactDetailPage from "./Layout/Contacts/ContactDetailPage";
+import LocationDetailPage from "./Layout/Locations/LocationDetailPage";
+
 import CreateLineItem from './Layout/LineItem/CreateLineItem/index.js'
 import Home from "./Layout/Home/Index";
 import Delete from "./Components/Delete/Index";
@@ -65,6 +70,11 @@ function App() {
           <Route path="/locations/:locationsId" element={<UserLocation />} />
           <Route path="/contact" element={<Contacts />} />
           <Route path="/contact/:contactId" element={<USerContact />} />
+
+          
+          <Route path="/contactDetail/:contactId" element={<ContactDetailPage />} />
+          <Route path="/locationsDetail/:locationsId" element={<LocationDetailPage/>} />
+          
           <Route path="/lineItem" element={<LineItem />} />
           <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
           <Route path="/client" element={<Clients />} />

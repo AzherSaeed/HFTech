@@ -39,7 +39,7 @@ const Index = () => {
   const [deleteId, setDeleteId] = useState();
 
 
-  const { data: listData, isLoading,refetch:refetchEstimateList,isRefetching } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true,true);
+  const { data: listData, isLoading, refetch: refetchEstimateList, isRefetching } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true, true);
 
   // const data = !listData.data.result === null ? ([
   //   ...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))
@@ -115,7 +115,8 @@ const Index = () => {
               src={deleteIcon}
               alt="delete Icon"
               className="action_icons deleteicon"
-              onClick={() => {setShowDeleteModal(true)
+              onClick={() => {
+                setShowDeleteModal(true)
                 setDeleteId(record.id);
               }}
             />
@@ -142,7 +143,7 @@ const Index = () => {
   ];
 
   const handleDelete = () => {
-    axios.delete(API_URL+ESTIMATE_LIST_ITEM_DELETE+deleteId).then((res) => console.log(res)).catch((error) => console.log(error));
+    axios.delete(API_URL + ESTIMATE_LIST_ITEM_DELETE + deleteId).then((res) => console.log(res)).catch((error) => console.log(error));
     refetchEstimateList();
 
   }
@@ -164,7 +165,6 @@ const Index = () => {
 
   return (
     <Sidebar>
-
       <Modal visible={showDeleteModal} footer={null} centered={true} closable={false}>
         <div className="text-center">
           <img src={ic_logo} alt="logo" width='120px' className="text-center" />
@@ -174,14 +174,13 @@ const Index = () => {
         </div>
         <div className="d-flex justify-content-center">
           <Button className="btn btn-sm bg-primary" onClick={handleCancel}>Cancel</Button>
-          <Button className="btn btn-sm bg-danger ms-3 px-3" onClick={ handleOk}>Ok</Button>
+          <Button className="btn btn-sm bg-danger ms-3 px-3" onClick={handleOk}>Ok</Button>
         </div>
       </Modal>
       <div>
         <div className="d-md-none">
           <MobileTable />
         </div>
-
         <div className="d-none d-md-block">
           <StyleEstimates>
             <div className="btn">
@@ -196,7 +195,7 @@ const Index = () => {
               />
             </div>
             {
-              isLoading && isRefetching? (
+              isLoading && isRefetching ? (
                 <Loader />
               ) : (
                 <Table pagination={false} columns={columns} dataSource={!listData?.data.result ? [] : [...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))]} />

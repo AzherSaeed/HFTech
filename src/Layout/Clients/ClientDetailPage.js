@@ -95,26 +95,26 @@ const ClientDetailPage = () => {
               />
             </div>
             <div className="client-detail-content-table">
-              <Tabs defaultActiveKey="1" size="large">
-                <TabPane tab="Locations" key="1">
+              <Tabs defaultActiveKey="1"  size="large">
+                <TabPane tab="Locations"  key="1">
                   <Checkbox.Group defaultValue={[3]}>
                     {locationData &&
                       locationData[0]?.data.result?.map((data, i) => (
-                        <div key={i} className="details">
-                          <Checkbox value={{ id: data.id }} name="spaceIds">
+                        <div key={i} className="details mt-2">
+                          {/* <Checkbox value={{ id: data.id }} name="spaceIds"> */}
                             <div className="details-checkbox">
-                              <div className="details-list">
+                              <div className="details-list py-2">
                                 <span className="details-list-name">Name:</span>
                                 {data.name}
                               </div>
-                              <div className="details-list">
+                              <div className="details-list py-2">
                                 <span className="details-list-name">
                                   Owner:
                                 </span>
                                 {data.dtoUser.userName}
                               </div>
                             </div>
-                          </Checkbox>
+                          {/* </Checkbox> */}
                         </div>
                       ))}
                   </Checkbox.Group>
@@ -123,21 +123,21 @@ const ClientDetailPage = () => {
                   <Checkbox.Group>
                     {locationData &&
                       locationData[1]?.data.result?.map((data, i) => (
-                        <div key={i} className="details">
-                          <Checkbox value={{ id: data.id }} name="contactIds">
-                            <div className="details-checkbox">
-                              <div className="details-list">
+                        <div key={i} className="details mt-2">
+                          {/* <Checkbox value={{ id: data.id }} name="contactIds"> */}
+                            <div className="details-checkbox ">
+                              <div className="details-list py-2">
                                 <span className="details-list-name">Name:</span>
                                 <span>{data.name}</span>
                               </div>
-                              <div className="details-list">
+                              <div className="details-list py-2">
                                 <span className="details-list-name">
                                   Owner:
                                 </span>
                                 <span>{data.dtoUser.userName}</span>
                               </div>
                             </div>
-                          </Checkbox>
+                          {/* </Checkbox> */}
                         </div>
                       ))}
                   </Checkbox.Group>

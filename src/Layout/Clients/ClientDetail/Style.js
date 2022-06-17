@@ -7,6 +7,12 @@ const Style = styled.div`
     @media screen and (max-width: 725px) {
       flex-direction: column;
     }
+    .ant-tabs-nav-list{
+      padding: 8px;
+    }
+    .ant-tabs-nav{
+      margin-bottom:0;
+    }
   }
   .leftSide {
     background-color: white;

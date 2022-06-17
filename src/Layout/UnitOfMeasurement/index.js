@@ -245,7 +245,7 @@ const Index = () => {
                       padding="5px 8px"
                       width="100%"
                       type="submit"
-                      title="Update Unit of Measurement"
+                      title="Save"
                       disabled={unitDetailHandler}
                     />
                   </Form>
