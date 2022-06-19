@@ -11,7 +11,7 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfulDeleteModal from "../../Components/Delete/SuccessfullModal";
-import MobileTableCard from '../../Components/CustomMobileCard'
+import MobileTableCard from './MobileTable';
 import {
   API_URL,
   LINE_ITEMS_GET,
@@ -65,8 +65,8 @@ const columns = [
 ];
 const Index = () => {
   let [detail, setDetail] = useState([]);
-  const onSuccess = (data) => {};
-  useEffect(() => {}, [detail]);
+  const onSuccess = (data) => { };
+  useEffect(() => { }, [detail]);
   const onError = (err) => {
     console.log(err, "error while fetching data from api");
   };
@@ -136,10 +136,10 @@ const Index = () => {
   const contactData = data?.data?.result?.map((lineItem) => {
     return {
       id: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.id} </Link>,
-      name:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.name} </Link>,
-      type:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.lineItemType} </Link>,
-      created:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {moment(lineItem.dtoUser.insertedDate).format("l, h:mm:ss a")} </Link>,
-      owner:  <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.dtoUser.userName} </Link>,
+      name: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.name} </Link>,
+      type: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.lineItemType} </Link>,
+      created: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {moment(lineItem.dtoUser.insertedDate).format("l, h:mm:ss a")} </Link>,
+      owner: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.dtoUser.userName} </Link>,
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
           <img
@@ -168,7 +168,7 @@ const Index = () => {
   return (
     <Sidebar>
       <LineItemContainer>
-        <div className="btn">
+        <div className="btn d-none d-md-flex">
           <CustomButton
             bgcolor={BasicColor}
             color="white"
@@ -182,10 +182,10 @@ const Index = () => {
           />
         </div>
 
-        <MobileTableCard  data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit}  />
-          <div className="content-table-main">
-            <Table pagination={true} columns={columns} dataSource={contactData} />
-          </div>
+        <MobileTableCard data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit} />
+        <div className="content-table-main">
+          <Table pagination={true} columns={columns} dataSource={contactData} />
+        </div>
         <Modal
           visible={isModalVisible}
           footer={null}

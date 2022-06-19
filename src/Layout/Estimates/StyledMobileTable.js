@@ -1,22 +1,27 @@
 import styled from 'styled-components';
 
-export const MobileTableStyledMain=styled.div`
+export const MobileTableStyledMain = styled.div`
+
+.plus-icon{
+right:5%;
+bottom: 5%;
+}
 display: flex;
 justify-content: space-between;
 background-color: #E1E2E2;
 p{
- margin:0;    
- font-size: 16px;
+margin:0;    
+font-size: 16px;
 }
 
 .inner-section{
 padding-bottom: 10px;
 .card:first-child{
 margin-top: 12px;
- } 
- .card:not(:first-child){
- margin-top:20px;
- }  
+} 
+.card:not(:first-child){
+margin-top:20px;
+}  
 .card{
 padding:12px;
 
@@ -30,12 +35,12 @@ color:#156985 ;
 }
 
 .details{
- margin-top:10px;
- font-size: 16px;
+margin-top:10px;
+font-size: 16px;
 }
 .details-1{
- margin-top:10px;
- font-size: 13px;
+margin-top:10px;
+font-size: 13px;
 }
 
 .price-section{
@@ -45,12 +50,12 @@ margin-top:14px;
 .actions-section{
 margin-top:16px;
 img{
- background-color:#E1E2E2;
- padding: 10px;
- height: 35px;
+background-color:#E1E2E2;
+padding: 10px;
+height: 35px;
 }
 img:not(:first-child){
- margin-left:4px ;
+margin-left:4px ;
 }
 
 .warn-actions{

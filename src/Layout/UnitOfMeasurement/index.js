@@ -21,6 +21,7 @@ import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfulDeleteModal from "../../Components/Delete/SuccessfullModal";
+import { Container } from "react-bootstrap";
 
 const initialValues = {
   name: "",
@@ -142,142 +143,151 @@ const Index = () => {
     <Sidebar>
       <UnitOfMeasurementContainer>
         {isLoading && <Loader />}
-        <div className="unitOfMeasurementHeader">
-          <p>Unit Of Measurement</p>
-        </div>
-        <div className="unitOfMeasurementContent">
-          <div className="unitOfMeasurementContent-detail">
-            <div className="unitOfMeasurementContent-detail-children">
-              {!isLoading &&
-                data.data.result.map((unit) => {
-                  return (
-                    <div className="unitOfMeasurementContent-detail-children-input">
-                      <Input.Group
-                        compact
-                        className="unitOfMeasurementContent-detail-children-input-group"
-                      >
-                        <div className="unitOfMeasurementContent-detail-children-input-group-div">
-                          <label>Unit Name</label>
-                          <Input
-                            style={{ width: "100%" }}
-                            defaultValue={unit.name}
-                            disabled={unitDetailHandler?.id !== unit.id}
-                            onChange={(e) =>
-                              setunitUpdateInputHandler(e.target.value)
-                            }
-                          />
-                        </div>
+        <Container>
+          <div className="mt-3">
+            <div className="unitOfMeasurementHeader d-none d-md-block ">
+              <p className="fw-bold fs-5 text-center text-sm-start ms-1">Unit Of Measurement</p>
+            </div>
+            <div className="unitOfMeasurementContent">
+              <div className="unitOfMeasurementContent-detail">
+                <div className="unitOfMeasurementContent-detail-children">
+                  {!isLoading &&
+                    data.data.result.map((unit) => {
+                      return (
+                        <div className="unitOfMeasurementContent-detail-children-input">
+                          <Input.Group
+                            compact
+                            className="unitOfMeasurementContent-detail-children-input-group"
+                          >
+                            <div className="unitOfMeasurementContent-detail-children-input-group-div">
+                              <label>Unit Name</label>
+                              <Input
+                                style={{ width: "100%" }}
+                                defaultValue={unit.name}
+                                disabled={unitDetailHandler?.id !== unit.id}
+                                onChange={(e) =>
+                                  setunitUpdateInputHandler(e.target.value)
+                                }
+                              />
+                            </div>
 
-                        {unitDetailHandler?.id == unit.id ? (
-                          <div style={{ marginTop: "25px" }}>
-                            <CustomButton
-                              bgcolor="#156985"
-                              color="white"
-                              padding="3px 0px"
-                              width="70px"
-                              type="submit"
-                              title="Update"
-                              clicked={() => unitUpdateHandler(unit)}
+                            {unitDetailHandler?.id == unit.id ? (
+                              <div style={{ marginTop: "25px" }}>
+                                <CustomButton
+                                  bgcolor="#156985"
+                                  color="white"
+                                  padding="3px 0px"
+                                  width="70px"
+                                  type="submit"
+                                  title="Update"
+                                  clicked={() => unitUpdateHandler(unit)}
+                                />
+                              </div>
+                            ) : null}
+                          </Input.Group>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "10px",
+                              marginTop: "17px",
+                            }}
+                          >
+                            <img
+                              src={deleteIcon}
+                              alt="delete Icon"
+                              className="action_icons deleteicon"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => unitDeleteHandler(unit)}
+                            />
+                            <img
+                              src={editIcon}
+                              alt="edit Icon"
+                              className="action_icons editicon"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => unitEditHandler(unit)}
                             />
                           </div>
-                        ) : null}
-                      </Input.Group>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "10px",
-                          marginTop: "17px",
-                        }}
-                      >
-                        <img
-                          src={deleteIcon}
-                          alt="delete Icon"
-                          className="action_icons deleteicon"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => unitDeleteHandler(unit)}
-                        />
-                        <img
-                          src={editIcon}
-                          alt="edit Icon"
-                          className="action_icons editicon"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => unitEditHandler(unit)}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+              
+              <Modal
+                visible={isModalVisible}
+                footer={null}
+                onCancel={handleCancel}
+                centered={true}
+              >
+                <DeleteModal
+                  handleCancel={handleCancel}
+                  userDetail={unitDeleteDetailHandler}
+                  deleteUser={handleIndividualDelete}
+                />
+              </Modal>
+              <Modal
+                visible={successDeleteModal}
+                footer={null}
+                onCancel={handleCancel}
+                centered={true}
+              >
+                <SuccessfulDeleteModal
+                  handleCancel={handleCancel}
+                  userDetail={unitDeleteDetailHandler}
+                  deleteUser={handleIndividualDelete}
+                />
+              </Modal>
             </div>
           </div>
           <div className="unitOfMeasurementContent-form">
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            >
-              {(formik) => {
-                return (
-                  <Form
-                    name="basic"
-                    onFinish={formik.handleSubmit}
-                    // onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                    validateMessages={validationSchema}
-                  >
-                    <div className="unitOfMeasurementContent-form-input">
-                      <FormControl
-                        control="input"
-                        type="text"
-                        name="name"
-                        placeholder="Role"
-                        label="Create New"
-                        className={
-                          formik.errors.name && formik.touched.name
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                      />
-                    </div>
-                    <CustomButton
-                      bgcolor="#156985"
-                      color="white"
-                      padding="5px 8px"
-                      width="100%"
-                      type="submit"
-                      title="Save"
-                      disabled={unitDetailHandler}
-                    />
-                  </Form>
-                );
-              }}
-            </Formik>
-          </div>
-          <Modal
-            visible={isModalVisible}
-            footer={null}
-            onCancel={handleCancel}
-            centered={true}
-          >
-            <DeleteModal
-              handleCancel={handleCancel}
-              userDetail={unitDeleteDetailHandler}
-              deleteUser={handleIndividualDelete}
-            />
-          </Modal>
-          <Modal
-            visible={successDeleteModal}
-            footer={null}
-            onCancel={handleCancel}
-            centered={true}
-          >
-            <SuccessfulDeleteModal
-              handleCancel={handleCancel}
-              userDetail={unitDeleteDetailHandler}
-              deleteUser={handleIndividualDelete}
-            />
-          </Modal>
-        </div>
+                <div className="inner-container">
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={onSubmit}
+                >
+                  {(formik) => {
+                    return (
+                      <Form
+                        name="basic"
+                        onFinish={formik.handleSubmit}
+                        // onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                        validateMessages={validationSchema}
+                      >
+                        <div className="unitOfMeasurementContent-form-input mt-3 fw-bold">
+                          <FormControl
+                            control="input"
+                            type="text"
+                            name="name"
+                            placeholder="Role"
+                            label="Create New"
+                            className={
+                              formik.errors.name && formik.touched.name
+                                ? "is-invalid"
+                                : "customInput"
+                            }
+                          />
+                        </div>
+                        <div className="mt-3 mt-auto">
+                          <CustomButton
+                            bgcolor="#156985"
+                            color="white"
+                            padding="5px 8px"
+                            width="100%"
+                            type="submit"
+                            title="Save"
+                            disabled={unitDetailHandler}
+                          />
+                        </div>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+                </div>
+              </div>
+        </Container>
       </UnitOfMeasurementContainer>
     </Sidebar>
   );

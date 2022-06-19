@@ -4,10 +4,8 @@ import * as Yup from "yup";
 import { Form } from "antd";
 import FormControl from "../../../Components/FormControl";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { LoginContainer } from "./style";
+import { SignupContainer } from "./style";
 import ic_logo from "../../../Assets/icons/ic_logo_small.svg";
-import ic_flag from "../../../Assets/ic_flag.svg";
-import { API_URL } from "../../../Services/config";
 import { toast } from "react-toastify";
 import { BasicColor } from "../../../Components/GlobalStyle";
 import { Link, useNavigate } from "react-router-dom";
@@ -78,8 +76,8 @@ const Index = () => {
   };
 
   return (
-    <LoginContainer>
-      <div className="login-container-card">
+    <SignupContainer>
+      <div className="login-container-card my-auto">
         <div className="login-container-card-logo">
           <img src={ic_logo} alt="ic_logo" className="logo" />
         </div>
@@ -147,7 +145,7 @@ const Index = () => {
                         maxLength="10"
                         className={
                           formik.errors.phoneNumber &&
-                          formik.touched.phoneNumber
+                            formik.touched.phoneNumber
                             ? "is-invalid"
                             : "customPasswordInput"
                         }
@@ -155,17 +153,20 @@ const Index = () => {
                     </div>
 
                     <p to="/" className="forget_password">
-                     <input type='checkbox' name="forget_pass" id="forget_pass"/>
-                     <label for="forget_pass">  Agreed with Terms & Conditions Privacy Policy</label>
+                      <input type='checkbox' name="forget_pass" id="forget_pass" />
+                      <label for="forget_pass">  Agreed with Terms & Conditions Privacy Policy</label>
                     </p>
+                    <div className="d-flex align-items-center">
+
                     <CustomButton
                       bgcolor={BasicColor}
                       color="white"
-                      padding="11px 8px"
+                      padding="9px 8px"
                       width="100%"
                       type="submit"
                       title="SUBMIT"
-                    />
+                      />
+                      </div>
                   </div>
                 </Form>
               );
@@ -177,12 +178,12 @@ const Index = () => {
       <div className="login-container-bottom">
         <p> Already have Account ? </p>
         <h6>
-          <Link to="/login" style={{ color: {BasicColor} }}>
+          <Link to="/login" style={{ color: { BasicColor } }}>
             Login
           </Link>
         </h6>
       </div>
-    </LoginContainer>
+    </SignupContainer>
   );
 };
 

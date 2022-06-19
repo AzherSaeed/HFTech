@@ -1,7 +1,16 @@
 import styled from "styled-components";
 
 export const UnitOfMeasurementContainer = styled.div`
+  background-color: white;
+  padding-top: 5px;
+  padding-bottom:10px;
+  border-radius: 7px;
+  .unitOfMeasurementHeader{
+    background-color: #F9F9F9;
+    line-height: 45px;
+  }
   .unitOfMeasurementContent {
+  
     &-detail {
       &-children {
         display: grid;
@@ -28,6 +37,7 @@ export const UnitOfMeasurementContainer = styled.div`
 
                 label{
                   margin-bottom: 6px;
+                  font-weight: 700;
                 }
                 input{
                   border: none;
@@ -68,4 +78,23 @@ export const UnitOfMeasurementContainer = styled.div`
       }
     }
   }
+@media screen and (max-width:480px){
+  background-color: #F9F9F9;
+.unitOfMeasurementContent {
+background-color: white;
+border-radius: 10px;
+padding: 9px 7px;
+}
+.unitOfMeasurementContent-form{
+
+margin-top: 10px;
+padding-top: 10px;
+.inner-container{
+background-color: white;
+border-radius: 10px;
+padding: 9px 7px;
+}
+
+}
+}
 `;

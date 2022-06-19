@@ -49,6 +49,15 @@ export const LoginContainer = styled.div`
         font-weight: normal;
         color: ${BasicColor};
       }
+      @media screen and (max-width:425px) {
+        p{
+          font-size: 14px;
+        }
+        h6{
+          font-size: 14px;
+        }
+
+      }
     }
   }
   .is-invalid {
@@ -95,16 +104,16 @@ export const LoginContainer = styled.div`
   }
 }
 @media screen and (max-width: 425px) {
-  padding: 10px;
   .login-container{
     &-card{
-      width: 95%;
+      width: 100%;
     }
   } 
   .line{ 
     display:inline;
     width: 90%;
-    margin: auto;
+    margin-bottom: 6px;
+    /* margin: auto; */
   }
 }
 `;

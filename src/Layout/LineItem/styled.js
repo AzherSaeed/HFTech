@@ -7,6 +7,7 @@ export const LineItemContainer = styled.div`
     justify-content: flex-end;
     margin-top: -25px;
   }
+  
   .ant-table-thead {
     background-color: #f3f6f9;
     border-radius: 8px;
@@ -149,9 +150,19 @@ font-weight: 700;
 `;
 
 export const LineItemDetailPageContainer = styled.div`
+background-color: white;
+height: 82vh;
+.table-heads{
+  background-color:white;
+  .name-side{
+    width: 56%;
+  }
+}
+.lineItemDetail-header{
+    background-color:#F9F9F9;
+  }
   .lineItemDetail {
     &-header {
-      background-color: #f9f9f9;
       color: #232837;
       padding: 10px;
       border-radius: 4px;

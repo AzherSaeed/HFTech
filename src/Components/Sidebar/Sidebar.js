@@ -11,7 +11,7 @@ import searchIcon from "../../Assets/ic_search.svg";
 import notificationIcon from "../../Assets/ic_notification.svg";
 import flagIcon from "../../Assets/ic_flag.svg";
 import profileIcon from "../../Assets/card-profile.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { CollapsedContext } from "../../App";
 import Navbars from "../Navbar/Navbar";
 // import { useSelector } from "react-redux";
@@ -20,10 +20,12 @@ const { Header, Content, Sider } = Layout;
 const Sidebar = ({ children }) => {
   // const userName = useSelector((state) => state.fetchUser.user);
 
+  const location = useLocation();
+  console.log(location.pathname.split('/'), "path name of url location");
   return (
     <SideBarContainer>
       <div className="d-md-none">
-        <Navbars />
+        <Navbars  title={location.pathname.split('/')[1]}/>
       </div>{" "}
       <Layout>
         <Sider

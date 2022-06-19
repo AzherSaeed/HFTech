@@ -16,7 +16,7 @@ import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import { API_URL, GET_SPACE_DETAIL, DELETE_SPACE } from "../../Services/config";
 import moment from "moment";
-import MobileTableCard from "../../Components/CustomMobileCard";
+import MobileTableCard from "./MobileTable";
 
 const columns = [
   {
@@ -169,7 +169,7 @@ const Index = () => {
   return (
     <Sidebar>
       <LocationDetailPageContainer>
-        <div className="btn">
+        <div className="btn d-none d-md-flex">
           <CustomButton
             bgcolor={BasicColor}
             color="white"

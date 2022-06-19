@@ -92,11 +92,11 @@ const CreateNew = () => {
 
   // For Locations Fetch Data
 
-  const { data: locationsData, refetch: locationsRefetch, } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), false);
+  const { data: locationsData, refetch: locationsRefetch, } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
 
   // For Contact Fetch Data
 
-  const { data: contactsData, refetch: contactsRefetch } = CustomQueryHookById('estimateContactDataSelect', clientId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), false);
+  const { data: contactsData, refetch: contactsRefetch } = CustomQueryHookById('estimateContactDataSelect', clientId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
 
   // For Load Data by Id
 
@@ -226,12 +226,10 @@ const CreateNew = () => {
   const onSelectClient = (value, id) => {
     console.log('data called')
     navigate(`/estimates/createNew/${id}`);
-    generaticService
-      .get((API_URL + ESTIMATE_CONTACT_DATA_SELECT + id))
+    generaticService.get((API_URL+ESTIMATE_CONTACT_DATA_SELECT+id))
       .then((response) => setContact(response.result))
       .catch((error) => console.log(error, 'contact error in data'));
-    generaticService
-      .get((API_URL + ESTIMATE_LOCATIONS_DATA_SELECT + id))
+    generaticService.get((API_URL+ESTIMATE_LOCATIONS_DATA_SELECT+id))
       .then((response) => setLocations(response.result))
       .catch((error) => console.log(error, 'location error in data'));
   }
@@ -327,7 +325,7 @@ const CreateNew = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={locations}
+                        options={locationsData?.data.result}
                       />
                       <FormControl
                         control="multiSelect"
@@ -340,7 +338,7 @@ const CreateNew = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={contacts}
+                        options={contactsData?.data.result}
                       />
                     </div>
 

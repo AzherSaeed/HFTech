@@ -12,7 +12,7 @@ import moment from "moment";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
-import MobileTableCard from '../../Components/CustomMobileCard'
+import MobileTableCard from './MobileTable'
 
 
 const columns = [
@@ -184,7 +184,7 @@ const Index = () => {
   return (
     <Sidebar>
       <StyleEstimates>
-        <div className="btn">
+        <div className="btn d-none d-md-flex ">
           <CustomButton
             bgcolor={BasicColor}
             color="white"
@@ -197,6 +197,7 @@ const Index = () => {
             }}
           />
         </div>
+        
         <MobileTableCard  data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit}  />
         <div className="content-table-main">
           <Table pagination={true} columns={columns} dataSource={contactData} />

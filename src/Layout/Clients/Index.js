@@ -13,7 +13,7 @@ import axios from "axios";
 import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfullModal from "../../Components/Delete/SuccessfullModal";
-import MobileTableCard from '../../Components/CustomMobileCard'
+import MobileTableCard from './MobileTable';
 const columns = [
   {
     title: "Id",
@@ -173,7 +173,7 @@ const Index = () => {
   return (
     <Sidebar>
       <StyleEstimates>
-        <div className="btn">
+        <div className="btn d-none d-md-flex">
           <CustomButton
             bgcolor={BasicColor}
             color="white"

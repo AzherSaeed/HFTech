@@ -136,7 +136,7 @@ const Index = () => {
                   <TabPane tab="Materials Lineitems" key="2">
                     {materialsData?.data?.result?.map((item, index) => (
                       <div className="addItem" key={index} onClick={() => refetchByIdHandler(item.id)}>
-                        <div className="d-none d-sm-block">
+                        <div >
                           <div className="addItem-div">
                             <div>{item.name}</div>
                             <div>&gt;</div>
@@ -152,15 +152,13 @@ const Index = () => {
               {
                 itemDetails && (
                   <div className="second-table">
-                    <div className="d-none d-sm-block">
+                    <div className="mt-3">
                       <div className="main-heading">
                         <p>{itemDetails?.data.result.name}</p>
                       </div>
                     </div>
-                    <div className="d-sm-none">
-                      <MobileLabourLine />
-                    </div>
-                    <div className="d-none d-sm-block">
+                    
+                    <div >
                       {itemFetching ? (
                         <div className="d-flex justify-content-center">
                           <Spin indicator={antIcon} />

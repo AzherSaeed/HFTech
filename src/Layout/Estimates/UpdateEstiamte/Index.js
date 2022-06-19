@@ -79,11 +79,11 @@ console.log('one time','one Time in update estimate',oneTime)
 
   // For Locations Fetch Data
 
-  // const { data: locationsData, isLoading: locationsIsLoading, refetch: locationsRefetch, isRefetching: locationsRefetching } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
+  const { data: locationsData, isLoading: locationsIsLoading, refetch: locationsRefetch, isRefetching: locationsRefetching } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
 
-  // // For Contact Fetch Data
+  // For Contact Fetch Data
 
-  // const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', itemId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
+  const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', itemId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
 
 
 
@@ -316,7 +316,7 @@ console.log('one time','one Time in update estimate',oneTime)
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={locations}
+                        options={locationsData?.data.result}
                       />
                       <FormControl
                         control="multiSelect"
@@ -330,7 +330,7 @@ console.log('one time','one Time in update estimate',oneTime)
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={contacts}
+                        options={contactsData?.date.result}
                       />
                     </div>
 

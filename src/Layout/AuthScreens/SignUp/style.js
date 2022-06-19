@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import { BasicColor } from "../../../Components/GlobalStyle";
 
-export const LoginContainer = styled.div`
+export const SignupContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
+  max-width: 455px;
   background-color: #fafafa;
+  margin: 0 auto;
   .login-container {
     &-card {
       background-color: white;
-      padding: 20px;
+      padding: 16px 12px;
       border-radius: 6px;
-      width: 30%;
-      margin: auto;
+      
 
       &-logo {
         margin: auto;
@@ -41,6 +42,7 @@ export const LoginContainer = styled.div`
       p {
         font-size: 16px;
         font-weight: normal;
+       
       }
       h6 {
         margin-top: -9px;
@@ -75,6 +77,11 @@ export const LoginContainer = styled.div`
   }
   .forget_password {
     text-align: left;
+  label{
+    color: #000000;
+    font-weight: 500;
+    font-family: 'EnnVisions';
+  }
   }
   .ant-input-suffix {
     margin-left: 30px;
@@ -99,7 +106,6 @@ export const LoginContainer = styled.div`
   @media screen and (max-width: 925px) {
     .login-container {
       &-card {
-        width: 50%;
       }
     }
     .joinCommunity{
@@ -109,22 +115,14 @@ export const LoginContainer = styled.div`
   @media screen and (max-width: 680px) {
     .login-container {
       &-card {
-        width: 60%;
         background: #fafafa;
       }
     }
   }
-  @media screen and (max-width: 580px) {
-    .login-container {
-      &-card {
-        width: 70%;
-      }
-    }
-  }
+
   @media screen and (max-width: 500px) {
     .login-container {
       &-card {
-        width: 80%;
         &-logo {
           h1 {
             font-size: 16px;
@@ -136,16 +134,34 @@ export const LoginContainer = styled.div`
   @media screen and (max-width: 425px) {
     .login-container {
       &-card {
-        width: 95%;
+        padding: 10px;
+      }
+      &-bottom {
+      
+      p {
+        font-size: 14px;
+      }
+      h6 {
+        font-size: 14px;
       }
     }
+    }
+
     .joinCommunity{
       display: none;
     }
     .line{ 
     display:inline;
     width: 90%;
-    margin: auto;
+    margin-bottom: 6px;
   }
+  }
+@media screen and (max-width: 360px) {
+
+.forget_password {
+label{
+font-size: 13px;
+}
+}
   }
 `;

@@ -27,57 +27,18 @@ const lineItemType = [
   { id: "Materials", name: "Materials" },
   { id: "Labor", name: "Labor" },
 ];
-const initialValues = {
-  name: "",
-  lineItemType: "Labor",
-  channel: "IOS",
-  dtoLineItemDetails: [
-    {
-      name: "",
-      qty: "",
-      price: "",
-      total: "",
-    },
-    {
-      name: "",
-      qty: "",
-      price: "",
-      total: "",
-    },
-    {
-      name: "",
-      qty: "",
-      price: "",
-      total: "",
-    },
-    {
-      name: "",
-      qty: "",
-      price: "",
-      total: "",
-    },
-  ],
-};
-const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
-  dtoLineItemDetails: Yup.array(
-    Yup.object({
-      name: Yup.string(),
-      qty: Yup.string(),
-      price: Yup.string(),
-    })
-  ),
-});
+
 
 
 const Index = () => {
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const regex = /^\d*(\.\d+)?$/;
-  
+
   const [selectedRateType, setselectedRateType] = useState("Select Type");
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
   const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
+
 
   const handleCancel = () => {
     setsuccessfullDeleteModal(false);
@@ -143,6 +104,50 @@ const Index = () => {
     }
   );
 
+  const initialValues = {
+    name: "",
+    lineItemType:  "",
+    channel: "IOS",
+    dtoLineItemDetails: [
+      {
+        name: "",
+        qty: "",
+        price: "",
+        total: "",
+      },
+      {
+        name: "",
+        qty: "",
+        price: "",
+        total: "",
+      },
+      {
+        name: "",
+        qty: "",
+        price: "",
+        total: "",
+      },
+      {
+        name: "",
+        qty: "",
+        price: "",
+        total: "",
+      },
+    ],
+  
+  };
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    lineItemType:Yup.string().required("Line Item Required"),
+    dtoLineItemDetails: Yup.array(
+      Yup.object({
+        name: Yup.string(),
+        qty: Yup.string(),
+        price: Yup.string(),
+      })
+    ),
+  });
+  
   useEffect(() => {
     if (lineItemData?.data?.result?.lineItemType) {
       setselectedRateType(lineItemData?.data?.result?.lineItemType);
@@ -198,25 +203,24 @@ const Index = () => {
       data.dtoLineItemDetails[3].total = data.dtoLineItemDetails[3].qty * data.dtoLineItemDetails[3].price;
       const finalData = {
         channel: data.channel,
-        dtoUnitOfMeasure: dtoUnitOfMeasures,
+        dtoUnitOfMeasures,
         lineItemType: data.lineItemType,
         name: data.name,
 
-
+        total: data.dtoLineItemDetails.reduce((prev, current) => prev + current.total, 0),
         dtoLineItemDetails: [
           ...data.dtoLineItemDetails.filter(({ name, qty, price, total }) => {
-            if (name !== "" && qty !== "" && price !== "") {
+            if (name !== "") {
               return {
                 name,
                 qty,
                 price,
-                total: 24,
+                total,
               };
             }
           }),
         ],
       };
-
       mutation.mutate(finalData);
     }
 
@@ -233,6 +237,7 @@ const Index = () => {
       dtoUnitOfMeasures.push(value);
     };
   }
+  console.log(dtoUnitOfMeasures, "unit of measure");
   return (
     <Sidebar>
       {isFetching && isLoading ? (
@@ -320,8 +325,14 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[0].price"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[0]
-                                  .price
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result?.dtoLineItemDetails[0]
+                                    .price
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[0].price').value
+                                  )
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -341,8 +352,14 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[0].qty"
                               value={
-                                lineItemData?.data.result.dtoLineItemDetails[0]
-                                  .qty
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result.dtoLineItemDetails[0]
+                                    .qty
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[3].qty').value
+                                  )
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -364,9 +381,7 @@ const Index = () => {
                               name="dtoLineItemDetails[0].total"
                               value={
                                 formik.getFieldProps('dtoLineItemDetails[0].price').value * formik.getFieldProps('dtoLineItemDetails[0].qty').value
-                                // formik.values.dtoLineItemDetails.length > 0 &&
-                                // formik.values.dtoLineItemDetails[0].price *
-                                // formik.values.dtoLineItemDetails[0].qty
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -405,13 +420,15 @@ const Index = () => {
                               disabled={formik.getFieldProps('dtoLineItemDetails[1].name').value ? false : true}
                               name="dtoLineItemDetails[1].price"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[1]
-                                  .price
-                                // lineItemId !== "createLineItem" &&
-                                // lineItemData?.data.result.dtoLineItemDetails
-                                //   .length > 1 &&
-                                // lineItemData?.data.result.dtoLineItemDetails[1]
-                                //   .price
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result?.dtoLineItemDetails[1]
+                                    .price
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[1].price').value
+                                  )
+
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -432,13 +449,15 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[1].qty"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[1]
-                                  .qty
-                                // lineItemId !== "createLineItem" &&
-                                // lineItemData?.data.result.dtoLineItemDetails
-                                //   .length > 1 &&
-                                // lineItemData?.data.result.dtoLineItemDetails[1]
-                                //   .qty
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result?.dtoLineItemDetails[1]
+                                    .qty
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[1].qty').value
+                                  )
+
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -460,9 +479,7 @@ const Index = () => {
                               name="dtoLineItemDetails[1].total"
                               value={
                                 formik.getFieldProps('dtoLineItemDetails[1].price').value * formik.getFieldProps('dtoLineItemDetails[1].qty').value
-                                // formik.values.dtoLineItemDetails.length > 1 &&
-                                // formik.values.dtoLineItemDetails[1].price *
-                                // formik.values.dtoLineItemDetails[1].qty
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -502,13 +519,15 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[2].price"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[2]
-                                  .price
-                                // lineItemId !== "createLineItem" &&
-                                // lineItemData?.data.result.dtoLineItemDetails
-                                //   .length > 2 &&
-                                // lineItemData?.data.result.dtoLineItemDetails[2]
-                                //   .price
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result?.dtoLineItemDetails[2]
+                                    .price
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[2].price').value
+                                  )
+
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -529,13 +548,15 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[2].qty"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[2]
-                                  .qty
-                                // lineItemId !== "createLineItem" &&
-                                // lineItemData?.data.result.dtoLineItemDetails
-                                //   .length > 2 &&
-                                // lineItemData?.data.result.dtoLineItemDetails[2]
-                                //   .qty
+                                lineItemId !== "createLineItem" ? (
+
+                                  lineItemData?.data.result?.dtoLineItemDetails[2]
+                                    .qty
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[2].qty').value
+                                  )
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -552,13 +573,12 @@ const Index = () => {
                               type='number'
                               controls={false}
                               id="total"
+                              readOnly={true}
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[2].total"
                               value={
                                 formik.getFieldProps('dtoLineItemDetails[2].price').value * formik.getFieldProps('dtoLineItemDetails[2].qty').value
-                                // formik.values.dtoLineItemDetails.length > 2 &&
-                                // formik.values.dtoLineItemDetails[2].price *
-                                // formik.values.dtoLineItemDetails[2].qty
+
                               }
 
                               onChange={(value) =>
@@ -598,13 +618,14 @@ const Index = () => {
                               id="reg"
                               name="dtoLineItemDetails[3].price"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[3]
-                                  .price
-                                // lineItemId !== "createLineItem" &&
-                                // lineItemData?.data.result.dtoLineItemDetails
-                                //   .length > 3 &&
-                                // lineItemData?.data.result.dtoLineItemDetails[3]
-                                //   .price
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result?.dtoLineItemDetails[3]
+                                    .price
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[3].price').value
+                                  )
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -625,13 +646,15 @@ const Index = () => {
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[3].qty"
                               value={
-                                lineItemData?.data.result?.dtoLineItemDetails[3]
-                                  .price
-                                // lineItemId !== "createLineItem" &&
-                                // lineItemData?.data.result.dtoLineItemDetails
-                                //   .length > 3 &&
-                                // lineItemData?.data.result.dtoLineItemDetails[3]
-                                //   .qty
+                                lineItemId !== "createLineItem" ? (
+                                  lineItemData?.data.result?.dtoLineItemDetails[3]
+                                    .qty
+                                ) :
+                                  (
+                                    formik.getFieldProps('dtoLineItemDetails[3].qty').value
+                                  )
+
+
                               }
                               onChange={(value) =>
                                 formik.setFieldValue(
@@ -648,13 +671,12 @@ const Index = () => {
                               type='number'
                               controls={false}
                               id="total"
+                              readOnly={true}
                               style={{ width: "100%", marginTop: "8px" }}
                               name="dtoLineItemDetails[3].total"
                               value={
                                 formik.getFieldProps('dtoLineItemDetails[3].price').value * formik.getFieldProps('dtoLineItemDetails[3].qty').value
-                                // formik.values.dtoLineItemDetails.length > 3 &&
-                                // formik.values.dtoLineItemDetails[3].price *
-                                // formik.values.dtoLineItemDetails[3].qty
+
                               }
 
                               onChange={(value) =>
@@ -669,9 +691,26 @@ const Index = () => {
                       </div>
                     </div>
                     <div className="unitOfMeasure">
+
                       <div className="filter-btns d-flex justify-content-evenly">
                         {unitsIsLoading ? (
                           <Loader />
+                        ) : lineItemId !== "createLineItem" && lineItemData?.data.result ? (
+                          unitsData?.data.result.map(({ id, name }, index) => (
+                            <div className="filter" key={index}>
+                              <input
+                                type="checkbox"
+
+                                id={id}
+                                name="brand"
+                                onClick={(e) =>
+                                  handleChange({ id: (+e.target.id) })
+                                }
+                                value={name}
+                              />
+                              <label htmlFor={id}>{name}</label>
+                            </div>
+                          ))
                         ) : (
                           unitsData?.data.result.map(({ id, name }, index) => (
                             <div className="filter" key={index}>
@@ -680,7 +719,7 @@ const Index = () => {
                                 id={id}
                                 name="brand"
                                 onClick={(e) =>
-                                  handleChange({ id: e.target.value })
+                                  handleChange({ id: (+e.target.id) })
                                 }
                                 value={name}
                               />
@@ -690,28 +729,7 @@ const Index = () => {
                         )
                         }
                       </div>
-                      {/* <p className="heading">Units of Measure</p>
-                      <Radio.Group
-                        defaultValue={
-                          !isFetching
-                            ? lineItemData?.data?.result.unitOfMeasure
-                            : "2"
-                        }
-                        buttonStyle="outline"
-                        className="units-detail"
-                        onChange={(e) =>
-                          formik.setFieldValue("dtoUnitOfMeasure", {
-                            id: e.target.value,
-                          })
-                        }
-                      >
-                        <Radio.Button value="1">Day</Radio.Button>
-                        <Radio.Button value="2">Each</Radio.Button>
-                        <Radio.Button value="3">Pair</Radio.Button>
-                        <Radio.Button value="4">Box</Radio.Button>
-                        <Radio.Button value="5">Roll</Radio.Button>
-                        <Radio.Button value="6">Week</Radio.Button>
-                      </Radio.Group> */}
+
                     </div>
 
                     <CustomButton

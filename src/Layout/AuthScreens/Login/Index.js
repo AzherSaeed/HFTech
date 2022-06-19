@@ -118,7 +118,7 @@ const Index = () => {
       <hr className="line" />
       <div className="login-container-bottom">
         <p> New Here ? </p>
-        <h6>
+        <h6 className="ms-1"> 
           <Link to="/signup" style={{ color: "#156985" }}>
             Create an Account
           </Link>

@@ -39,12 +39,15 @@ const Index = () => {
   const [deleteId, setDeleteId] = useState();
 
 
-  const { data: listData, isLoading, refetch: refetchEstimateList, isRefetching } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true, true);
+  const { data: listData, isLoading, refetch: refetchEstimateList, isRefetching, isSuccess } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true, true);
 
-  // const data = !listData.data.result === null ? ([
-  //   ...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))
-
-  // ]) : [];
+  const deleteHandler = (id) => {
+    setShowDeleteModal(true)
+    setDeleteId(id);
+  }
+  const editHandler=(id)=>{
+    navigate(`/estimates/update/${id}`);
+  }
   const columns = [
     {
       title: "Id",
@@ -143,8 +146,8 @@ const Index = () => {
   ];
 
   const handleDelete = () => {
-    axios.delete(API_URL + ESTIMATE_LIST_ITEM_DELETE + deleteId).then((res) => console.log(res)).catch((error) => console.log(error));
-    refetchEstimateList();
+    axios.delete(API_URL + ESTIMATE_LIST_ITEM_DELETE + deleteId).then((res) => refetchEstimateList()).catch((error) => console.log(error));
+    
 
   }
   const handleCancel = () => {
@@ -178,9 +181,15 @@ const Index = () => {
         </div>
       </Modal>
       <div>
-        <div className="d-md-none">
-          <MobileTable />
-        </div>
+        {
+          isSuccess && (
+            <div className="d-md-none" >
+              <MobileTable data={listData?.data?.result} deleteHandler={deleteHandler} editHandler={editHandler} />
+            </div>
+          
+          )
+        }
+
         <div className="d-none d-md-block">
           <StyleEstimates>
             <div className="btn">
@@ -198,7 +207,7 @@ const Index = () => {
               isLoading && isRefetching ? (
                 <Loader />
               ) : (
-                <Table pagination={false} columns={columns} dataSource={!listData?.data.result ? [] : [...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))]} />
+                <Table pagination={false} columns={columns} dataSource={!isSuccess ? [] : [...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))]} />
               )
             }
 

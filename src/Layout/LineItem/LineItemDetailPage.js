@@ -47,15 +47,15 @@ const LineItemDetailPage = () => {
         {isFetching && isLoading ? (
           <Loader />
         ) : (
-          <div>
+          <div className="px-2  pt-2">        
             <div className="lineItemDetail-header">
               <h1>Project Manager</h1>
             </div>
             <div className="lineItemDetail-table">
               <Table responsive="sm">
-                <thead>
+                <thead className="table-heads">
                   <tr>
-                    <th>Name</th>
+                    <th className="name-side">Name</th>
                     <th>Rate</th>
                     <th>Qty</th>
                     <th>Total</th>
@@ -68,7 +68,7 @@ const LineItemDetailPage = () => {
                         <td>{data.name}</td>
                         <td>${data.price}</td>
                         <td>{data.qty}</td>
-                        <td>{data.total}</td>
+                        <td>${data.total}</td>
                       </tr>
                     );
                   })}
@@ -77,17 +77,17 @@ const LineItemDetailPage = () => {
             </div>
             <div className="lineItemDetail-units">
               <div className="lineItemDetail-units-title">
-                <p>Unit of Measurement</p>
+                <p className="fw-bold m-0">Unit of Measurement</p>
               </div>
               <div className="lineItemDetail-units-value">
                 {userData.data.result.dtoUnitOfMeasures?.map((data, i) => {
-                  return <p key={i}>{data.name}</p>;
+                  return <p key={i}>{data.name},</p>;
                 })}
               </div>
             </div>
-            <div className="lineItemDetail-total">
-                <h1>Total</h1>
-                <p>??????</p>
+            <div className="border-bottom lineItemDetail-total">
+                <h1 className="fw-bold m-0">Total</h1>
+                <p>${userData.data.result.total}</p>
             </div>
           </div>
         )}
