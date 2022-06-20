@@ -5,10 +5,10 @@ import { Row } from 'react-bootstrap';
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import addIcon from '../../Assets/ic_add_new.svg';
-const MobileIndex = ({ data, deleteHandler, editHandler }) => {
+const MobileIndex = ({ data, deleteHandler, editHandler , carddetailHandler }) => {
     const navigate = useNavigate();
 
-    console.log(data, 'data in mobile Cards');
+   
     return (
         <MobileCardContainer>
             <div className=" plus-icon d-md-none">
@@ -17,7 +17,7 @@ const MobileIndex = ({ data, deleteHandler, editHandler }) => {
             <div>
                 {data?.map((content, i) => {
                     return (
-                        <div key={i} className="mobile-card-content">
+                        <div key={i} className="mobile-card-content" onClick={() => carddetailHandler(content)} >
                             <div className="mobile-card-content-row">
                                 <Link className="id hf-link" to="#">
                                     {content.id}

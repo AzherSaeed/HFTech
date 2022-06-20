@@ -21,7 +21,7 @@ const Index = (props) => {
             // <Form.Item name={name}>
             <div>
               <DatePicker showTime
-                format="YYYY-DD-MM HH:mm"
+                format="YYYY-DD-MM HH:mm A"
                 onChange={onChange}
                 name={name}
                 id={name}

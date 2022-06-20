@@ -170,6 +170,11 @@ const Index = () => {
       };
     });
 
+
+    const carddetailHandler = (data) => {
+      navigate(`/clientsDetail/${data.id}`);
+    }
+
   return (
     <Sidebar>
       <StyleEstimates>
@@ -192,7 +197,7 @@ const Index = () => {
         {isSuccess && (
           // <Table pagination={true} columns={columns} dataSource={Data} />
           <div>
-              <MobileTableCard  data={data?.data?.result} deleteHandler={clientDeleteHandler} editHandler={editIconHandler}  />
+              <MobileTableCard carddetailHandler={carddetailHandler}  data={data?.data?.result} deleteHandler={clientDeleteHandler} editHandler={editIconHandler}  />
           <div className="content-table-main">
             <Table pagination={true} columns={columns} dataSource={Data} />
           </div>
