@@ -37,6 +37,7 @@ const Index = () => {
   const [isModalVisibled, setIsModalVisibled] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
+  const [createNewData, setCreateNewData] = useState([]);
 
 
   const { data: listData, isLoading, refetch: refetchEstimateList, isRefetching, isSuccess } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true, true);
