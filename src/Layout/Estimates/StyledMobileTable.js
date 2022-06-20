@@ -5,6 +5,8 @@ export const MobileTableStyledMain = styled.div`
 .plus-icon{
 right:5%;
 bottom: 5%;
+position: fixed;
+z-index: 30;
 }
 display: flex;
 justify-content: space-between;

@@ -172,7 +172,7 @@ height: 82vh;
       }
     }
     &-table {
-      max-width: 50%;
+      max-width: 345px;
     }
     &-units {
       max-width: 50%;

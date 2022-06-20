@@ -12,7 +12,7 @@ const Index = ({ data, deleteHandler, editHandler }) => {
   console.log(data, 'data in mobile Cards');
   return (
     <MobileCardContainer>
-      <div className="position-absolute plus-icon d-md-none">
+      <div className=" plus-icon d-md-none">
       <img src={addIcon} onClick={()=>navigate("/lineItem/createLineItem")} alt="add-icon" />
       </div>
       <div>

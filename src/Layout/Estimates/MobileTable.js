@@ -14,7 +14,7 @@ const MobileTable = ({ data, deleteHandler, editHandler }) => {
 
   return (
     <MobileTableStyledMain>
-      <div className="position-absolute plus-icon d-md-none">
+      <div className=" plus-icon d-md-none">
         <img src={addIcon} onClick={() => navigate("/estimates/createNew")} alt="add-icon" />
       </div>
       <div className="inner-section container">

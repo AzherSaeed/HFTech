@@ -11,7 +11,7 @@ const MobileIndex = ({ data, deleteHandler, editHandler }) => {
     console.log(data, 'data in mobile Cards');
     return (
         <MobileCardContainer>
-            <div className="position-absolute plus-icon d-md-none">
+            <div className=" plus-icon d-md-none">
                 <img src={addIcon} onClick={() => navigate("/locations/createNew")} alt="add-icon" />
             </div>
             <div>

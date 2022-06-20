@@ -4,6 +4,8 @@ export const MobileCardContainer = styled.div`
 .plus-icon{
 right:5%;
 bottom: 5%;
+position: fixed;
+z-index: 30;
 }
 @media screen and (min-width : 769px ) {
 display: none;

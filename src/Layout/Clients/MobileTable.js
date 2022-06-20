@@ -10,7 +10,7 @@ const MobileIndex = ({ data, deleteHandler, editHandler }) => {
 
     return (
         <MobileCardContainer>
-            <div className="position-absolute plus-icon d-md-none">
+            <div className=" plus-icon d-md-none">
                 <img src={addIcon} onClick={() => navigate("/clients/createClient")} alt="add-icon" />
             </div>
             <div>
