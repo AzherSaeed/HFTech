@@ -4,7 +4,7 @@ import ErrorMsg from "../ErrorMessage";
 import { Input } from "antd";
 import { CustomInputContainer } from "./style";
 const InputField = (props) => {
-  const { label, prefix,maxLength, disabled , placeholder, className, name, ...rest } = props;
+  const { label, prefix,defaultValue,maxLength, disabled , placeholder, className, name, ...rest } = props;
   return (
     <CustomInputContainer>
       <label htmlFor={name}>{label}</label>
@@ -18,6 +18,7 @@ const InputField = (props) => {
             maxLength={maxLength}
             {...rest}
             placeholder={placeholder}
+            defaultValue={defaultValue}
             {...field}
           />
         )}

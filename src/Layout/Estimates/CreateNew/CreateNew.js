@@ -20,6 +20,8 @@ import ic_logo from "../../../Assets/icons/ic_logo.svg";
 import Loader from '../../../Components/Loader/Loader';
 import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/QueryCustomHook/Index';
 import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
+import { useContext } from 'react';
+import { CreateContextData } from '../../../App';
 
 const initialValues = {
   client: "",
@@ -54,8 +56,9 @@ const CreateNew = () => {
   const navigate = useNavigate();
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
   const firstUpdate = useRef(true);
-  const [contacts, setContact] = useState()
-  const [locations, setLocations] = useState();
+  const { createNewData, setCreateNewData } = useContext(CreateContextData)
+
+
   const [dateAndTime, setDateAndTime] = useState();
 
 
@@ -77,14 +80,21 @@ const CreateNew = () => {
     />
   );
 
+  const navigateToAddItem = async (values) => {
+    await setCreateNewData({ ...createNewData, values: values })
+    navigate('/estimates/createNew/addItem');
+
+  }
+  console.log(createNewData, 'create new data');
+
 
   // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('uuserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true,true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('uuserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true, true);
 
   // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('userLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true,true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('userLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true, true);
 
   // For ClientS Fetch Data
 
@@ -226,12 +236,6 @@ const CreateNew = () => {
   const onSelectClient = (value, id) => {
     console.log('data called')
     navigate(`/estimates/createNew/${id}`);
-    generaticService.get((API_URL+ESTIMATE_CONTACT_DATA_SELECT+id))
-      .then((response) => setContact(response.result))
-      .catch((error) => console.log(error, 'contact error in data'));
-    generaticService.get((API_URL+ESTIMATE_LOCATIONS_DATA_SELECT+id))
-      .then((response) => setLocations(response.result))
-      .catch((error) => console.log(error, 'location error in data'));
   }
 
   // Handle Time and date in
@@ -239,6 +243,8 @@ const CreateNew = () => {
     setDateAndTime(timeandDate);
     console.log(timeandDate)
   };
+
+
   return (
     <Sidebar>
       <Style>
@@ -272,7 +278,7 @@ const CreateNew = () => {
           onSubmit={onSubmit}
         >
           {(formik) => {
-            console.log(formik.values , 'valuesvaluesvalues');
+            console.log(formik.values, 'valuesvaluesvalues');
             return (
               <Form
                 name="basic"
@@ -289,6 +295,9 @@ const CreateNew = () => {
                       name="client"
                       placeholder="Select Client"
                       label="Client"
+                      defaultValue={
+                        createNewData?.values?.client && createNewData?.values.client
+                      }
                       className={
                         formik.errors.name && formik.touched.name
                           ? "is-invalid"
@@ -319,19 +328,25 @@ const CreateNew = () => {
                         type="text"
                         name="locations"
                         placeholder="Select Location"
+                        defaultValue={
+                          createNewData?.values?.locations && createNewData?.values.locations
+                        }
                         label="Location"
                         className={
                           formik.errors.locations && formik.touched.locations
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={locationsData?.data.result}
+                        options={locationsData?.data.result }
                       />
                       <FormControl
                         control="multiSelect"
                         type="text"
                         name="contacts"
                         placeholder="Select Contact"
+                        defaultValue={
+                          createNewData?.values?.contacts && createNewData?.values.contacts
+                        }
                         label="Contact"
                         className={
                           formik.errors.contacts && formik.touched.contacts
@@ -349,6 +364,9 @@ const CreateNew = () => {
                         name="description"
                         placeholder="Enter estimate description"
                         label="Estimate Description"
+                        defaultValue={
+                          createNewData?.values?.description && createNewData?.values.description
+                        }
                         className={
                           formik.errors.description && formik.touched.description
                             ? "is-invalid"
@@ -364,6 +382,9 @@ const CreateNew = () => {
                       type="text"
                       name="referenceNumber"
                       placeholder="Enter Reference Number"
+                      defaultValue={
+                        createNewData?.values?.referenceNumber && createNewData?.values.referenceNumber
+                      }
                       label="Refernece Number"
                       className={
                         formik.errors.referenceNumber && formik.touched.referenceNumber
@@ -373,12 +394,13 @@ const CreateNew = () => {
                     />
                     <div className='addItem'>
                       <div className='addItem-label'>Line Items</div>
-                      <Link to='/estimates/createNew/addItem'>
+                      <div onClick={() => navigateToAddItem(formik.values)}>
                         <div className='addItem-div'>
                           <div>Add LineItems</div>
                           <div><RightOutlined /></div>
                         </div>
-                      </Link>
+
+                      </div>
                     </div>
                   </div>
                 </div>

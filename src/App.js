@@ -36,18 +36,23 @@ import { ReactQueryDevtools } from "react-query/devtools";
 const queryClient = new QueryClient();
 export const CollapsedContext = createContext();
 
+export const CreateContextData = createContext()
 function App() {
-
+  const [createNewData, setCreateNewData] = useState({});
   const [collapse, setCollapse] = useState(false);
   const menuCollapsed = (data, navTitle) => {
     setCollapse(data);
   };
+
 
   return (
     <QueryClientProvider client={queryClient}>
       <CollapsedContext.Provider value={{ menuCollapsed, collapse, }}>
         <MobileSiderBar />
         <ToastContainer />
+        <CreateContextData.Provider value={{
+          createNewData,setCreateNewData
+        }}>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/login" element={<Login />} />
@@ -96,6 +101,7 @@ function App() {
           <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
 
         </Routes>
+        </CreateContextData.Provider>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />
     </QueryClientProvider>
