@@ -248,7 +248,7 @@ const Index = () => {
             <img src={ic_logo} alt="logo" width='120px' className="text-center" />
           </div>
           <div className="mt-3 text-center" >
-            <h5>Item Deleted Succesfull</h5>
+            <h5>Item Deleted Succesfully</h5>
           </div>
         </Modal>
         {
