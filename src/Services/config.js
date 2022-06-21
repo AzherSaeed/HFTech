@@ -56,3 +56,10 @@ export const UNITOFMEASUREMENT_SAVE = 'setup/saveUnitOfMeasure';
 export const UNITOFMEASUREMENT_GET = 'setup/get';
 export const UNITOFMEASUREMENT_UPDATE = 'setup/updateUnitOfMeasure';
 export const UNITOFMEASUREMENT_DELETE = 'setup/delate'
+
+
+//search api's
+
+export const CLIENT_SEARCH = 'client/searchClient'
+export const CONTACT_SEARCH = 'contact/searchContact'
+export const SPACE_SEARCH = 'space/searchSpace';
