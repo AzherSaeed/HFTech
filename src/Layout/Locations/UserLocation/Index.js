@@ -374,7 +374,7 @@ const Index = () => {
                   }}
                 </Formik>
               </div>
-              <div className="rightSide">
+              <div className="rightSide mt-3 mt-md-0">
                 <MapContainer
                   center={[51.505, -0.09]}
                   zoom={7}

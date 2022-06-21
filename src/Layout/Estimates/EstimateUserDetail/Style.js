@@ -7,10 +7,15 @@ const Style = styled.div`
   .grid-container-areas{
   display: grid;
   grid-template-areas: 
-  "a b" 
-  "a c";
+  "b a" 
+  "c a";
+  grid-template-columns: 1fr 1fr;
   .a{
     grid-area: a;
+    .title{
+      line-height: 20px !important;
+    }
+    
   }
   .b{
     grid-area: b;

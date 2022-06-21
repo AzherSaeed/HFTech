@@ -199,9 +199,9 @@ const Index = () => {
 
             </div>
             <div className="grid-container-areas">
-              <div className="data a d-flex justify-content-center flex-column">
+              <div className="data a d-flex justify-content-end flex-column">
                 <p className="title">
-                  {userDetails?.data.result.description}
+                  {userDetails?.data.result.description} Lorem ipsum dolor, sit amet consectetur adipisicing elit. In totam ratione eos inventore, optio quis quibusdam voluptas sapiente iusto temporibus modi, veniam odio voluptate. Rem velit, obcaecati quia sapiente beatae praesentium eligendi.
                 </p>
                 <p className="identity">Estimate Description</p>
               </div>
