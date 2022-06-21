@@ -40,7 +40,7 @@ const Index = () => {
   const [locations, setLocations] = useState()
   const [oneTime, setOneTime] = useState(false);
 
-console.log('one time','one Time in update estimate',oneTime)
+  console.log('one time', 'one Time in update estimate', oneTime)
   const fetchData = (id) => {
     axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + id).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
   }
@@ -58,15 +58,15 @@ console.log('one time','one Time in update estimate',oneTime)
 
   // For Load Table User default Detail by Id
 
-  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDefaultDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS),true,true);
+  const { data: userDetails, isLoading: userDetailIsLoading } = CustomQueryHookById('estimateTableItemDefaultDetails', estimateId, (API_URL + ESTIMATE_TABLE_ITEM_DETAILS), true, true);
 
   // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true,true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true, true);
 
   // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true,true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true, true);
 
   // For Line Item Detail by Id
 
@@ -151,12 +151,12 @@ console.log('one time','one Time in update estimate',oneTime)
       "referenceNumber": value.referenceNumber,
       "date": value.date,
       "description": value.description,
-      "dtoUserLineItems":materialsData== null && labourData ? [
+      "dtoUserLineItems": materialsData == null && labourData ? [
         ...labourData?.data.result.map(({ id }) => ({ id })),
         ...materialsData?.data.result.map(({ id }) => ({ id }))
       ] : labourData.data ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
       "channel": "IOS"
-    }).then((res) =>{
+    }).then((res) => {
       setIsUpdateModalVisible(true);
       setTimeout(() => {
         setIsUpdateModalVisible(false)
@@ -248,304 +248,308 @@ console.log('one time','one Time in update estimate',oneTime)
             <img src={ic_logo} alt="logo" width='120px' className="text-center" />
           </div>
           <div className="mt-3 text-center" >
-            <h5>Item Deleted Succesfull</h5>
+            <h5>Item Deleted Succesfully</h5>
           </div>
         </Modal>
-        <Formik
-          initialValues={initialValues}
-          // validationSchema={validationSchema}
-          onSubmit={onSubmit}
-          enableReinitialize={true}
-        >
-          {(formik) => {
-            return (
-              <Form
-                name="basic"
-                onFinish={formik.handleSubmit}
-                // onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              // validateMessages={validationSchema}
-              >
-                <div div className='grid-container'>
-                  <div className='fileds'>
-                    <FormControl
-                      control="select"
-                      type="text"
-                      name="client"
-                      placeholder="Select Client"
-                      label="Client"
-                      className={
-                        formik.errors.client && formik.touched.client
-                          ? "is-invalid"
-                          : "customInput"
-                      }
-                      options={clientData?.data.result}
-                      defaultValue={ {
-                        value: userDetails?.data.result.dtoClient.name,
-                        label: userDetails?.data.result.dtoClient.name,
-                      }}
-                      onSelect={onSelectClient}
+        {
+          userDetailIsLoading ? (<Loader />) : (
+            <Formik
+              initialValues={initialValues}
+              // validationSchema={validationSchema}
+              onSubmit={onSubmit}
+              enableReinitialize={true}
+            >
+              {(formik) => {
+                return (
+                  <Form
+                    name="basic"
+                    onFinish={formik.handleSubmit}
+                    // onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                  // validateMessages={validationSchema}
+                  >
+                    <div div className='grid-container'>
+                      <div className='fileds'>
+                        <FormControl
+                          control="select"
+                          type="text"
+                          name="client"
+                          placeholder="Select Client"
+                          label="Client"
+                          className={
+                            formik.errors.client && formik.touched.client
+                              ? "is-invalid"
+                              : "customInput"
+                          }
+                          options={clientData?.data.result}
+                          defaultValue={{
+                            value: userDetails?.data.result.dtoClient.name,
+                            label: userDetails?.data.result.dtoClient.name,
+                          }}
+                          onSelect={onSelectClient}
 
-                    />
-                    <FormControl
-                      control="dateTime"
-                      type="text"
-                      name="date"
-                      placeholder="mm/dd/yy"
-                      label="Date"
-                      className={
-                        formik.errors.date && formik.touched.date
-                          ? "is-invalid"
-                          : "customInput"
-                      }
-                    />
-                  </div>
-                  <div className='fileds'>
-                    <div>
-                      <FormControl
-                        control="multiSelect"
-                        type="text"
-                        name="locations"
-                        placeholder="Select Location"
-                        defaultValue={
-                          oneTime ? [{id:"",value:""}]:userDetails?.data.result.dtoSpace.map((({ name }) => (name)))
-                        }
-                        label="Location"
-                        className={
-                          formik.errors.locations && formik.touched.locations
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                        options={locationsData?.data.result}
-                      />
-                      <FormControl
-                        control="multiSelect"
-                        type="text"
-                        name="contacts"
-                        placeholder="Select Contact"
-                        label="Contact"
-                        defaultValue={ oneTime ? [{id:"",value:""}] :userDetails?.data.result.dtoContact.map(({ name }) => (name))}
-                        className={
-                          formik.errors.contacts && formik.touched.contacts
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                        options={contactsData?.date.result}
-                      />
-                    </div>
-
-                    <div className='textarea'>
-                      <FormControl
-                        control="textarea"
-                        type="text"
-                        name="description"
-                        placeholder="Enter estimate description"
-                        label="Estimate Description"
-                        
-                        className={
-                          formik.errors.description && formik.touched.description
-                            ? "is-invalid"
-                            : "customInput"
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div className='fileds'>
-                    <FormControl
-                      control="input"
-                      type="text"
-                      name="referenceNumber"
-                      placeholder="Enter Reference Number"
-                      label="Refernece Number"
-                      defaultValue={ userDetails?.data.result.referenceNumber
-                      }
-                      className={
-                        formik.errors.referenceNumber && formik.touched.referenceNumber
-                          ? "is-invalid"
-                          : "customInput"
-                      }
-                      
-                    />
-                    <div className='addItem'>
-                      <div className='addItem-label'>Line Items</div>
-                      <Link to='/estimates/createNew/addItem'>
-                        <div className='addItem-div'>
-                          <div>Add LineItems</div>
-                          <div><RightOutlined /></div>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <CreateEstimateStyled>
-                  <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
-                    <div className="tabWrapper">
-                      {
-                        oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
-                          <div className="rateWrapper mt-3" key={id}>
-                            <h5>{name}</h5>
-                            <div className="input-fields d-flex">
-                              <InputNumber
-                                addonBefore="$"
-                                addonAfter="Rate"
-                                defaultValue={price}
-                                controls={false}
-                                value={oldData ? oldData[index].price : price}
-                                type='text'
-                                onChange={(value) => handleItemsDetails(index, 'price', value)}
-                              />
-                              <InputNumber
-                                addonAfter="Quantity"
-                                defaultValue={quantity}
-                                value={quantity}
-                                controls={false}
-                                type='text'
-                                onChange={(value) => handleItemsDetails(index, 'quantity', value)}
-                              />
-                              <InputNumber
-                                className="total-input text-dark"
-                                addonBefore="Total"
-                                defaultValue={total}
-                                type='text'
-                                disabled
-                                controls={false}
-                                value={oldData ? oldData[index].total : (quantity * price)}
-                              />
-                            </div>
-                          </div>
-                        )
-                        )
-                      }
-                      {oldData && (
-                        <div className="grand-total-section mt-4 d-flex justify-content-between">
-                          <h6 className="title fw-bold">Total</h6>
-                          <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
-                        </div>
-                      )}
-
-                      <div className="saveLineItems mt-3">
-                        <CustomButton
-                          bgcolor="#156985"
-                          color="white"
-                          padding="8px 8px"
-                          width="75%"
-                          type="submit"
-                          title="Update Line Items"
-                          clicked={onSubmitUpdate}
+                        />
+                        <FormControl
+                          control="dateTime"
+                          type="text"
+                          name="date"
+                          placeholder="mm/dd/yy"
+                          label="Date"
+                          className={
+                            formik.errors.date && formik.touched.date
+                              ? "is-invalid"
+                              : "customInput"
+                          }
                         />
                       </div>
-                    </div>
-                  </Modal>
+                      <div className='fileds'>
+                        <div>
+                          <FormControl
+                            control="multiSelect"
+                            type="text"
+                            name="locations"
+                            placeholder="Select Location"
+                            defaultValue={
+                              oneTime ? [{ id: "", value: "" }] : userDetails?.data.result.dtoSpace.map((({ name }) => (name)))
+                            }
+                            label="Location"
+                            className={
+                              formik.errors.locations && formik.touched.locations
+                                ? "is-invalid"
+                                : "customInput"
+                            }
+                            options={locationsData?.data.result}
+                          />
+                          <FormControl
+                            control="multiSelect"
+                            type="text"
+                            name="contacts"
+                            placeholder="Select Contact"
+                            label="Contact"
+                            defaultValue={oneTime ? [{ id: "", value: "" }] : userDetails?.data.result.dtoContact.map(({ name }) => (name))}
+                            className={
+                              formik.errors.contacts && formik.touched.contacts
+                                ? "is-invalid"
+                                : "customInput"
+                            }
+                            options={contactsData?.date.result}
+                          />
+                        </div>
 
-                  <div className="main-container">
-                    <div className="row">
-                      <div className="col-md-6 col-sm-12">
-                        <div className="first-table">
-                          <Tabs defaultActiveKey="1">
-                            <TabPane tab="Labor Lineitems" key="1">
-                              {labourData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
-                                <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
-                                  <div className="addItem-div">
-                                    <div>{item.name}</div>
-                                    <div>&gt;</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </TabPane>
-                            <TabPane tab="Materials Lineitems" key="2">
-                              {materialsData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
-                                <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
-                                  <div className="d-none d-sm-block">
-                                    <div className="addItem-div">
-                                      <div>{item.name}</div>
-                                      <div>&gt;</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </TabPane>
-                          </Tabs>
+                        <div className='textarea'>
+                          <FormControl
+                            control="textarea"
+                            type="text"
+                            name="description"
+                            placeholder="Enter estimate description"
+                            label="Estimate Description"
+
+                            className={
+                              formik.errors.description && formik.touched.description
+                                ? "is-invalid"
+                                : "customInput"
+                            }
+                          />
                         </div>
                       </div>
-                      <div className="col-md-6 col-sm-12 ">
-                        {
-                          oldData && (
-                            <div className="second-table">
-                              <div className="d-none d-sm-block">
-                                <div className="inner-section">
-                                  <div className="main-heading-section d-flex justify-content-between">
-                                    <p className="main-heading">{itemDetails?.data.result.dtoLineItem.name}</p>
-                                    <div className="warn-actions">
-                                      <div style={{ display: 'flex', gap: '6px' }}>
-                                        <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
-                                        <img onClick={() => setIsModalVisible(true)} src={editIcon} alt="edit Icon" className="action_icons editicon" />
+
+                      <div className='fileds'>
+                        <FormControl
+                          control="input"
+                          type="text"
+                          name="referenceNumber"
+                          placeholder="Enter Reference Number"
+                          label="Refernece Number"
+                          defaultValue={userDetails?.data.result.referenceNumber
+                          }
+                          className={
+                            formik.errors.referenceNumber && formik.touched.referenceNumber
+                              ? "is-invalid"
+                              : "customInput"
+                          }
+
+                        />
+                        <div className='addItem'>
+                          <div className='addItem-label'>Line Items</div>
+                          <Link to='/estimates/createNew/addItem'>
+                            <div className='addItem-div'>
+                              <div>Add LineItems</div>
+                              <div><RightOutlined /></div>
+                            </div>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                    <CreateEstimateStyled>
+                      <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
+                        <div className="tabWrapper">
+                          {
+                            oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+                              <div className="rateWrapper mt-3" key={id}>
+                                <h5>{name}</h5>
+                                <div className="input-fields d-flex">
+                                  <InputNumber
+                                    addonBefore="$"
+                                    addonAfter="Rate"
+                                    defaultValue={price}
+                                    controls={false}
+                                    value={oldData ? oldData[index].price : price}
+                                    type='text'
+                                    onChange={(value) => handleItemsDetails(index, 'price', value)}
+                                  />
+                                  <InputNumber
+                                    addonAfter="Quantity"
+                                    defaultValue={quantity}
+                                    value={quantity}
+                                    controls={false}
+                                    type='text'
+                                    onChange={(value) => handleItemsDetails(index, 'quantity', value)}
+                                  />
+                                  <InputNumber
+                                    className="total-input text-dark"
+                                    addonBefore="Total"
+                                    defaultValue={total}
+                                    type='text'
+                                    disabled
+                                    controls={false}
+                                    value={oldData ? oldData[index].total : (quantity * price)}
+                                  />
+                                </div>
+                              </div>
+                            )
+                            )
+                          }
+                          {oldData && (
+                            <div className="grand-total-section mt-4 d-flex justify-content-between">
+                              <h6 className="title fw-bold">Total</h6>
+                              <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
+                            </div>
+                          )}
+
+                          <div className="saveLineItems mt-3">
+                            <CustomButton
+                              bgcolor="#156985"
+                              color="white"
+                              padding="8px 8px"
+                              width="75%"
+                              type="submit"
+                              title="Update Line Items"
+                              clicked={onSubmitUpdate}
+                            />
+                          </div>
+                        </div>
+                      </Modal>
+
+                      <div className="main-container">
+                        <div className="row">
+                          <div className="col-md-6 col-sm-12">
+                            <div className="first-table">
+                              <Tabs defaultActiveKey="1">
+                                <TabPane tab="Labor Lineitems" key="1">
+                                  {labourData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
+                                    <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
+                                      <div className="addItem-div">
+                                        <div>{item.name}</div>
+                                        <div>&gt;</div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </TabPane>
+                                <TabPane tab="Materials Lineitems" key="2">
+                                  {materialsData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
+                                    <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
+                                      <div className="d-none d-sm-block">
+                                        <div className="addItem-div">
+                                          <div>{item.name}</div>
+                                          <div>&gt;</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </TabPane>
+                              </Tabs>
+                            </div>
+                          </div>
+                          <div className="col-md-6 col-sm-12 ">
+                            {
+                              oldData && (
+                                <div className="second-table">
+                                  <div className="d-none d-sm-block">
+                                    <div className="inner-section">
+                                      <div className="main-heading-section d-flex justify-content-between">
+                                        <p className="main-heading">{itemDetails?.data.result.dtoLineItem.name}</p>
+                                        <div className="warn-actions">
+                                          <div style={{ display: 'flex', gap: '6px' }}>
+                                            <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
+                                            <img onClick={() => setIsModalVisible(true)} src={editIcon} alt="edit Icon" className="action_icons editicon" />
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                              <div className="d-sm-none">
+                                  <div className="d-sm-none">
 
-                              </div>
-                              <div className="d-none d-sm-block">
-                                {lineItemDetailsRefecting ? (
-                                  <div className="d-flex justify-content-center">
-                                    <Spin indicator={antIcon} />
                                   </div>
-                                ) : (
-                                  <div className="tabWrapper">
-                                    <UpdateEstimateRightStyled>
-                                      <table className="table">
-                                        <thead>
-                                          <tr>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Rate</th>
-                                            <th scope="col">QTY</th>
-                                            <th scope="col">Total</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {
-                                            oldData.map(({ id, name, price, total, quantity }, index) => (
-                                              <tr key={id}>
-                                                <td>{name}</td>
-                                                <td>{price}</td>
-                                                <td>{quantity}</td>
-                                                <td>{total}</td>
+                                  <div className="d-none d-sm-block">
+                                    {lineItemDetailsRefecting ? (
+                                      <div className="d-flex justify-content-center">
+                                        <Spin indicator={antIcon} />
+                                      </div>
+                                    ) : (
+                                      <div className="tabWrapper">
+                                        <UpdateEstimateRightStyled>
+                                          <table className="table">
+                                            <thead>
+                                              <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Rate</th>
+                                                <th scope="col">QTY</th>
+                                                <th scope="col">Total</th>
                                               </tr>
-                                            )
-                                            )
-                                          }
-                                        </tbody>
-                                      </table>
-                                    </UpdateEstimateRightStyled>
+                                            </thead>
+                                            <tbody>
+                                              {
+                                                oldData.map(({ id, name, price, total, quantity }, index) => (
+                                                  <tr key={id}>
+                                                    <td>{name}</td>
+                                                    <td>{price}</td>
+                                                    <td>{quantity}</td>
+                                                    <td>{total}</td>
+                                                  </tr>
+                                                )
+                                                )
+                                              }
+                                            </tbody>
+                                          </table>
+                                        </UpdateEstimateRightStyled>
 
+                                      </div>
+                                    )
+                                    }
                                   </div>
-                                )
-                                }
-                              </div>
-                            </div>
-                          )
-                        }
+                                </div>
+                              )
+                            }
+                          </div>
+                        </div>
                       </div>
+                    </CreateEstimateStyled>
+                    <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
+                      <CustomButton
+                        bgcolor="#156985"
+                        color="white"
+                        padding="8px 8px"
+                        width="100%"
+                        type="submit"
+                        title="Update Estimate"
+                      />
                     </div>
-                  </div>
-                </CreateEstimateStyled>
-                <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
-                  <CustomButton
-                    bgcolor="#156985"
-                    color="white"
-                    padding="8px 8px"
-                    width="100%"
-                    type="submit"
-                    title="Update Estimate"
-                  />
-                </div>
-              </Form>
-            );
-          }}
-        </Formik>
+                  </Form>
+                );
+              }}
+            </Formik>
+          )
+        }
       </Styled>
 
 

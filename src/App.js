@@ -3,7 +3,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./Layout/AuthScreens/Login/Index";
 import Signup from "./Layout/AuthScreens/SignUp/Index";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Estimates from "./Layout/Estimates/Index";
 import Locations from "./Layout/Locations/Index";
@@ -33,6 +33,7 @@ import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
 // this is the devTool the react query provides
 import { ReactQueryDevtools } from "react-query/devtools";
+import { useEffect } from "react";
 const queryClient = new QueryClient();
 export const CollapsedContext = createContext();
 
@@ -40,9 +41,12 @@ export const CreateContextData = createContext()
 function App() {
   const [createNewData, setCreateNewData] = useState({});
   const [collapse, setCollapse] = useState(false);
+  const location = useLocation();
   const menuCollapsed = (data, navTitle) => {
     setCollapse(data);
   };
+
+  
 
 
   return (
@@ -51,56 +55,56 @@ function App() {
         <MobileSiderBar />
         <ToastContainer />
         <CreateContextData.Provider value={{
-          createNewData,setCreateNewData
+          createNewData, setCreateNewData
         }}>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/resetPassword" element={<ResetPassword />} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path="/estimates" element={<Estimates />} />
-          <Route path="/estimates/delete" element={<Delete />} />
-          <Route path="/estimates/createNew" element={<CreateNew />} />
-          <Route path="/estimates/createNew/:clientId" element={<CreateNew />} />
-          <Route path="/estimates/createNew/addItem" element={<AddItem />} />
-          <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />
-          <Route path="/estimates/:estimateId" element={<UserDetail />} />
-          <Route path="/estimates/:estimateId/:itemId" element={<UserDetail />} />
-          <Route path="/estimates/createNew/:clientId/:itemId" element={<CreateNew />} />
-          <Route path="/estimates/update" element={<UpdateEstiamte />} />
-          <Route path="/estimates/update/:estimateId" element={<UpdateEstiamte />} />
-          <Route path="/estimates/update/:estimateId/:itemId" element={<UpdateEstiamte />} />
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
+            <Route path="/forgetPassword" element={<ForgetPassword />} />
+            <Route path="/estimates" element={<Estimates />} />
+            <Route path="/estimates/delete" element={<Delete />} />
+            <Route path="/estimates/createNew" element={<CreateNew />} />
+            <Route path="/estimates/createNew/:clientId" element={<CreateNew />} />
+            <Route path="/estimates/createNew/addItem" element={<AddItem />} />
+            <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />
+            <Route path="/estimates/:estimateId" element={<UserDetail />} />
+            <Route path="/estimates/:estimateId/:itemId" element={<UserDetail />} />
+            <Route path="/estimates/createNew/:clientId/:itemId" element={<CreateNew />} />
+            <Route path="/estimates/update" element={<UpdateEstiamte />} />
+            <Route path="/estimates/update/:estimateId" element={<UpdateEstiamte />} />
+            <Route path="/estimates/update/:estimateId/:itemId" element={<UpdateEstiamte />} />
 
-        
 
-          <Route path="/contact" element={<Contacts />} />
-          <Route path="/contact/:contactId" element={<USerContact />} />
-          <Route path="/contactDetail/:contactId" element={<ContactDetailPage />} />
 
-          {/*Locations */}
+            <Route path="/contact" element={<Contacts />} />
+            <Route path="/contact/:contactId" element={<USerContact />} />
+            <Route path="/contactDetail/:contactId" element={<ContactDetailPage />} />
 
-          <Route path="/locations" element={<Locations />} />
-          <Route path="/locations/:locationsId" element={<UserLocation />} />
-          <Route path="/locationsDetail/:locationsId" element={<LocationDetailPage />} />
+            {/*Locations */}
 
-          {/*Clients */}
+            <Route path="/locations" element={<Locations />} />
+            <Route path="/locations/:locationsId" element={<UserLocation />} />
+            <Route path="/locationsDetail/:locationsId" element={<LocationDetailPage />} />
 
-          <Route path="/client" element={<Clients />} />
-          <Route path="/clients/:clientId" element={<ClientDetail />} />
-          <Route path="/clientsDetail/:clientId" element={<ClientDetailPage />} />
+            {/*Clients */}
 
-          {/*Line Items */}
+            <Route path="/client" element={<Clients />} />
+            <Route path="/clients/:clientId" element={<ClientDetail />} />
+            <Route path="/clientsDetail/:clientId" element={<ClientDetailPage />} />
 
-          <Route path="/lineItem" element={<LineItem />} />
-          <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
-          <Route path="/lineItemDetail/:lineItemId" element={<LineItemDetailPage />} />
+            {/*Line Items */}
 
-          {/* Unit Of Measurement */}
+            <Route path="/lineItem" element={<LineItem />} />
+            <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
+            <Route path="/lineItemDetail/:lineItemId" element={<LineItemDetailPage />} />
 
-          <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
+            {/* Unit Of Measurement */}
 
-        </Routes>
+            <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
+
+          </Routes>
         </CreateContextData.Provider>
       </CollapsedContext.Provider>
       <ReactQueryDevtools />

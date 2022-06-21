@@ -23,16 +23,7 @@ import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiam
 import { useContext } from 'react';
 import { CreateContextData } from '../../../App';
 
-const initialValues = {
-  client: "",
-  contacts: "",
-  locations: "",
-  referenceNumber: "",
-  description: "",
-  date: "",
 
-
-};
 const validationSchema = Yup.object({
   client: Yup.string().required("Client is required!"),
   contacts: Yup.array().required("Contract is required!"),
@@ -61,6 +52,18 @@ const CreateNew = () => {
 
   const [dateAndTime, setDateAndTime] = useState();
 
+  const initialValues = {
+    client: "",
+    contacts: "",
+    locations: "",
+    referenceNumber:
+      createNewData?.values?.referenceNumber && createNewData?.values.referenceNumber
+    ,
+    description: createNewData?.values?.description && createNewData?.values.description,
+    date: "",
+
+
+  };
 
   // Save Data by Id to send Update after Changes
 
@@ -337,7 +340,7 @@ const CreateNew = () => {
                             ? "is-invalid"
                             : "customInput"
                         }
-                        options={locationsData?.data.result }
+                        options={locationsData?.data.result}
                       />
                       <FormControl
                         control="multiSelect"

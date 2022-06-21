@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Tag, Space } from "antd";
@@ -22,22 +22,28 @@ import Loader from "../../Components/Loader/Loader";
 import ic_logo from "../../Assets/icons/ic_logo.svg";
 import { Button } from "react-bootstrap";
 import axios from "axios";
-
+import { CreateContextData } from "../../App";
 
 
 const Index = () => {
   // const userDetail = useSelector((state) => state.fetchUser.user);
   // const userError = useSelector((state) => state.fetchUser.error);
+  const { setCreateNewData } = useContext(CreateContextData);
 
   // console.log(userDetail);
   // console.log(userError);
+  useEffect(() => {
+
+    setCreateNewData({});
+
+  }, [])
+
 
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibled, setIsModalVisibled] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
-  const [createNewData, setCreateNewData] = useState([]);
 
 
   const { data: listData, isLoading, refetch: refetchEstimateList, isRefetching, isSuccess } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true, true);
@@ -46,7 +52,7 @@ const Index = () => {
     setShowDeleteModal(true)
     setDeleteId(id);
   }
-  const editHandler=(id)=>{
+  const editHandler = (id) => {
     navigate(`/estimates/update/${id}`);
   }
   const columns = [
@@ -148,7 +154,7 @@ const Index = () => {
 
   const handleDelete = () => {
     axios.delete(API_URL + ESTIMATE_LIST_ITEM_DELETE + deleteId).then((res) => refetchEstimateList()).catch((error) => console.log(error));
-    
+
 
   }
   const handleCancel = () => {
@@ -187,7 +193,7 @@ const Index = () => {
             <div className="d-md-none" >
               <MobileTable data={listData?.data?.result} deleteHandler={deleteHandler} editHandler={editHandler} />
             </div>
-          
+
           )
         }
 
