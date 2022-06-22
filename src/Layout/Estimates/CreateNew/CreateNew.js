@@ -22,6 +22,7 @@ import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/Que
 import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
 import { useContext } from 'react';
 import { CreateContextData } from '../../../App';
+import moment from 'moment';
 
 
 const validationSchema = Yup.object({
@@ -47,20 +48,20 @@ const CreateNew = () => {
   const navigate = useNavigate();
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
   const firstUpdate = useRef(true);
-  const { createNewData, setCreateNewData } = useContext(CreateContextData)
+  const { createNewData, setCreateNewData,setOldUrl } = useContext(CreateContextData)
 
 
   const [dateAndTime, setDateAndTime] = useState();
 
   const initialValues = {
-    client: "",
-    contacts: "",
-    locations: "",
+    client: createNewData.values&& createNewData?.values.client,
+    contacts: createNewData.values&& createNewData?.values.locations,
+    locations: createNewData.values && createNewData?.values.contacts,
     referenceNumber:
-      createNewData?.values?.referenceNumber && createNewData?.values.referenceNumber
+    createNewData.values &&createNewData?.values.referenceNumber
     ,
-    description: createNewData?.values?.description && createNewData?.values.description,
-    date: "",
+    description:  createNewData.values &&createNewData?.values.description,
+    date: createNewData.values && createNewData?.values.date,
 
 
   };
@@ -84,6 +85,7 @@ const CreateNew = () => {
   );
 
   const navigateToAddItem = async (values) => {
+    await setOldUrl(`/estimates/createNew/${clientId}`);
     await setCreateNewData({ ...createNewData, values: values })
     navigate('/estimates/createNew/addItem');
 
@@ -157,7 +159,7 @@ const CreateNew = () => {
   const onSubmit = (value) => {
     if (!labourData.data.result && !materialsData.data.result) {
       alert('plz select one line item');
-    } else if (!dateAndTime) {
+    } else if (!value.date) {
       alert('plz select date and time');
     }
     else {
@@ -172,7 +174,7 @@ const CreateNew = () => {
           ...value.locations.map(({ key }) => ({ id: key }))
         ],
         "referenceNumber": value.referenceNumber,
-        "date": dateAndTime,
+        "date": value.date,
         "description": value.description,
 
         "dtoUserLineItems": !materialsData == null && !labourData == null ? [
@@ -299,7 +301,7 @@ const CreateNew = () => {
                       placeholder="Select Client"
                       label="Client"
                       defaultValue={
-                        createNewData?.values?.client && createNewData?.values.client
+                        createNewData?.values?.client && formik.values.client
                       }
                       className={
                         formik.errors.name && formik.touched.name
@@ -316,12 +318,13 @@ const CreateNew = () => {
                       name="date"
                       placeholder="mm/dd/yy"
                       label="Date"
+                      defaultValue={createNewData?.values?.date && moment(formik.values.date)}
                       className={
                         formik.errors.date && formik.touched.date
                           ? "is-invalid"
                           : "customInput"
                       }
-                      onChange={onchangeDateTime}
+                      // onChange={onchangeDateTime}
                     />
                   </div>
                   <div className='fileds'>
@@ -332,7 +335,7 @@ const CreateNew = () => {
                         name="locations"
                         placeholder="Select Location"
                         defaultValue={
-                          createNewData?.values?.locations && createNewData?.values.locations
+                          createNewData?.values?.locations && formik.values.locations
                         }
                         label="Location"
                         className={
@@ -348,7 +351,7 @@ const CreateNew = () => {
                         name="contacts"
                         placeholder="Select Contact"
                         defaultValue={
-                          createNewData?.values?.contacts && createNewData?.values.contacts
+                          createNewData?.values?.contacts && formik.values.contacts
                         }
                         label="Contact"
                         className={

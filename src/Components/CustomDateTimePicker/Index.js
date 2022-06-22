@@ -21,8 +21,8 @@ const Index = (props) => {
             // <Form.Item name={name}>
             <div>
               <DatePicker showTime
-                format="YYYY-DD-MM HH:mm A"
-                onChange={onChange}
+                format="MM-DD-YYYY h:mm A"
+                // onChange={onChange}
                 name={name}
                 id={name}
                 {...rest}
@@ -31,9 +31,9 @@ const Index = (props) => {
                 onOk={onOk}
                 placeholder={placeholder}
                 suffixIcon={<img src={dateIcon} alt='date-picker' />}
-                // onChange={(val) => {
-                //   form.setFieldValue(name, val._d.toString());
-                // }}
+                onChange={(val,timeandDate) => {
+                  form.setFieldValue(name, timeandDate.toString());
+                }}
               />
             </div>
             // </Form.Item>

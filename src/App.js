@@ -40,8 +40,9 @@ export const CollapsedContext = createContext();
 export const CreateContextData = createContext()
 function App() {
   const [createNewData, setCreateNewData] = useState({});
+  const [updateNewData, setUpdateNewData] = useState({});
+  const [oldUrl,setOldUrl]=useState();
   const [collapse, setCollapse] = useState(false);
-  const location = useLocation();
   const menuCollapsed = (data, navTitle) => {
     setCollapse(data);
   };
@@ -55,7 +56,7 @@ function App() {
         <MobileSiderBar />
         <ToastContainer />
         <CreateContextData.Provider value={{
-          createNewData, setCreateNewData
+          createNewData, setCreateNewData,updateNewData, setUpdateNewData,setOldUrl,oldUrl
         }}>
           <Routes>
             <Route exact path="/" element={<Home />} />

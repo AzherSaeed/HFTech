@@ -36,13 +36,13 @@ const initialValues = {
 const validationSchema = Yup.object({
   name: Yup.string()
     .required("Name is required!"),
-    countryId: Yup.string()
+  countryId: Yup.string()
     .required("Country is required!"),
-    cityId: Yup.string()
+  cityId: Yup.string()
     .required("City is required!"),
-    stateId: Yup.string()
+  stateId: Yup.string()
     .required("State is required!"),
-    address: Yup.string()
+  address: Yup.string()
     .required("Address is required!"),
 });
 
@@ -79,7 +79,7 @@ const Index = () => {
       refetchInterval: false,
       refetchOnWindowFocus: false,
       keepPreviousData: false,
-      onSuccess: (data) => {},
+      onSuccess: (data) => { },
     }
   );
 
@@ -181,29 +181,29 @@ const Index = () => {
     (countryDetail) => {
       return locationsId !== "createNew"
         ? axios.put(API_URL + UPDATE_SPACE, countryDetail, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        })
+        : axios.post(
+          API_URL + CREATE_SPACE,
+          {
+            name: countryDetail.name,
+            address: countryDetail.address,
+            coordinate: countryDetail.coordinate,
+            channel: countryDetail.channel,
+            countryId: countryDetail.countryId,
+            stateId: countryDetail.stateId,
+            cityId: countryDetail.cityId,
+          },
+          {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
             },
-          })
-        : axios.post(
-            API_URL + CREATE_SPACE,
-            {
-              name: countryDetail.name,
-              address: countryDetail.address,
-              coordinate: countryDetail.coordinate,
-              channel: countryDetail.channel,
-              countryId: countryDetail.countryId,
-              stateId: countryDetail.stateId,
-              cityId: countryDetail.cityId,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-              },
-            }
-          );
+          }
+        );
     },
     {
       onSuccess,
@@ -215,7 +215,7 @@ const Index = () => {
       },
     }
   );
-  const onSubmit = (data , {resetForm} ) => {
+  const onSubmit = (data, { resetForm }) => {
     mutation.mutate(data);
     resetForm()
   };
@@ -259,7 +259,7 @@ const Index = () => {
             <div className="main-container">
               <div className="leftSide">
                 <Formik
-                  initialValues={ locationsId !== "createNew" && spaceData?.data?.result ? spaceData?.data?.result : initialValues}
+                  initialValues={locationsId !== "createNew" && spaceData?.data?.result ? spaceData?.data?.result : initialValues}
                   validationSchema={validationSchema}
                   onSubmit={onSubmit}
                 >
@@ -295,7 +295,20 @@ const Index = () => {
                                 : "customInput"
                             }
                           />
-
+                          <div>
+                            <FormControl
+                              control="input"
+                              type="text"
+                              name="address"
+                              label="Address"
+                              placeholder="Enter complete address"
+                              className={
+                                formik.errors.name && formik.touched.name
+                                  ? "is-invalid"
+                                  : "customInput"
+                              }
+                            />
+                          </div>
                           <FormControl
                             control="searchSelect"
                             name="countryId"
@@ -305,7 +318,7 @@ const Index = () => {
                             handleSelectValue={handleSelectCountry}
                             className={
                               formik.errors.countryId &&
-                              formik.touched.countryId
+                                formik.touched.countryId
                                 ? "is-invalid"
                                 : "customPasswordInput"
                             }
@@ -345,20 +358,7 @@ const Index = () => {
                             />
                           </div>
 
-                          <div>
-                            <FormControl
-                              control="input"
-                              type="text"
-                              name="address"
-                              label="Address"
-                              placeholder="Enter complete address"
-                              className={
-                                formik.errors.name && formik.touched.name
-                                  ? "is-invalid"
-                                  : "customInput"
-                              }
-                            />
-                          </div>
+
                           <CustomButton
                             bgcolor="#156985"
                             color="white"
