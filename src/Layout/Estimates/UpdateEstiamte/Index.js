@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import Style, { CreateEstimateStyled, UpdateEstimateRightStyled } from "./Style";
 import Styled from '../CreateNew/Style'
 import Sidebar from "../../../Components/Sidebar/Sidebar";
@@ -21,6 +21,7 @@ import { Formik } from "formik";
 import moment from "moment";
 import * as Yup from "yup";
 import GenericService from "../../../Services/GenericService";
+import { CreateContextData } from "../../../App";
 
 const generaticService = new GenericService();
 
@@ -39,6 +40,8 @@ const Index = () => {
   const [contacts, setContact] = useState()
   const [locations, setLocations] = useState()
   const [oneTime, setOneTime] = useState(false);
+
+  const { updateNewData, setUpdateNewData, setOldUrl } = useContext(CreateContextData);
 
   console.log('one time', 'one Time in update estimate', oneTime)
   const fetchData = (id) => {
@@ -83,12 +86,7 @@ const Index = () => {
 
   // For Contact Fetch Data
 
-  const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', itemId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
-
-
-
-
-
+  const { data: contactsData, isLoading: contactsIsLoading, refetch: contactsRefetch, isRefetching: contactsIsRefecting } = CustomQueryHookById('estimateContactDataSelect', clientId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
 
 
   // Item Delete Handler
@@ -136,30 +134,39 @@ const Index = () => {
     setOldData([...oldData,]);
   }
 
+  const navigateToAddItem = async (values) => {
+    await setOldUrl(`/estimates/update/${estimateId}`)
+    await setUpdateNewData({ ...updateNewData, values: values })
+    navigate('/estimates/createNew/addItem');
+
+  }
+
   const onSubmit = (value) => {
+    console.log(value.contacts, 'contact', value.dtoSpace, 'spaces');
     console.log(value, 'contacts in estimate')
     axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
       "dtoClient": {
-        "id": clientId
+        "id": +estimateId
       },
       "dtoContact": [
-        ...value.contacts.map(({ key }) => ({ id: key }))
+        ...value.contacts.map(({ id }) => ({ id }))
       ],
       "dtoSpace": [
-        ...value.locations.map(({ key }) => ({ id: key }))
+        ...value.locations.map(({ id }) => ({ id }))
       ],
       "referenceNumber": value.referenceNumber,
       "date": value.date,
       "description": value.description,
-      "dtoUserLineItems": materialsData == null && labourData ? [
+      "dtoUserLineItems": !materialsData.data.result == null && !labourData.data.result == null ? [
         ...labourData?.data.result.map(({ id }) => ({ id })),
         ...materialsData?.data.result.map(({ id }) => ({ id }))
-      ] : labourData.data ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
+      ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
       "channel": "IOS"
     }).then((res) => {
       setIsUpdateModalVisible(true);
       setTimeout(() => {
         setIsUpdateModalVisible(false)
+        navigate('/estimates');
       }, 2000);
     }).catch((error) => console.log(error, 'error in estimate create'));
 
@@ -200,13 +207,12 @@ const Index = () => {
     }).catch((error) => console.log(error, 'error'));
   }
   const initialValues = {
-    client: "",
-    contacts: "",
-    locations: "",
-    referenceNumber: userDetails?.data.result.referenceNumber,
-    description: userDetails?.data.result.description,
-    date: "",
-
+    client: updateNewData.values ? updateNewData?.values.client : userDetails?.data.result.dtoClient.name,
+    contacts: updateNewData.values ? updateNewData?.values.contacts : userDetails?.data.result.dtoSpace,
+    locations: updateNewData.values ? updateNewData?.values.locations : userDetails?.data.result.dtoContact,
+    referenceNumber: updateNewData.values ? updateNewData?.values.referenceNumber : userDetails?.data.result.referenceNumber,
+    description: updateNewData.values ? updateNewData?.values.description : userDetails?.data.result.description,
+    date: updateNewData.values ? updateNewData?.values.date : userDetails?.data.result.date,
 
   };
   const validationSchema = Yup.object({
@@ -215,7 +221,7 @@ const Index = () => {
     locations: Yup.array().required("Location is required!"),
     referenceNumber: Yup.string().required("Reference Number is required!"),
     description: Yup.string().required("Description is required!"),
-    // date: Yup.string().required("Date is required!"),
+    date: Yup.string().required("Date is required!"),
   });
   const onSelectClient = (value, id) => {
     setClientId(id);
@@ -255,7 +261,7 @@ const Index = () => {
           userDetailIsLoading ? (<Loader />) : (
             <Formik
               initialValues={initialValues}
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema}
               onSubmit={onSubmit}
               enableReinitialize={true}
             >
@@ -282,10 +288,9 @@ const Index = () => {
                               : "customInput"
                           }
                           options={clientData?.data.result}
-                          defaultValue={{
-                            value: userDetails?.data.result.dtoClient.name,
-                            label: userDetails?.data.result.dtoClient.name,
-                          }}
+                          defaultValue={
+                            formik.values.client
+                          }
                           onSelect={onSelectClient}
 
                         />
@@ -293,8 +298,9 @@ const Index = () => {
                           control="dateTime"
                           type="text"
                           name="date"
-                          placeholder="mm/dd/yy"
+                          placeholder="mm/dd/yy HH:mm"
                           label="Date"
+                          defaultValue={moment(formik.values.date)}
                           className={
                             formik.errors.date && formik.touched.date
                               ? "is-invalid"
@@ -310,7 +316,7 @@ const Index = () => {
                             name="locations"
                             placeholder="Select Location"
                             defaultValue={
-                              oneTime ? [{ id: "", value: "" }] : userDetails?.data.result.dtoSpace.map((({ name }) => (name)))
+                              formik.values.locations.map(({ name }) => ({ value: name }))
                             }
                             label="Location"
                             className={
@@ -326,13 +332,13 @@ const Index = () => {
                             name="contacts"
                             placeholder="Select Contact"
                             label="Contact"
-                            defaultValue={oneTime ? [{ id: "", value: "" }] : userDetails?.data.result.dtoContact.map(({ name }) => (name))}
+                            defaultValue={formik.values.contacts.map(({ name }) => ({ value: name }))}
                             className={
                               formik.errors.contacts && formik.touched.contacts
                                 ? "is-invalid"
                                 : "customInput"
                             }
-                            options={contactsData?.date.result}
+                            options={contactsData?.data.result}
                           />
                         </div>
 
@@ -371,12 +377,12 @@ const Index = () => {
                         />
                         <div className='addItem'>
                           <div className='addItem-label'>Line Items</div>
-                          <Link to='/estimates/createNew/addItem'>
+                          <div onClick={() => navigateToAddItem(formik.values)}>
                             <div className='addItem-div'>
                               <div>Add LineItems</div>
                               <div><RightOutlined /></div>
                             </div>
-                          </Link>
+                          </div>
                         </div>
                       </div>
                     </div>

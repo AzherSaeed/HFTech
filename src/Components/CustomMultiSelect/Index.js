@@ -30,7 +30,7 @@ const SelectComp = (props) => {
                 name={name}
                 id={name}
                 mode='multiple'
-                defaultValue={defaultValue}
+                defaultValue={defaultValue&& defaultValue.map(({value}) => (value))}
                 {...rest}
                 placeholder={placeholder}
                 // You have to provide the onChange function and on changing the value you should call

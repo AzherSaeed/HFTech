@@ -9,10 +9,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../../../Components/Loader/Loader";
 import { CustomQueryHookById, CustomQueryHookGet } from "../../../../Components/QueryCustomHook/Index";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ic_logo from "../../../../Assets/icons/ic_logo.svg";
 import { Next } from "react-bootstrap/esm/PageItem";
+import { CreateContextData } from "../../../../App";
 const { TabPane } = Tabs;
 
 const Index = () => {
@@ -20,6 +21,8 @@ const Index = () => {
   const { itemId } = useParams();
   const [oldData, setOldData] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const {oldUrl } = useContext(CreateContextData);
 
   const fetchData = () => {
     axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log(error, 'error in list admin'))
@@ -86,7 +89,7 @@ const Index = () => {
               id
             },
             total,
-            quantity:qty,
+            quantity: qty,
             price
           }
         ))
@@ -157,7 +160,7 @@ const Index = () => {
                         <p>{itemDetails?.data.result.name}</p>
                       </div>
                     </div>
-                    
+
                     <div >
                       {itemFetching ? (
                         <div className="d-flex justify-content-center">
@@ -176,7 +179,7 @@ const Index = () => {
                                     defaultValue={price}
                                     controls={false}
                                     value={oldData ? oldData[index].price : price}
-                                    type='text'
+                                    type='number'
                                     onChange={(value) => handleItemsDetails(index, 'price', value)}
                                   />
                                   <InputNumber
@@ -184,14 +187,14 @@ const Index = () => {
                                     defaultValue={qty}
                                     value={oldData ? oldData[index].qty : qty}
                                     controls={false}
-                                    type='text'
+                                    type='number'
                                     onChange={(value) => handleItemsDetails(index, 'qty', value)}
                                   />
                                   <InputNumber
                                     className="total-input"
                                     addonBefore="Total"
                                     defaultValue={total}
-                                    type='text'
+                                    type='number'
                                     disabled
                                     controls={false}
                                     value={oldData ? oldData[index].total : (qty * price)}
@@ -223,8 +226,22 @@ const Index = () => {
                       }
                     </div>
                   </div>
+
                 )
               }
+            </div>
+            <div className="mt-3 ">
+              <div className="d-flex justify-content-end">
+              <CustomButton
+                bgcolor="#156985"
+                color="white"
+                padding="8px 8px"
+                width="48%"
+                title="Done"
+                clicked={() => navigate(oldUrl)}
+              />
+              </div>
+            
             </div>
           </div>
         </div>
