@@ -67,8 +67,7 @@ export const CustomQueryHookPost = (name, url, enable) => {
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
-                    userId: '',
-                    token: '',
+
                 },
             });
         },

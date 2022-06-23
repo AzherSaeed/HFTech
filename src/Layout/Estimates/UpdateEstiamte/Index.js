@@ -36,7 +36,7 @@ const Index = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
-  const [clientId, setClientId] = useState();
+  const [clientId, setClientId] = useState(null);
   const [contacts, setContact] = useState()
   const [locations, setLocations] = useState()
   const [oneTime, setOneTime] = useState(false);
@@ -73,7 +73,7 @@ const Index = () => {
 
   // For Line Item Detail by Id
 
-  const { data: itemDetails, isLoading: lineItemDetailsIsLoading, refetch: lineItemDetailsRefech, isRefetching: lineItemDetailsRefecting, } = CustomQueryHookById('estimatelineItemDetails', itemId, (API_URL + ESTIMATE_LINE_ITEM_DETAILS), false);
+  const { data: itemDetails, isLoading: lineItemDetailsIsLoading, refetch: lineItemDetailsRefech, isRefetching: lineItemDetailsRefecting, } = CustomQueryHookById('estimatelineItemDetails', itemId, (API_URL + ESTIMATE_LINE_ITEM_DETAILS), true);
 
 
   // For ClientS Fetch Data
@@ -92,7 +92,7 @@ const Index = () => {
   // Item Delete Handler
 
   const itemDeleteHandler = () => {
-    axios.delete(API_URL + USER_LINE_ITEM_DELETE + estimateId).then((res) => {
+    axios.delete(API_URL + USER_LINE_ITEM_DELETE + itemId).then((res) => {
       setIsDeleteModal(true);
       labourRefetching();
       materialsRefetching();
@@ -142,22 +142,24 @@ const Index = () => {
   }
 
   const onSubmit = (value) => {
-    console.log(value.contacts, 'contact', value.dtoSpace, 'spaces');
-    console.log(value, 'contacts in estimate')
+
     axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
+      id: +estimateId,
       "dtoClient": {
-        "id": +estimateId
+        "id": clientId ? +clientId : +userDetails.data.result.dtoClient.id
       },
       "dtoContact": [
-        ...value.contacts.map(({ id }) => ({ id }))
+        ...value.contacts.filter((item) => (Object.keys(item
+        ).length !== 0)).map((item) => (item.hasOwnProperty('id') ? { id: +item.id } : { id: +item.key })).filter(({ id }) => id !== undefined)
       ],
       "dtoSpace": [
-        ...value.locations.map(({ id }) => ({ id }))
+        ...value.locations.filter((item) => (Object.keys(item
+        ).length !== 0)).map((item) => (item.hasOwnProperty('id') ? { id: +item.id } : { id: +item.key })).filter(({ id }) => id !== undefined)
       ],
       "referenceNumber": value.referenceNumber,
       "date": value.date,
       "description": value.description,
-      "dtoUserLineItems": !materialsData.data.result == null && !labourData.data.result == null ? [
+      "dtoUserLineItems": materialsData.data.result && labourData.data.result ? [
         ...labourData?.data.result.map(({ id }) => ({ id })),
         ...materialsData?.data.result.map(({ id }) => ({ id }))
       ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
@@ -170,9 +172,8 @@ const Index = () => {
       }, 2000);
     }).catch((error) => console.log(error, 'error in estimate create'));
 
-
   };
-  console.log(oldData, 'old data old');
+
   const onSubmitUpdate = () => {
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
       "id": itemDetails.data.result.id,
@@ -264,6 +265,7 @@ const Index = () => {
               validationSchema={validationSchema}
               onSubmit={onSubmit}
               enableReinitialize={true}
+
             >
               {(formik) => {
                 return (
@@ -316,7 +318,8 @@ const Index = () => {
                             name="locations"
                             placeholder="Select Location"
                             defaultValue={
-                              formik.values.locations.map(({ name }) => ({ value: name }))
+                              formik.values.locations.filter((item) => (Object.keys(item
+                              ).length !== 0)).map((item) => (item.hasOwnProperty('name') ? { value: item.name } : { value: item.value }))
                             }
                             label="Location"
                             className={
@@ -332,7 +335,9 @@ const Index = () => {
                             name="contacts"
                             placeholder="Select Contact"
                             label="Contact"
-                            defaultValue={formik.values.contacts.map(({ name }) => ({ value: name }))}
+                            defaultValue={formik.values.contacts.filter((item) => (Object.keys(item
+                            ).length !== 0)).map((item) => (item.hasOwnProperty('name') ? { value: item.name } : { value: item.value }))
+                            }
                             className={
                               formik.errors.contacts && formik.touched.contacts
                                 ? "is-invalid"
