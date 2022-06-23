@@ -162,9 +162,9 @@ const CreateNew = () => {
       alert('plz select date and time');
     }
     else {
-      console.log(value.locations.filter((item) => (Object.keys(item
-        ).length !== 0)),'value of create data');
-      console.log({
+      
+      
+      axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
         "dtoClient": {
           "id": clientId
         },
@@ -185,35 +185,14 @@ const CreateNew = () => {
           ...materialsData?.data.result.map(({ id }) => ({ id }))
         ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
         "channel": "IOS"
-      }
-        , 'value of create data');
-      // axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
-      //   "dtoClient": {
-      //     "id": clientId
-      //   },
-      //   "dtoContact": [
-      //     ...value.contacts.map(({ key }) => ({ id: key }))
-      //   ],
-      //   "dtoSpace": [
-      //     ...value.locations.map(({ key }) => ({ id: key }))
-      //   ],
-      //   "referenceNumber": value.referenceNumber,
-      //   "date": value.date,
-      //   "description": value.description,
+      }).then((res) => {
+        setSaveEstimateModal(true);
+        setTimeout(() => {
+          setSaveEstimateModal(false);
+          navigate('/estimates')
 
-      //   "dtoUserLineItems": materialsData.data.result && labourData.data.result ? [
-      //     ...labourData?.data.result.map(({ id }) => ({ id })),
-      //     ...materialsData?.data.result.map(({ id }) => ({ id }))
-      //   ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
-      //   "channel": "IOS"
-      // }).then((res) => {
-      //   setSaveEstimateModal(true);
-      //   setTimeout(() => {
-      //     setSaveEstimateModal(false);
-      //     navigate('/estimates')
-
-      //   }, 2000);
-      // }).catch((error) => console.log(error, 'error in estimate create'));
+        }, 2000);
+      }).catch((error) => console.log(error, 'error in estimate create'));
     }
   };
   const handleItemsDetails = (index, inputName, value) => {
