@@ -237,7 +237,7 @@ const Index = () => {
       dtoUnitOfMeasures.push(value);
     };
   }
-  console.log(dtoUnitOfMeasures, "unit of measure");
+  console.log(lineItemData?.data.result?.dtoLineItemDetails, "unit of measure");
   return (
     <Sidebar>
       {isFetching && isLoading ? (
@@ -357,7 +357,7 @@ const Index = () => {
                                     .qty
                                 ) :
                                   (
-                                    formik.getFieldProps('dtoLineItemDetails[3].qty').value
+                                    formik.getFieldProps('dtoLineItemDetails[0].qty').value
                                   )
 
                               }
@@ -520,7 +520,7 @@ const Index = () => {
                               name="dtoLineItemDetails[2].price"
                               value={
                                 lineItemId !== "createLineItem" ? (
-                                  lineItemData?.data.result?.dtoLineItemDetails[2]
+                                  lineItemData?.data.result?.dtoLineItemDetails.length > 2 && lineItemData?.data.result?.dtoLineItemDetails[2]
                                     .price
                                 ) :
                                   (
@@ -549,7 +549,7 @@ const Index = () => {
                               name="dtoLineItemDetails[2].qty"
                               value={
                                 lineItemId !== "createLineItem" ? (
-
+                                  lineItemData?.data.result?.dtoLineItemDetails.length > 2 &&
                                   lineItemData?.data.result?.dtoLineItemDetails[2]
                                     .qty
                                 ) :
@@ -619,7 +619,7 @@ const Index = () => {
                               name="dtoLineItemDetails[3].price"
                               value={
                                 lineItemId !== "createLineItem" ? (
-                                  lineItemData?.data.result?.dtoLineItemDetails[3]
+                                  lineItemData?.data.result?.dtoLineItemDetails.length > 3 && lineItemData?.data.result?.dtoLineItemDetails[3]
                                     .price
                                 ) :
                                   (
@@ -647,7 +647,7 @@ const Index = () => {
                               name="dtoLineItemDetails[3].qty"
                               value={
                                 lineItemId !== "createLineItem" ? (
-                                  lineItemData?.data.result?.dtoLineItemDetails[3]
+                                  lineItemData?.data.result?.dtoLineItemDetails.length > 3 && lineItemData?.data.result?.dtoLineItemDetails[3]
                                     .qty
                                 ) :
                                   (
@@ -712,7 +712,7 @@ const Index = () => {
                             </div>
                           ))
                         ) : (
-                          unitsData?.data.result.map(({ id, name }, index) => (
+                          unitsData?.data.result.map(({ id, name , isSelected } , index) => (
                             <div className="filter" key={index}>
                               <input
                                 type="checkbox"

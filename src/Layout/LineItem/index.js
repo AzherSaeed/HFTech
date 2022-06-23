@@ -11,13 +11,14 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfulDeleteModal from "../../Components/Delete/SuccessfullModal";
-import MobileTableCard from './MobileTable';
+import MobileTableCard from "./MobileTable";
 import {
   API_URL,
   LINE_ITEMS_GET,
   LINEITEM_DELETE,
 } from "../../Services/config";
 import moment from "moment";
+import EmailPop from "../../Components/EmailPop";
 
 const columns = [
   {
@@ -31,7 +32,7 @@ const columns = [
     key: "name",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Line item Type",
@@ -39,7 +40,7 @@ const columns = [
     key: "type",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Created",
@@ -47,7 +48,7 @@ const columns = [
     key: "created",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Owner",
@@ -55,7 +56,7 @@ const columns = [
     dataIndex: "owner",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Action",
@@ -65,8 +66,8 @@ const columns = [
 ];
 const Index = () => {
   let [detail, setDetail] = useState([]);
-  const onSuccess = (data) => { };
-  useEffect(() => { }, [detail]);
+  const onSuccess = (data) => {};
+  useEffect(() => {}, [detail]);
   const onError = (err) => {
     console.log(err, "error while fetching data from api");
   };
@@ -118,7 +119,7 @@ const Index = () => {
   };
 
   const handleEdit = (lineItem) => {
-    navigate(`/lineItem/${lineItem.id}`);
+    // navigate(`/lineItem/${lineItem.id}`);
   };
 
   const { isLoading, isError, refetch, data, error } = useQuery(
@@ -135,11 +136,36 @@ const Index = () => {
   );
   const contactData = data?.data?.result?.map((lineItem) => {
     return {
-      id: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.id} </Link>,
-      name: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.name} </Link>,
-      type: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.lineItemType} </Link>,
-      created: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {moment(lineItem.dtoUser.insertedDate).format("l, h:mm:ss a")} </Link>,
-      owner: <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}> {lineItem.dtoUser.userName} </Link>,
+      id: (
+        <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}>
+          {" "}
+          {lineItem.id}{" "}
+        </Link>
+      ),
+      name: (
+        <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}>
+          {" "}
+          {lineItem.name}{" "}
+        </Link>
+      ),
+      type: (
+        <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}>
+          {" "}
+          {lineItem.lineItemType}{" "}
+        </Link>
+      ),
+      created: (
+        <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}>
+          {" "}
+          {moment(lineItem.dtoUser.insertedDate).format("l, h:mm:ss a")}{" "}
+        </Link>
+      ),
+      owner: (
+        <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}>
+          {" "}
+          {lineItem.dtoUser.userName}{" "}
+        </Link>
+      ),
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
           <img
@@ -168,9 +194,7 @@ const Index = () => {
 
   const carddetailHandler = (data) => {
     navigate(`/lineItemDetail/${data.id}`);
-  }
-
-
+  };
 
   return (
     <Sidebar>
@@ -189,7 +213,12 @@ const Index = () => {
           />
         </div>
 
-        <MobileTableCard carddetailHandler={carddetailHandler} data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit} />
+        <MobileTableCard
+          carddetailHandler={carddetailHandler}
+          data={data?.data?.result}
+          deleteHandler={handleDelete}
+          editHandler={handleEdit}
+        />
         <div className="content-table-main">
           <Table pagination={true} columns={columns} dataSource={contactData} />
         </div>
@@ -218,6 +247,14 @@ const Index = () => {
             deleteUser={handleIndividualDelete}
             toLocation="/lineItem"
           />
+        </Modal>
+        <Modal
+          visible={true}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+        >
+          <EmailPop />
         </Modal>
       </LineItemContainer>
     </Sidebar>

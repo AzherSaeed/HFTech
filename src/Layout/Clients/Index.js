@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Space, Modal } from "antd";
+import { Table, Space, Modal, Input } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
-import { BasicColor } from "../../Components/GlobalStyle";
+import { BasicColor, SearchInputContainer } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import { useNavigate, Link } from "react-router-dom";
-import { API_URL, CLIENT_DELETE, GET_CLIENT } from "../../Services/config";
+import {
+  API_URL,
+  CLIENT_DELETE,
+  CLIENT_SEARCH,
+  GET_CLIENT,
+} from "../../Services/config";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfullModal from "../../Components/Delete/SuccessfullModal";
-import MobileTableCard from './MobileTable';
+import MobileTableCard from "./MobileTable";
 const columns = [
   {
     title: "Id",
@@ -26,7 +31,7 @@ const columns = [
     key: "name",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Phone",
@@ -34,7 +39,7 @@ const columns = [
     key: "phone",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Email",
@@ -42,7 +47,7 @@ const columns = [
     key: "email",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Created",
@@ -50,7 +55,7 @@ const columns = [
     key: "created",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Owner",
@@ -58,7 +63,7 @@ const columns = [
     dataIndex: "owner",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Action",
@@ -73,6 +78,9 @@ const Index = () => {
   const [clientData, setclientData] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [successModal, setsuccessModal] = useState(false);
+  const [clientTableData, setclientTableData] = useState([]);
+  const [searchKeyword, setsearchKeyword] = useState("");
+
 
   const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
     "get-client",
@@ -86,12 +94,58 @@ const Index = () => {
     },
     {
       onSuccess: (data) => {
+        setclientTableData(data.data.result);
         setIsModalVisible(false);
       },
       refetchInterval: false,
       refetchOnWindowFocus: false,
     }
   );
+
+
+  // const { data : searchData, isLoading : searchLoading } = useQuery(
+  //   "search_client",
+  //   (value) => {
+  //     return axios.get((API_URL + CLIENT_SEARCH , value), {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Access-Control-Allow-Origin": "*",
+  //       },
+  //     });
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data , 'this is search');
+  //       // setclientTableData(data.data.result);
+  //       // setIsModalVisible(false);
+  //     },
+  //     refetchInterval: false,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
+
+
+
+  const searchQuery = useMutation(
+    (value) => {
+      return axios.get(API_URL + CLIENT_SEARCH, {  params: { searchKeyword: value.searchKeyword , pageNumber : value.pageNumber ,  pageSize : value.pageSize } },{
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    },
+    {
+      onSuccess: (data) => {
+        setclientTableData(data.data.result.records);
+      },
+
+      onError: (err, variables, snapshotValue) => {
+        console.log(err);
+      },
+    }
+  );
+
 
   const editIconHandler = (data) => {
     navigate(`/clients/${data.id}`);
@@ -141,14 +195,44 @@ const Index = () => {
   };
   const Data =
     isSuccess &&
-    data.data.result?.map((client) => {
+    clientTableData?.map((client) => {
       return {
-        id: <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.id} </Link>,
-        name:  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.name} </Link>,
-        email:  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.email} </Link>,
-        phone:  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.phone} </Link>,
-        owner :  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.dtoUser.userName} </Link>,
-        created :  <Link className="hf-link" to={`/clientsDetail/${client.id}`}> {client.insertedDate} </Link>,
+        id: (
+          <Link className="hf-link" to={`/clientsDetail/${client.id}`}>
+            {" "}
+            {client.id}{" "}
+          </Link>
+        ),
+        name: (
+          <Link className="hf-link" to={`/clientsDetail/${client.id}`}>
+            {" "}
+            {client.name}{" "}
+          </Link>
+        ),
+        email: (
+          <Link className="hf-link" to={`/clientsDetail/${client.id}`}>
+            {" "}
+            {client.email}{" "}
+          </Link>
+        ),
+        phone: (
+          <Link className="hf-link" to={`/clientsDetail/${client.id}`}>
+            {" "}
+            {client.phone}{" "}
+          </Link>
+        ),
+        owner: (
+          <Link className="hf-link" to={`/clientsDetail/${client.id}`}>
+            {" "}
+            {client.dtoUser.userName}{" "}
+          </Link>
+        ),
+        created: (
+          <Link className="hf-link" to={`/clientsDetail/${client.id}`}>
+            {" "}
+            {client.insertedDate}{" "}
+          </Link>
+        ),
         action: (
           <Space size="middle">
             <div style={{ display: "flex", gap: "4px", placeItems: "center" }}>
@@ -170,16 +254,30 @@ const Index = () => {
       };
     });
 
+  const carddetailHandler = (data) => {
+    navigate(`/clientsDetail/${data.id}`);
+  };
 
-    const carddetailHandler = (data) => {
-      navigate(`/clientsDetail/${data.id}`);
-    }
+  const searchInputHandler = (value) => {
+    const data = {
+      searchKeyword: value,
+      pageNumber: 0,
+      pageSize: 10,
+    };
+    console.log(data);
+    searchQuery.mutate(data);
+  };
 
   return (
     <Sidebar>
       <StyleEstimates>
-        <div className="btn d-none d-md-flex">
-          
+        <div className="d-flex justify-space-between ">
+          <SearchInputContainer>
+            <Input
+              name="searchKeyword"
+              onChange={(e) => searchInputHandler(e.target.value)}
+            />
+          </SearchInputContainer>
           <CustomButton
             bgcolor={BasicColor}
             color="white"
@@ -198,10 +296,15 @@ const Index = () => {
         {isSuccess && (
           // <Table pagination={true} columns={columns} dataSource={Data} />
           <div>
-              <MobileTableCard carddetailHandler={carddetailHandler}  data={data?.data?.result} deleteHandler={clientDeleteHandler} editHandler={editIconHandler}  />
-          <div className="content-table-main">
-            <Table pagination={true} columns={columns} dataSource={Data} />
-          </div>
+            <MobileTableCard
+              carddetailHandler={carddetailHandler}
+              data={data?.data?.result}
+              deleteHandler={clientDeleteHandler}
+              editHandler={editIconHandler}
+            />
+            <div className="content-table-main">
+              <Table pagination={true} columns={columns} dataSource={Data} />
+            </div>
           </div>
         )}
 

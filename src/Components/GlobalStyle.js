@@ -32,3 +32,9 @@ export const InputErrorMessage = styled.div`
     letter-spacing: 1px;
     margin-top: 5px;
 `
+
+export const SearchInputContainer = styled.div`
+
+  
+
+`
