@@ -33,7 +33,6 @@ import { useMutation } from "react-query";
 const Index = () => {
   const { setCreateNewData } = useContext(CreateContextData);
 
-
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibled, setIsModalVisibled] = useState(false);
@@ -42,13 +41,9 @@ const Index = () => {
   const [storeSpecificUser, setstoreSpecificUser] = useState(null);
   const [deleteId, setDeleteId] = useState();
 
-
-
   useEffect(() => {
     setCreateNewData({});
   }, []);
-
-  
 
   const {
     data: listData,
@@ -146,12 +141,18 @@ const Index = () => {
         <Space size="large">
           <div style={{ display: "flex", gap: "6px" }}>
             <img src={pdfIcon} alt="edit Icon" className="action_icons" />
-            <img
-              src={downloadIcon}
-              alt="Delete Icon"
-              className="action_icons"
-              onClick={() => reportDownloadHandler(record)}
-            />
+            <a
+              href={`https://node01.dagnum.com:8443/hftech/api/report/${record.id}`}
+              alt="link"
+            >
+              <img
+                src={downloadIcon}
+                alt="Delete Icon"
+                className="action_icons"
+                // onClick={() => reportDownloadHandler(record)}
+              />
+            </a>
+
             <img
               src={emailIcon}
               onClick={() => emailTemplateReportHandler(record)}
@@ -180,7 +181,7 @@ const Index = () => {
           </div>
         </Space>
       ),
-    }
+    },
   ];
 
   const handleDelete = () => {
@@ -196,20 +197,17 @@ const Index = () => {
 
   const reportDownloadMutaion = useMutation(
     (id) => {
-      return axios.get(
-        API_URL + `report/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
+      return axios.get(API_URL + `report/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
     },
     {
       onSuccess: (data) => {
-        console.log(data , 'data.datadata.datadata.data');
-        setIsModalVisibled(true);;
+        console.log(data, "data.datadata.datadata.data");
+        setIsModalVisibled(true);
       },
       onError: (err) => {
         console.log("deleting error : ", err);
@@ -218,7 +216,6 @@ const Index = () => {
       refetchOnWindowFocus: false,
     }
   );
-
 
   const reportDownloadHandler = (data) => {
     reportDownloadMutaion.mutate(data.id);
