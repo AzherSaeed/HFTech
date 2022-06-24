@@ -48,19 +48,19 @@ const CreateNew = () => {
   const navigate = useNavigate();
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
   const firstUpdate = useRef(true);
-  const { createNewData, setCreateNewData,setOldUrl } = useContext(CreateContextData)
+  const { createNewData, setCreateNewData, setOldUrl } = useContext(CreateContextData)
 
 
   const [dateAndTime, setDateAndTime] = useState();
 
   const initialValues = {
-    client: createNewData.values&& createNewData?.values.client,
-    contacts: createNewData.values&& createNewData?.values.locations,
-    locations: createNewData.values && createNewData?.values.contacts,
+    client: createNewData.values && createNewData?.values.client,
+    locations: createNewData.values && createNewData?.values.locations,
+    contacts: createNewData.values && createNewData?.values.contacts,
     referenceNumber:
-    createNewData.values &&createNewData?.values.referenceNumber
+      createNewData.values && createNewData?.values.referenceNumber
     ,
-    description:  createNewData.values &&createNewData?.values.description,
+    description: createNewData.values && createNewData?.values.description,
     date: createNewData.values && createNewData?.values.date,
 
 
@@ -72,9 +72,7 @@ const CreateNew = () => {
     axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + id).then((response) => setOldData(response.data)).catch((error) => console.log('error', error));
   }
 
-  const handleChange = (value) => {
-    document.getElementById('process-default-btn').style = null;
-  }
+
   const antIcon = (
     <LoadingOutlined
       style={{
@@ -117,6 +115,7 @@ const CreateNew = () => {
   const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('userLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), false);
 
   // Item Delete Handler
+  console.log(itemDetails, "item details", oldData, 'oldata')
 
   const itemDeleteHandler = () => {
     axios.delete(API_URL + USER_LINE_ITEM_DELETE + itemId).then((res) => {
@@ -161,21 +160,25 @@ const CreateNew = () => {
       alert('plz select date and time');
     }
     else {
+      
+      
       axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
         "dtoClient": {
           "id": clientId
         },
         "dtoContact": [
-          ...value.contacts.map(({ key }) => ({ id: key }))
+          ...value.contacts.filter((item) => (Object.keys(item
+            ).length !== 0)).map(({ key }) => ({ id: key }))
         ],
         "dtoSpace": [
-          ...value.locations.map(({ key }) => ({ id: key }))
+          ...value.locations.filter((item) => (Object.keys(item
+            ).length !== 0)).map(({ key }) => ({ id: key }))
         ],
         "referenceNumber": value.referenceNumber,
         "date": value.date,
         "description": value.description,
 
-        "dtoUserLineItems": !materialsData == null && !labourData == null ? [
+        "dtoUserLineItems": materialsData.data.result && labourData.data.result ? [
           ...labourData?.data.result.map(({ id }) => ({ id })),
           ...materialsData?.data.result.map(({ id }) => ({ id }))
         ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
@@ -203,17 +206,17 @@ const CreateNew = () => {
 
   const brands = ['Day', 'Each', 'Pair', 'Box', 'Roll', 'Week'];
   const onSubmitUpdate = () => {
-
+    console.log('update called');
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
-      "id": itemDetails.data.result.id,
-      "channel": itemDetails.data.result.channel,
-      "total": itemDetails.data.result.total,
-      "isReversed": itemDetails.data.result.isReversed,
+      "id": oldData.result.id,
+      "channel": oldData.result.channel,
+      "total": oldData.result.total,
+      "isReversed": oldData.result.isReversed,
       "dtoUnitOfMeasure": {
-        "id": itemDetails.data.result.dtoUnitOfMeasure ? itemDetails.data.result.dtoUnitOfMeasure.id : null
+        "id": oldData.result.dtoUnitOfMeasure ? oldData.result.dtoUnitOfMeasure.id : null
       },
       "dtoLineItem": {
-        "id": itemDetails.data.result.dtoLineItem.id
+        "id": oldData.result.dtoLineItem.id
       },
       "userLineItemDetails": [
         ...oldData.result.userLineItemDetails.map(({ dtoLineItemDetail: { id }, total, quantity, price }) => (
@@ -318,7 +321,7 @@ const CreateNew = () => {
                           ? "is-invalid"
                           : "customInput"
                       }
-                      // onChange={onchangeDateTime}
+                    // onChange={onchangeDateTime}
                     />
                   </div>
                   <div className='fileds'>
@@ -329,7 +332,8 @@ const CreateNew = () => {
                         name="locations"
                         placeholder="Select Location"
                         defaultValue={
-                          createNewData?.values?.locations && formik.values.locations
+                          createNewData?.values?.locations && formik.values.locations.filter((item) => (Object.keys(item
+                            ).length !== 0))
                         }
                         label="Location"
                         className={
@@ -345,7 +349,8 @@ const CreateNew = () => {
                         name="contacts"
                         placeholder="Select Contact"
                         defaultValue={
-                          createNewData?.values?.contacts && formik.values.contacts
+                          createNewData?.values?.contacts && formik.values.contacts.filter((item) => (Object.keys(item
+                            ).length !== 0))
                         }
                         label="Contact"
                         className={
@@ -547,7 +552,7 @@ const CreateNew = () => {
                                           {
                                             brands.map((title, index) => (
                                               <div className='filter' key={index}>
-                                                <input type="checkbox" id={title} name="brand" onClick={(e) => handleChange(e.target.value)} value="{title}" />
+                                                <input type="checkbox" id={title} name="brand" value="{title}" />
                                                 <label htmlFor={title}>{title}</label>
                                               </div>
                                             ))
