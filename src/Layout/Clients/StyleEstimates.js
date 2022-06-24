@@ -3,8 +3,6 @@ const StyleEstimates = styled.div`
   .btn {
     display: flex;
     justify-content: flex-end;
-    /* margin-bottom: 14px; */
-    margin-top: -25px;
   }
   .ant-table {
     padding: 10px;

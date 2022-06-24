@@ -38,7 +38,6 @@ const LocationDetailPage = () => {
     }
   );
 
-  console.log(userData , 'userData');
 
   return (
     <Sidebar>

@@ -15,46 +15,66 @@ import MobileTable from "./MobileTable";
 import { Modal } from "antd";
 import DeleteModal from "../../Components/Delete/Index";
 import UpdateModal from "../../Components/Download/Index";
-import { useSelector } from "react-redux";
-import { API_URL, ESTIMATE_LIST_ITEM_DELETE, ESTIMATE_TABLE_GET_LIST } from "../../Services/config";
+import {
+  API_URL,
+  ESTIMATES_REPORT_DOWNLOAD,
+  ESTIMATE_LIST_ITEM_DELETE,
+  ESTIMATE_TABLE_GET_LIST,
+} from "../../Services/config";
 import { CustomQueryHookGet } from "../../Components/QueryCustomHook/Index";
 import Loader from "../../Components/Loader/Loader";
 import ic_logo from "../../Assets/icons/ic_logo.svg";
 import { Button } from "react-bootstrap";
 import axios from "axios";
 import { CreateContextData } from "../../App";
-
+import EmailPop from "../../Components/EmailPop";
+import { useMutation } from "react-query";
 
 const Index = () => {
-  // const userDetail = useSelector((state) => state.fetchUser.user);
-  // const userError = useSelector((state) => state.fetchUser.error);
   const { setCreateNewData } = useContext(CreateContextData);
-
-  // console.log(userDetail);
-  // console.log(userError);
-  useEffect(() => {
-
-    setCreateNewData({});
-
-  }, [])
 
 
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibled, setIsModalVisibled] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [emailReportPopup, setemailReportPopup] = useState(false);
+  const [storeSpecificUser, setstoreSpecificUser] = useState(null);
   const [deleteId, setDeleteId] = useState();
 
 
-  const { data: listData, isLoading, refetch: refetchEstimateList, isRefetching, isSuccess } = CustomQueryHookGet('estimateTableGetList', (API_URL + ESTIMATE_TABLE_GET_LIST), true, true);
+
+  useEffect(() => {
+    setCreateNewData({});
+  }, []);
+
+  
+
+  const {
+    data: listData,
+    isLoading,
+    refetch: refetchEstimateList,
+    isRefetching,
+    isSuccess,
+  } = CustomQueryHookGet(
+    "estimateTableGetList",
+    API_URL + ESTIMATE_TABLE_GET_LIST,
+    true,
+    true
+  );
 
   const deleteHandler = (id) => {
-    setShowDeleteModal(true)
+    setShowDeleteModal(true);
     setDeleteId(id);
-  }
+  };
   const editHandler = (id) => {
     navigate(`/estimates/update/${id}`);
-  }
+  };
+  const emailTemplateReportHandler = (user) => {
+    setstoreSpecificUser(user);
+    setemailReportPopup(true);
+  };
+
   const columns = [
     {
       title: "Id",
@@ -69,7 +89,10 @@ const Index = () => {
       dataIndex: "client",
       key: "client",
       render: (text, record) => (
-        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+        <Link className="table-link" to={`/estimates/${record.id}`}>
+          {" "}
+          {text}{" "}
+        </Link>
       ),
     },
     {
@@ -77,7 +100,10 @@ const Index = () => {
       dataIndex: "reference",
       key: "reference",
       render: (text, record) => (
-        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+        <Link className="table-link" to={`/estimates/${record.id}`}>
+          {" "}
+          {text}{" "}
+        </Link>
       ),
     },
     {
@@ -85,7 +111,10 @@ const Index = () => {
       key: "totalPrice",
       dataIndex: "totalPrice",
       render: (text, record) => (
-        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+        <Link className="table-link" to={`/estimates/${record.id}`}>
+          {" "}
+          {text}{" "}
+        </Link>
       ),
     },
     {
@@ -93,7 +122,10 @@ const Index = () => {
       key: "date",
       dataIndex: "date",
       render: (text, record) => (
-        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+        <Link className="table-link" to={`/estimates/${record.id}`}>
+          {" "}
+          {text}{" "}
+        </Link>
       ),
     },
     {
@@ -101,7 +133,10 @@ const Index = () => {
       key: "owner",
       dataIndex: "owner",
       render: (text, record) => (
-        <Link className='table-link' to={`/estimates/${record.id}`}> {text} </Link>
+        <Link className="table-link" to={`/estimates/${record.id}`}>
+          {" "}
+          {text}{" "}
+        </Link>
       ),
     },
     {
@@ -115,9 +150,14 @@ const Index = () => {
               src={downloadIcon}
               alt="Delete Icon"
               className="action_icons"
-              onClick={showModald}
+              onClick={() => reportDownloadHandler(record)}
             />
-            <img src={emailIcon} alt="edit Icon" className="action_icons" />
+            <img
+              src={emailIcon}
+              onClick={() => emailTemplateReportHandler(record)}
+              alt="edit Icon"
+              className="action_icons"
+            />
             <img src={tickIcon} alt="Delete Icon" className="action_icons" />
           </div>
           <div style={{ display: "flex", gap: "4px" }}>
@@ -126,7 +166,7 @@ const Index = () => {
               alt="delete Icon"
               className="action_icons deleteicon"
               onClick={() => {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
                 setDeleteId(record.id);
               }}
             />
@@ -140,28 +180,48 @@ const Index = () => {
           </div>
         </Space>
       ),
-    },
-    // {
-    //   title: "Locations",
-    //   dataIndex: "address",
-    //   key: "locations",
-    // },
-
-
-
-
+    }
   ];
 
   const handleDelete = () => {
-    axios.delete(API_URL + ESTIMATE_LIST_ITEM_DELETE + deleteId).then((res) => refetchEstimateList()).catch((error) => console.log(error));
-
-
-  }
+    axios
+      .delete(API_URL + ESTIMATE_LIST_ITEM_DELETE + deleteId)
+      .then((res) => refetchEstimateList())
+      .catch((error) => console.log(error));
+  };
   const handleCancel = () => {
     setShowDeleteModal(false);
+    setemailReportPopup(false);
   };
-  const showModald = () => {
-    setIsModalVisibled(true);
+
+  const reportDownloadMutaion = useMutation(
+    (id) => {
+      return axios.get(
+        API_URL + `report/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data , 'data.datadata.datadata.data');
+        setIsModalVisibled(true);;
+      },
+      onError: (err) => {
+        console.log("deleting error : ", err);
+      },
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+
+  const reportDownloadHandler = (data) => {
+    reportDownloadMutaion.mutate(data.id);
   };
 
   const clickedHandler = () => {
@@ -175,27 +235,37 @@ const Index = () => {
 
   return (
     <Sidebar>
-      <Modal visible={showDeleteModal} footer={null} centered={true} closable={false}>
+      <Modal
+        visible={showDeleteModal}
+        footer={null}
+        centered={true}
+        closable={false}
+      >
         <div className="text-center">
-          <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+          <img src={ic_logo} alt="logo" width="120px" className="text-center" />
         </div>
-        <div className="mt-3 text-center" >
+        <div className="mt-3 text-center">
           <h6>Do you Want to Delete?</h6>
         </div>
         <div className="d-flex justify-content-center">
-          <Button className="btn btn-sm bg-primary" onClick={handleCancel}>Cancel</Button>
-          <Button className="btn btn-sm bg-danger ms-3 px-3" onClick={handleOk}>Ok</Button>
+          <Button className="btn btn-sm bg-primary" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button className="btn btn-sm bg-danger ms-3 px-3" onClick={handleOk}>
+            Ok
+          </Button>
         </div>
       </Modal>
       <div>
-        {
-          isSuccess && (
-            <div className="d-md-none" >
-              <MobileTable data={listData?.data?.result} deleteHandler={deleteHandler} editHandler={editHandler} />
-            </div>
-
-          )
-        }
+        {isSuccess && (
+          <div className="d-md-none">
+            <MobileTable
+              data={listData?.data?.result}
+              deleteHandler={deleteHandler}
+              editHandler={editHandler}
+            />
+          </div>
+        )}
 
         <div className="d-none d-md-block">
           <StyleEstimates>
@@ -210,13 +280,36 @@ const Index = () => {
                 clicked={clickedHandler}
               />
             </div>
-            {
-              isLoading && isRefetching ? (
-                <Loader />
-              ) : (
-                <Table pagination={false} columns={columns} dataSource={!isSuccess ? [] : [...listData?.data.result.map(({ id, dtoClient: { name }, dtoUser: { userName }, referenceNumber, date }) => ({ id: id, client: name, reference: referenceNumber, totalPrice: '50000', date: date, owner: userName }))]} />
-              )
-            }
+            {isLoading && isRefetching ? (
+              <Loader />
+            ) : (
+              <Table
+                pagination={false}
+                columns={columns}
+                dataSource={
+                  !isSuccess
+                    ? []
+                    : [
+                        ...listData?.data.result.map(
+                          ({
+                            id,
+                            dtoClient: { name },
+                            dtoUser: { userName },
+                            referenceNumber,
+                            date,
+                          }) => ({
+                            id: id,
+                            client: name,
+                            reference: referenceNumber,
+                            totalPrice: "50000",
+                            date: date,
+                            owner: userName,
+                          })
+                        ),
+                      ]
+                }
+              />
+            )}
 
             <Modal
               visible={isModalVisible}
@@ -233,6 +326,17 @@ const Index = () => {
               centered={true}
             >
               <UpdateModal />
+            </Modal>
+            <Modal
+              visible={emailReportPopup}
+              footer={null}
+              onCancel={handleCancel}
+              centered={true}
+            >
+              <EmailPop
+                user={storeSpecificUser}
+                setemailReportPopup={setemailReportPopup}
+              />
             </Modal>
           </StyleEstimates>
         </div>

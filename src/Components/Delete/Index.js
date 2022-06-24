@@ -17,7 +17,6 @@ const Index = ({ handleCancel, userDetail, deleteUser, toLocation }) => {
     }, 300);
   };
 
-  console.log(userDetail, "userDetail");
   return (
     <LoginContainer>
       <div className="login-container-card">

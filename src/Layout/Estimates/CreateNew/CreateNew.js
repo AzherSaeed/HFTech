@@ -90,7 +90,6 @@ const CreateNew = () => {
     navigate('/estimates/createNew/addItem');
 
   }
-  console.log(createNewData, 'create new data');
 
 
   // For Labour Data
@@ -131,7 +130,6 @@ const CreateNew = () => {
     }).catch((error) => console.log(error));
   }
 
-  console.log(itemId, "userId");
   if (materialsLoading) {
     return <Loader />
   }
@@ -193,7 +191,6 @@ const CreateNew = () => {
     }
   };
   const handleItemsDetails = (index, inputName, value) => {
-    console.log('handle change in update')
     if (inputName === 'price') {
       oldData.result.userLineItemDetails[index].price = value;
       oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
@@ -239,14 +236,12 @@ const CreateNew = () => {
     }).catch((error) => console.log(error, 'error'));
   }
   const onSelectClient = (value, id) => {
-    console.log('data called')
     navigate(`/estimates/createNew/${id}`);
   }
 
   // Handle Time and date in
   const onchangeDateTime = (value, timeandDate) => {
     setDateAndTime(timeandDate);
-    console.log(timeandDate)
   };
 
 
@@ -283,7 +278,6 @@ const CreateNew = () => {
           onSubmit={onSubmit}
         >
           {(formik) => {
-            console.log(formik.values, 'valuesvaluesvalues');
             return (
               <Form
                 name="basic"

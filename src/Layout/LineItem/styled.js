@@ -5,7 +5,6 @@ export const LineItemContainer = styled.div`
   .btn {
     display: flex;
     justify-content: flex-end;
-    margin-top: -25px;
   }
   
   .ant-table-thead {

@@ -63,3 +63,5 @@ export const UNITOFMEASUREMENT_DELETE = 'setup/delate'
 export const CLIENT_SEARCH = 'client/searchClient'
 export const CONTACT_SEARCH = 'contact/searchContact'
 export const SPACE_SEARCH = 'space/searchSpace';
+export const LINEITEMS_SEARCH = 'client/searchClient';
+export const ESTIMATES_REPORT_DOWNLOAD = 'report';

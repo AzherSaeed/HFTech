@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Modal } from "antd";
+import { Table, Modal, Input } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
-import { BasicColor } from "../../Components/GlobalStyle";
+import { BasicColor, SearchInputContainer } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL, GET_CONTACT, CONTACT_DELETE } from "../../Services/config";
+import {
+  API_URL,
+  GET_CONTACT,
+  CONTACT_DELETE,
+  CONTACT_SEARCH,
+} from "../../Services/config";
 import moment from "moment";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import DeleteModal from "../../Components/Delete/Index";
-import MobileTableCard from './MobileTable'
-
+import MobileTableCard from "./MobileTable";
 
 const columns = [
   {
@@ -27,13 +31,12 @@ const columns = [
     key: "name",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Phone Number",
     key: "phone",
     dataIndex: "phone",
-    
   },
   {
     title: "Email Address",
@@ -41,7 +44,7 @@ const columns = [
     key: "email",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Created",
@@ -49,7 +52,7 @@ const columns = [
     key: "created",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
   {
     title: "Owner",
@@ -57,18 +60,8 @@ const columns = [
     key: "owner",
     ellipsis: {
       showTitle: false,
-    }
+    },
   },
-  // {
-  //   title: "Channel",
-  //   dataIndex: "channel",
-  //   key: "channel",
-  // },
-  // {
-  //   title: "Country Code",
-  //   key: "countryCode",
-  //   dataIndex: "countryCode",
-  // },
 
   {
     title: "Action",
@@ -84,6 +77,7 @@ const Index = () => {
     email: "",
     id: "",
   });
+  const [searchUserTable, setsearchUserTable] = useState([]);
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -137,10 +131,44 @@ const Index = () => {
     },
     {
       onSuccess: (data) => {
-        console.log(data);
+        setsearchUserTable(data?.data?.result);
       },
       refetchInterval: false,
       refetchOnWindowFocus: true,
+    }
+  );
+
+  const searchQuery = useMutation(
+    (value) => {
+      return axios.get(
+        API_URL + CONTACT_SEARCH,
+        {
+          params: {
+            searchKeyword: value.searchKeyword,
+            pageNumber: value.pageNumber,
+            pageSize: value.pageSize,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data) => {
+        if (!data.data.result) {
+          setsearchUserTable(data.data.result);
+        } else {
+          setsearchUserTable(data.data.result.records);
+        }
+      },
+
+      onError: (err, variables, snapshotValue) => {
+        console.log(err);
+      },
     }
   );
 
@@ -148,14 +176,38 @@ const Index = () => {
     mutation.mutate(deleteUserDetail.id);
   };
 
-  const contactData = data?.data?.result?.map((contact) => {
+  const contactData = searchUserTable?.map((contact) => {
     return {
-      id: <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.id}</Link>,
-      name:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.name}</Link>,
-      email: <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.email}</Link>,
-      phone:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.phone}</Link>,
-      created:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{moment(contact.insertedDate).format("l, h:mm:ss a")}</Link>,
-      owner:  <Link className="hf-link" to={`/contactDetail/${contact.id}`}>{contact.dtoUser.userName}</Link>,
+      id: (
+        <Link className="hf-link" to={`/contactDetail/${contact.id}`}>
+          {contact.id}
+        </Link>
+      ),
+      name: (
+        <Link className="hf-link" to={`/contactDetail/${contact.id}`}>
+          {contact.name}
+        </Link>
+      ),
+      email: (
+        <Link className="hf-link" to={`/contactDetail/${contact.id}`}>
+          {contact.email}
+        </Link>
+      ),
+      phone: (
+        <Link className="hf-link" to={`/contactDetail/${contact.id}`}>
+          {contact.phone}
+        </Link>
+      ),
+      created: (
+        <Link className="hf-link" to={`/contactDetail/${contact.id}`}>
+          {moment(contact.insertedDate).format("l, h:mm:ss a")}
+        </Link>
+      ),
+      owner: (
+        <Link className="hf-link" to={`/contactDetail/${contact.id}`}>
+          {contact.dtoUser.userName}
+        </Link>
+      ),
 
       action: (
         <div style={{ display: "flex", gap: "4px" }}>
@@ -181,29 +233,51 @@ const Index = () => {
     };
   });
 
-  
   const carddetailHandler = (data) => {
     navigate(`/contactDetail/${data.id}`);
-  }
+  };
+
+  const searchInputHandler = (value) => {
+    const data = {
+      searchKeyword: value,
+      pageNumber: 0,
+      pageSize: 10,
+    };
+    searchQuery.mutate(data);
+  };
 
   return (
     <Sidebar>
       <StyleEstimates>
-        <div className="btn d-none d-md-flex ">
-          <CustomButton
-            bgcolor={BasicColor}
-            color="white"
-            padding="8px 8px"
-            type="submit"
-            width="130px"
-            title="Create new"
-            clicked={() => {
-              navigate("/contact/createContact");
-            }}
-          />
+      <div className="table-search-container">
+          <SearchInputContainer>
+            <Input
+              name="searchKeyword"
+              onChange={(e) => searchInputHandler(e.target.value)}
+              placeholder="Search Contact"
+            />
+          </SearchInputContainer>
+          <div className="btn d-none d-md-flex">
+            <CustomButton
+              bgcolor={BasicColor}
+              color="white"
+              padding="8px 8px"
+              type="button"
+              width="130px"
+              title="Create new"
+              clicked={() => {
+                navigate("/locations/createNew");
+              }}
+            />
+          </div>
         </div>
-        
-        <MobileTableCard carddetailHandler={carddetailHandler}  data={data?.data?.result} deleteHandler={handleDelete} editHandler={handleEdit}  />
+
+        <MobileTableCard
+          carddetailHandler={carddetailHandler}
+          data={data?.data?.result}
+          deleteHandler={handleDelete}
+          editHandler={handleEdit}
+        />
         <div className="content-table-main">
           <Table pagination={true} columns={columns} dataSource={contactData} />
         </div>

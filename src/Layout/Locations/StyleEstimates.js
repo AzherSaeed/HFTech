@@ -3,7 +3,6 @@ const StyleEstimates = styled.div`
   .btn {
     display: flex;
     justify-content: flex-end;
-    margin-top: -25px;
   }
   .ant-table-thead {
     background-color: #f3f6f9;

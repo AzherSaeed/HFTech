@@ -9,7 +9,6 @@ import addIcon from '../../Assets/ic_add_new.svg';
 const Index = ({ data, deleteHandler, editHandler }) => {
   const navigate=useNavigate();
 
-  console.log(data, 'data in mobile Cards');
   return (
     <MobileCardContainer>
       <div className=" plus-icon d-md-none">

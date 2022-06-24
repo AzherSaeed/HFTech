@@ -9,7 +9,6 @@ console.log(useSelector, "use selector in custom components");
 
 export const CustomQueryHookGet = (name, url, enable, OnWindow) => {
     // const {userId,token}=useSelector((state)=>state.authReducer.user.result);
-    // console.log(userId,token,'date in reducer');
     return useQuery(
         name,
         () => {

@@ -72,7 +72,6 @@ const Index = () => {
   }
 
   const onSubmit = (value) => {
-    console.log(...value.contacts.map(({ key }) => ({ key })), 'myValues');
     axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
       "dtoClient": {
         "id": estimateId

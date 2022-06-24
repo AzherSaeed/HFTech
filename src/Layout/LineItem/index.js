@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { LineItemContainer } from "./styled";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import { Table, Modal } from "antd";
+import { Table, Modal, Input } from "antd";
 import CustomButton from "../../Components/CustomButton/Index";
-import { BasicColor } from "../../Components/GlobalStyle";
+import { BasicColor, SearchInputContainer } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
 import { useNavigate, Link } from "react-router-dom";
@@ -16,9 +16,9 @@ import {
   API_URL,
   LINE_ITEMS_GET,
   LINEITEM_DELETE,
+  LINEITEMS_SEARCH,
 } from "../../Services/config";
 import moment from "moment";
-import EmailPop from "../../Components/EmailPop";
 
 const columns = [
   {
@@ -66,13 +66,14 @@ const columns = [
 ];
 const Index = () => {
   let [detail, setDetail] = useState([]);
-  const onSuccess = (data) => {};
+
   useEffect(() => {}, [detail]);
   const onError = (err) => {
     console.log(err, "error while fetching data from api");
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
+  const [searchUserTable, setsearchUserTable] = useState([]);
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -119,7 +120,7 @@ const Index = () => {
   };
 
   const handleEdit = (lineItem) => {
-    // navigate(`/lineItem/${lineItem.id}`);
+    navigate(`/lineItem/${lineItem.id}`);
   };
 
   const { isLoading, isError, refetch, data, error } = useQuery(
@@ -132,9 +133,14 @@ const Index = () => {
         },
       });
     },
-    { refetchOnWindowFocus: "always", onSuccess, onError }
+    {
+      onSuccess: (data) => {
+        setsearchUserTable(data?.data?.result);
+      },
+      onError,
+    }
   );
-  const contactData = data?.data?.result?.map((lineItem) => {
+  const contactData = searchUserTable?.map((lineItem) => {
     return {
       id: (
         <Link className="hf-link" to={`/lineItemDetail/${lineItem.id}`}>
@@ -196,21 +202,76 @@ const Index = () => {
     navigate(`/lineItemDetail/${data.id}`);
   };
 
+
+  const searchQuery = useMutation(
+    (value) => {
+      return axios.get(
+        API_URL + LINEITEMS_SEARCH,
+        {
+          params: {
+            searchKeyword: value.searchKeyword,
+            pageNumber: value.pageNumber,
+            pageSize: value.pageSize,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data) => {
+        if (!data.data.result) {
+          setsearchUserTable(data.data.result);
+        } else {
+          setsearchUserTable(data.data.result.records);
+        }
+      },
+
+      onError: (err, variables, snapshotValue) => {
+        console.log(err);
+      },
+    }
+  );
+
+  const searchInputHandler = (value) => {
+    const data = {
+      searchKeyword: value,
+      pageNumber: 0,
+      pageSize: 10,
+    };
+    searchQuery.mutate(data);
+  };
+
+
+
   return (
     <Sidebar>
       <LineItemContainer>
-        <div className="btn d-none d-md-flex">
-          <CustomButton
-            bgcolor={BasicColor}
-            color="white"
-            padding="8px 8px"
-            type="button"
-            width="130px"
-            title="Create new"
-            clicked={() => {
-              navigate("/lineItem/createLineItem");
-            }}
-          />
+      <div className="table-search-container">
+          <SearchInputContainer>
+            <Input
+              name="searchKeyword"
+              onChange={(e) => searchInputHandler(e.target.value)}
+              placeholder="Search Lineitems"
+            />
+          </SearchInputContainer>
+          <div className="btn d-none d-md-flex">
+            <CustomButton
+              bgcolor={BasicColor}
+              color="white"
+              padding="8px 8px"
+              type="button"
+              width="130px"
+              title="Create new"
+              clicked={() => {
+                navigate("/locations/createNew");
+              }}
+            />
+          </div>
         </div>
 
         <MobileTableCard
@@ -247,14 +308,6 @@ const Index = () => {
             deleteUser={handleIndividualDelete}
             toLocation="/lineItem"
           />
-        </Modal>
-        <Modal
-          visible={true}
-          footer={null}
-          onCancel={handleCancel}
-          centered={true}
-        >
-          <EmailPop />
         </Modal>
       </LineItemContainer>
     </Sidebar>

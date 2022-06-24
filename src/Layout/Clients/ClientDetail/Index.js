@@ -82,7 +82,6 @@ const Index = () => {
   
   useEffect(() => {
     if(userData?.data.result){
-      console.log('loop in useEffect');
       for(let i = 0 ; i < userData?.data.result.contactIds.length ; i++){
         editContactIds.push(userData?.data.result.contactIds[i].id)
       }

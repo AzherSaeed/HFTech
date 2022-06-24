@@ -237,7 +237,6 @@ const Index = () => {
       dtoUnitOfMeasures.push(value);
     };
   }
-  console.log(lineItemData?.data.result?.dtoLineItemDetails, "unit of measure");
   return (
     <Sidebar>
       {isFetching && isLoading ? (

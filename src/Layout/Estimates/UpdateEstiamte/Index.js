@@ -43,7 +43,6 @@ const Index = () => {
 
   const { updateNewData, setUpdateNewData, setOldUrl } = useContext(CreateContextData);
 
-  console.log('one time', 'one Time in update estimate', oneTime)
   const fetchData = (id) => {
     axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + id).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
   }
@@ -101,7 +100,6 @@ const Index = () => {
       }, 3000);
     }).catch((error) => console.log(error));
   }
-  console.log(estimateId, "userId");
   if (materialsLoading) {
     return <Loader />
   }
@@ -142,8 +140,6 @@ const Index = () => {
   }
 
   const onSubmit = (value) => {
-    console.log(value.contacts, 'contact', value.dtoSpace, 'spaces');
-    console.log(value, 'contacts in estimate')
     axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
       "dtoClient": {
         "id": +estimateId
@@ -172,7 +168,6 @@ const Index = () => {
 
 
   };
-  console.log(oldData, 'old data old');
   const onSubmitUpdate = () => {
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
       "id": itemDetails.data.result.id,
@@ -234,7 +229,6 @@ const Index = () => {
       .get((API_URL + ESTIMATE_LOCATIONS_DATA_SELECT + id))
       .then((response) => setLocations(response.result))
       .catch((error) => console.log(error, 'location error in data'));
-    console.log('on slect trigger', value, id, 'id');
   }
 
 

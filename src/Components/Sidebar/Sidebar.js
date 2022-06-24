@@ -21,7 +21,6 @@ const Sidebar = ({ children }) => {
   // const userName = useSelector((state) => state.fetchUser.user);
 
   const location = useLocation();
-  console.log(location.pathname.split('/'), "path name of url location");
   return (
     <SideBarContainer>
       <div className="d-md-none">

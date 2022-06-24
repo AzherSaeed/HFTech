@@ -11,7 +11,6 @@ import CustomSearchSelect from './CustomSearchSelect'
 import CustomMultiSelect from './CustomMultiSelect/Index'
 const Formickcontroller = (props) => {
   const { control, ...rest } = props;
-  // console.log("enter to controller");
   switch (control) {
     case "input":
       return <Input {...rest} />;

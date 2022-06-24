@@ -50,3 +50,9 @@ body{
     display: none;
   }
 }
+
+.table-search-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

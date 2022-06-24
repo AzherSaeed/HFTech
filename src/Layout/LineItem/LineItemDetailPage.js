@@ -39,7 +39,6 @@ const LineItemDetailPage = () => {
     }
   );
 
-  console.log(userData);
 
   return (
     <Sidebar>

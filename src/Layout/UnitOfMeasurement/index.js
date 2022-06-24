@@ -58,7 +58,6 @@ const Index = () => {
 
   const mutation = useMutation(
     (unitDetail) => {
-      console.log(unitDetail, "unitDetail");
       if (unitDetailHandler?.id && !unitDeleteDetailHandler) {
         return axios.put(API_URL + UNITOFMEASUREMENT_UPDATE, unitDetail, {
           headers: {
@@ -94,7 +93,6 @@ const Index = () => {
           });
         } else {
           setunitDetailHandler(null);
-          console.log(response.data, "response.data.messag");
           if (response.data.status !== "CREATED") {
             setsuccessDeleteModal(true);
           }

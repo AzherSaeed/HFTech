@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import StyleEstimates from "./StyleEstimates";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { Table, Space, Modal, Input } from "antd";
-import CustomButton from "../../Components/CustomButton/Index";
 import { BasicColor, SearchInputContainer } from "../../Components/GlobalStyle";
 import deleteIcon from "../../Assets/icons/ic_delete.svg";
 import editIcon from "../../Assets/icons/ic_edit.svg";
@@ -19,6 +18,7 @@ import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/Delete/Index";
 import SuccessfullModal from "../../Components/Delete/SuccessfullModal";
 import MobileTableCard from "./MobileTable";
+import CustomButton from "../../Components/CustomButton/Index";
 const columns = [
   {
     title: "Id",
@@ -79,8 +79,6 @@ const Index = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [successModal, setsuccessModal] = useState(false);
   const [clientTableData, setclientTableData] = useState([]);
-  const [searchKeyword, setsearchKeyword] = useState("");
-
 
   const { data, isLoading, isSuccess, error, isError, refetch } = useQuery(
     "get-client",
@@ -102,42 +100,32 @@ const Index = () => {
     }
   );
 
-
-  // const { data : searchData, isLoading : searchLoading } = useQuery(
-  //   "search_client",
-  //   (value) => {
-  //     return axios.get((API_URL + CLIENT_SEARCH , value), {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Access-Control-Allow-Origin": "*",
-  //       },
-  //     });
-  //   },
-  //   {
-  //     onSuccess: (data) => {
-  //       console.log(data , 'this is search');
-  //       // setclientTableData(data.data.result);
-  //       // setIsModalVisible(false);
-  //     },
-  //     refetchInterval: false,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // );
-
-
-
   const searchQuery = useMutation(
     (value) => {
-      return axios.get(API_URL + CLIENT_SEARCH, {  params: { searchKeyword: value.searchKeyword , pageNumber : value.pageNumber ,  pageSize : value.pageSize } },{
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+      return axios.get(
+        API_URL + CLIENT_SEARCH,
+        {
+          params: {
+            searchKeyword: value.searchKeyword,
+            pageNumber: value.pageNumber,
+            pageSize: value.pageSize,
+          },
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
     },
     {
       onSuccess: (data) => {
-        setclientTableData(data.data.result.records);
+        if (!data.data.result) {
+          setclientTableData(data.data.result);
+        } else {
+          setclientTableData(data.data.result.records);
+        }
       },
 
       onError: (err, variables, snapshotValue) => {
@@ -145,7 +133,6 @@ const Index = () => {
       },
     }
   );
-
 
   const editIconHandler = (data) => {
     navigate(`/clients/${data.id}`);
@@ -264,31 +251,33 @@ const Index = () => {
       pageNumber: 0,
       pageSize: 10,
     };
-    console.log(data);
     searchQuery.mutate(data);
   };
 
   return (
     <Sidebar>
       <StyleEstimates>
-        <div className="d-flex justify-space-between ">
+      <div className="table-search-container">
           <SearchInputContainer>
             <Input
               name="searchKeyword"
               onChange={(e) => searchInputHandler(e.target.value)}
+              placeholder="Search Clients"
             />
           </SearchInputContainer>
-          <CustomButton
-            bgcolor={BasicColor}
-            color="white"
-            padding="8px 8px"
-            type="submit"
-            width="130px"
-            title="Create new"
-            clicked={() => {
-              navigate("/clients/createClient");
-            }}
-          />
+          <div className="btn d-none d-md-flex">
+            <CustomButton
+              bgcolor={BasicColor}
+              color="white"
+              padding="8px 8px"
+              type="button"
+              width="130px"
+              title="Create new"
+              clicked={() => {
+                navigate("/locations/createNew");
+              }}
+            />
+          </div>
         </div>
         {isLoading && <Loader />}
         {isError && <div>{error.message}</div>}
