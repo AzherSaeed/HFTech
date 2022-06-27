@@ -25,7 +25,7 @@ const Sidebar = ({ children }) => {
   return (
     <SideBarContainer>
       <div className="d-md-none">
-        <Navbars  title={location.pathname.split('/')[1]}/>
+        <Navbars title={location.pathname.split('/')[1]} />
       </div>{" "}
       <Layout>
         <Sider
@@ -42,7 +42,7 @@ const Sidebar = ({ children }) => {
           <div className="logos">
             <img src={logos} alt="Logo" className="logo" />
           </div>{" "}
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item key="/estimates">
               <Link to="/estimates" />
               Estimates{" "}
@@ -66,6 +66,10 @@ const Sidebar = ({ children }) => {
             <Menu.Item key="/unitOfMeasurement">
               <Link to="/unitOfMeasurement" />
               Unit of Measurement{" "}
+            </Menu.Item>
+            <Menu.Item key="/workOrders">
+              <Link to="/workOrders" />
+              Work Orders{" "}
             </Menu.Item>
           </Menu>{" "}
           {/* <div className="lgOutButton">

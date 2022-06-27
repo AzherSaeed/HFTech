@@ -25,9 +25,9 @@ color:#363636;
 margin-left:15px;  
 }
 .filter-btns .filter  input[type="checkbox"]:checked+label { 
-  background-color:#ED1C24;
-  color:white;
-  border:1px solid #ED1C24;
+  background: #F9FBFC;
+      border: 1px solid #156985;
+      color: #156985;
 }
 
 .filter-btns .filter > input{

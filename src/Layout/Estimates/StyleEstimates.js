@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyleEstimates =styled.div`
+const StyleEstimates = styled.div`
 .table-link{
  color:#464E5F;
 }
@@ -47,6 +47,6 @@ border-bottom: none !important;
     background: #007AFF !important;
     cursor: pointer;
 }
-`; 
+`;
 
 export default StyleEstimates;

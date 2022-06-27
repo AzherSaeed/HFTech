@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import Style, { CreateEstimateStyled, UpdateEstimateRightStyled } from "./Style";
+import Style, { CreateEstimateStyled, UnitOfMeasureStyled, UpdateEstimateRightStyled } from "./Style";
 import Styled from '../CreateNew/Style'
 import Sidebar from "../../../Components/Sidebar/Sidebar";
 import CustomButton from "../../../Components/CustomButton/Index";
@@ -40,12 +40,18 @@ const Index = () => {
   const [contacts, setContact] = useState()
   const [locations, setLocations] = useState()
   const [oneTime, setOneTime] = useState(false);
+  const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
+    const [deleteHandlerState, setDeleteHandlerState] = useState(true)
+
 
   const { updateNewData, setUpdateNewData, setOldUrl } = useContext(CreateContextData);
 
   console.log('one time', 'one Time in update estimate', oneTime)
   const fetchData = (id) => {
-    axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + id).then((response) => setOldData(response.data.result.userLineItemDetails)).catch((error) => console.log('error'))
+    axios.get(API_URL + ESTIMATE_LINE_ITEM_DETAILS + id).then((response) => {
+      setOldData(response.data)
+      setdtoUnitOfMeasures(response.data.result.dtoUnitOfMeasureList);
+    }).catch((error) => console.log('error'))
   }
 
 
@@ -96,6 +102,7 @@ const Index = () => {
       setIsDeleteModal(true);
       labourRefetching();
       materialsRefetching();
+      setDeleteHandlerState(false);
       setTimeout(() => {
         setIsDeleteModal(false);
       }, 3000);
@@ -106,11 +113,13 @@ const Index = () => {
     return <Loader />
   }
 
+  console.log(itemDetails,'item details');
   // Id Navigation handler
   const refetchByIdHandler = (id) => {
     navigate(`/estimates/update/${estimateId}/${id}`);
     fetchData(id);
     lineItemDetailsRefech();
+    setDeleteHandlerState(true);
   }
 
   const handleCancel = () => {
@@ -125,13 +134,13 @@ const Index = () => {
 
   const handleItemsDetails = (index, inputName, value) => {
     if (inputName === 'price') {
-      oldData[index].price = value;
-      oldData[index].total = oldData[index].quantity * oldData[index].price;
+      oldData.result.userLineItemDetails[index].price = value;
+      oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
     } else {
-      oldData[index].quantity = value;
-      oldData[index].total = oldData[index].quantity * oldData[index].price;
+      oldData.result.userLineItemDetails[index].quantity = value;
+      oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
     }
-    setOldData([...oldData,]);
+    setOldData([...oldData]);
   }
 
   const navigateToAddItem = async (values) => {
@@ -174,20 +183,37 @@ const Index = () => {
 
   };
 
+
+  // Handle change for measurement
+
+  const handleChange = (index) => {
+
+    const SelectedIndex = dtoUnitOfMeasures.findIndex(object => {
+      return object.isSelected === true;
+    });
+
+    console.log(SelectedIndex, 'selected index');
+    dtoUnitOfMeasures[SelectedIndex].isSelected = false;
+    dtoUnitOfMeasures[index].isSelected = !dtoUnitOfMeasures[index].isSelected;
+    setdtoUnitOfMeasures([...dtoUnitOfMeasures]);
+  };
+  console.log(oldData, 'old data of ')
+
+
   const onSubmitUpdate = () => {
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
-      "id": itemDetails.data.result.id,
-      "channel": itemDetails.data.result.channel,
-      "total": itemDetails.data.result.total,
-      "isReversed": itemDetails.data.result.isReversed,
+      "id": oldData.result.id,
+      "channel": oldData.result.channel,
+      "total": oldData.result.total,
+      "isReversed": oldData.result.isReversed,
       "dtoUnitOfMeasure": {
-        "id": itemDetails.data.result.dtoUnitOfMeasure ? itemDetails.data.result.dtoUnitOfMeasure.id : null
+        "id": dtoUnitOfMeasures && dtoUnitOfMeasures.filter(({ isSelected }) => isSelected === true)[0].id
       },
       "dtoLineItem": {
-        "id": itemDetails.data.result?.dtoLineItem ? itemDetails.data.result.dtoLineItem.id : null
+        "id": oldData.result?.dtoLineItem ? oldData.result.dtoLineItem.id : null
       },
       "userLineItemDetails": [
-        ...oldData.map(({ dtoLineItemDetail: { id }, total, quantity, price }) => (
+        ...oldData.result.userLineItemDetails.map(({ dtoLineItemDetail: { id }, total, quantity, price }) => (
           {
             "dtoLineItemDetail": {
               id
@@ -202,6 +228,7 @@ const Index = () => {
       setIsModalVisible(false);
       navigate(`/estimates/update/${estimateId}`);
       setIsUpdateModalVisible(true);
+      lineItemDetailsRefech();
       setTimeout(() => {
         setIsUpdateModalVisible(false);
       }, 3000);
@@ -395,7 +422,7 @@ const Index = () => {
                       <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
                         <div className="tabWrapper">
                           {
-                            oldData?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+                            oldData?.result.userLineItemDetails?.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
                               <div className="rateWrapper mt-3" key={id}>
                                 <h5>{name}</h5>
                                 <div className="input-fields d-flex">
@@ -404,8 +431,8 @@ const Index = () => {
                                     addonAfter="Rate"
                                     defaultValue={price}
                                     controls={false}
-                                    value={oldData ? oldData[index].price : price}
-                                    type='text'
+                                    value={ oldData.result.userLineItemDetails ?  oldData.result.userLineItemDetails[index].price : price}
+                                    type='number'
                                     onChange={(value) => handleItemsDetails(index, 'price', value)}
                                   />
                                   <InputNumber
@@ -413,29 +440,57 @@ const Index = () => {
                                     defaultValue={quantity}
                                     value={quantity}
                                     controls={false}
-                                    type='text'
+                                    type='number'
                                     onChange={(value) => handleItemsDetails(index, 'quantity', value)}
                                   />
                                   <InputNumber
                                     className="total-input text-dark"
                                     addonBefore="Total"
                                     defaultValue={total}
-                                    type='text'
+                                    type='number'
                                     disabled
                                     controls={false}
-                                    value={oldData ? oldData[index].total : (quantity * price)}
+                                    value={ oldData.result.userLineItemDetails ?  oldData.result.userLineItemDetails[index].total : (quantity * price)}
                                   />
                                 </div>
                               </div>
                             )
                             )
                           }
+                          <UnitOfMeasureStyled>
+                            <div className="unitOfMeasure mt-3">
+                              <h6 className="fw-bold">Unit of Measure</h6>
+                              <div className="filter-btns d-flex ">
+                                {
+                                  dtoUnitOfMeasures && dtoUnitOfMeasures.map(({ isSelected, name, id }, index) => (
+                                    <div className="filter ms-3" key={index}>
+                                      <input
+                                        type="radio"
+                                        id={id}
+                                        checked={isSelected}
+                                        name="brand"
+                                        onClick={() =>
+                                          handleChange(index)
+                                        }
+                                        value={name}
+                                      />
+                                      <label htmlFor={id}>{name}</label>
+                                    </div>
+                                  ))
+                                }
+                              </div>
+                            </div>
+                          </UnitOfMeasureStyled>
+
+
                           {oldData && (
                             <div className="grand-total-section mt-4 d-flex justify-content-between">
                               <h6 className="title fw-bold">Total</h6>
-                              <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
+                              <h6 className="amount fw-bold">{oldData.result.userLineItemDetails.reduce((prev, current) => prev + current.total, 0)}</h6>
                             </div>
                           )}
+
+
 
                           <div className="saveLineItems mt-3">
                             <CustomButton
@@ -483,7 +538,7 @@ const Index = () => {
                           </div>
                           <div className="col-md-6 col-sm-12 ">
                             {
-                              oldData && (
+                                 deleteHandlerState === true &&oldData && (
                                 <div className="second-table">
                                   <div className="d-none d-sm-block">
                                     <div className="inner-section">
@@ -520,7 +575,7 @@ const Index = () => {
                                             </thead>
                                             <tbody>
                                               {
-                                                oldData.map(({ id, name, price, total, quantity }, index) => (
+                                                oldData?.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
                                                   <tr key={id}>
                                                     <td>{name}</td>
                                                     <td>{price}</td>
@@ -532,6 +587,26 @@ const Index = () => {
                                               }
                                             </tbody>
                                           </table>
+
+                                          {
+                                            oldData?.result.dtoUnitOfMeasureList && (
+                                              <div className="unitOfMeasure">
+
+                                                <div className="filter-btns d-flex justify-content-between">
+                                                  <h6 className='fw-bold'>Unit of Measure</h6>
+                                                  {
+                                                    oldData?.result.dtoUnitOfMeasureList.filter(({ isSelected }) => isSelected === true).map(({ name }, index) => (
+                                                      <div className="filter" key={index}>
+                                                        <h6 className='fw-bold'>{name}</h6>
+                                                      </div>
+                                                    ))
+                                                  }
+                                                </div>
+                                              </div>
+                                            )
+                                          }
+
+
                                         </UpdateEstimateRightStyled>
 
                                       </div>

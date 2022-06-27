@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { LineItemDetailContainer } from "../styled";
 import Sidebar from "../../../Components/Sidebar/Sidebar";
-import { InputNumber, Radio, Modal } from "antd";
+import { InputNumber, Modal } from "antd";
 import CustomButton from "../../../Components/CustomButton/Index";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Form } from "antd";
 import { BasicColor } from "../../../Components/GlobalStyle";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import FormControl from "../../../Components/FormControl";
@@ -34,15 +34,26 @@ const Index = () => {
   const lineItemId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const regex = /^\d*(\.\d+)?$/;
+  const { lineItemId: ItemId } = useParams();
 
   const [selectedRateType, setselectedRateType] = useState("Select Type");
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
   const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
+  const [myUnits, setMyUnits] = useState(false);
 
 
   const handleCancel = () => {
     setsuccessfullDeleteModal(false);
   };
+
+  // Handle Update for Unit of Measurements
+
+  const handleUnitOfMeasurements = (index, value) => {
+    console.log(index, value, 'value of line items')
+    dtoUnitOfMeasures[index].isSelected = !dtoUnitOfMeasures[index].isSelected;
+    setdtoUnitOfMeasures([...dtoUnitOfMeasures]);
+
+  }
 
   const { data: unitsData, isLoading: unitsIsLoading, refetch } = useQuery(
     "units",
@@ -59,7 +70,7 @@ const Index = () => {
         console.log(data);
       },
       refetchInterval: false,
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -97,16 +108,25 @@ const Index = () => {
       );
     },
     {
+      onSuccess: (data) => {
+        console.log(data, 'Data of line items', dtoUnitOfMeasures);
+        if (!myUnits) {
+          setdtoUnitOfMeasures(data?.data.result.dtoUnitOfMeasures);
+        }
+        myUnits(true);
+      },
       enabled: regex.test(lineItemId),
       refetchInterval: false,
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
       keepPreviousData: false,
     }
   );
 
+  console.log('Data of line items', dtoUnitOfMeasures);
+
   const initialValues = {
     name: "",
-    lineItemType:  "",
+    lineItemType: "",
     channel: "IOS",
     dtoLineItemDetails: [
       {
@@ -134,11 +154,11 @@ const Index = () => {
         total: "",
       },
     ],
-  
+
   };
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
-    lineItemType:Yup.string().required("Line Item Required"),
+    lineItemType: Yup.string().required("Line Item Required"),
     dtoLineItemDetails: Yup.array(
       Yup.object({
         name: Yup.string(),
@@ -152,6 +172,9 @@ const Index = () => {
     if (lineItemData?.data?.result?.lineItemType) {
       setselectedRateType(lineItemData?.data?.result?.lineItemType);
     }
+    // return ()=>{
+    //   setdtoUnitOfMeasures(null);
+    // }
   }, [lineItemData]);
 
   const mutation = useMutation(
@@ -201,9 +224,10 @@ const Index = () => {
       data.dtoLineItemDetails[1].total = data.dtoLineItemDetails[1].qty * data.dtoLineItemDetails[1].price;
       data.dtoLineItemDetails[2].total = data.dtoLineItemDetails[2].qty * data.dtoLineItemDetails[2].price;
       data.dtoLineItemDetails[3].total = data.dtoLineItemDetails[3].qty * data.dtoLineItemDetails[3].price;
-      const finalData = {
+      const finalDataUpdate = {
         channel: data.channel,
-        dtoUnitOfMeasures,
+        id:ItemId,
+        dtoUnitOfMeasures:  dtoUnitOfMeasures.filter(({isSelected})=>isSelected===true).map(({ id }) => ({ id })),
         lineItemType: data.lineItemType,
         name: data.name,
 
@@ -221,15 +245,36 @@ const Index = () => {
           }),
         ],
       };
-      mutation.mutate(finalData);
+      const finalDataCreate = {
+        channel: data.channel,
+      
+        dtoUnitOfMeasures: dtoUnitOfMeasures,
+        lineItemType: data.lineItemType,
+        name: data.name,
+
+        total: data.dtoLineItemDetails.reduce((prev, current) => prev + current.total, 0),
+        dtoLineItemDetails: [
+          ...data.dtoLineItemDetails.filter(({ name, qty, price, total }) => {
+            if (name !== "") {
+              return {
+                name,
+                qty,
+                price,
+                total,
+              };
+            }
+          }),
+        ],
+      };
+      mutation.mutate(lineItemId !== 'createLineItem' ? finalDataUpdate : finalDataCreate);
     }
-
-
-
   };
 
-  const handleChange = (value) => {
+  console.log(dtoUnitOfMeasures, 'value of unitof measure')
+  
 
+  const handleChange = (value) => {
+    console.log(dtoUnitOfMeasures, 'value of unitof measure');
     var index = dtoUnitOfMeasures.findIndex(object => object.id === value.id);
     if (index !== -1) {
       dtoUnitOfMeasures.splice(index, 1)
@@ -237,7 +282,6 @@ const Index = () => {
       dtoUnitOfMeasures.push(value);
     };
   }
-  console.log(dtoUnitOfMeasures, "unit of measure");
   return (
     <Sidebar>
       {isFetching && isLoading ? (
@@ -693,18 +737,18 @@ const Index = () => {
                     <div className="unitOfMeasure">
 
                       <div className="filter-btns d-flex justify-content-evenly">
-                        {unitsIsLoading ? (
-                          <Loader />
-                        ) : lineItemId !== "createLineItem" && lineItemData?.data.result ? (
-                          unitsData?.data.result.map(({ id, name }, index) => (
+                        {lineItemId !== "createLineItem" && lineItemData?.data.result ? (
+                          dtoUnitOfMeasures.map(({ id, name, isSelected }, index) => (
                             <div className="filter" key={index}>
+                              {console.log(isSelected, 'isselected', lineItemData)}
                               <input
                                 type="checkbox"
-
                                 id={id}
+                                checked={isSelected}
                                 name="brand"
                                 onClick={(e) =>
-                                  handleChange({ id: (+e.target.id) })
+                                  handleUnitOfMeasurements(index, !isSelected)
+                                  // handleChange({ id: (+e.target.id) })
                                 }
                                 value={name}
                               />

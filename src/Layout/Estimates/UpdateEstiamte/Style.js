@@ -47,7 +47,61 @@ const Style = styled.div`
 export default Style;
 
 
+export const UnitOfMeasureStyled = styled.div`
+.unitOfMeasure {
+    .filter-btns .filter > label {
+      color: #363636;
+      font-style: normal;
+      font-weight: 400;
+      font-family: "EnnVisionsBold";
+      font-size: 14px;
+      color: white;
+      border-radius: 7px;
+      text-align: center;
+      padding: 4px 10px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    .filter-btns .filter > label:first-child {
+      margin-left: 0 !important;
+    }
+    .filter-btns .filter input[type="radio"] + label {
+      border-radius: 6px;
+      border: 1px solid #363636;
+      color: #363636;
+      padding: 2px 10px;
+      font-size: 16px;
+    }
+    .filter-btns .filter input[type="radio"]:checked + label {
+      background: #F9FBFC;
+      border: 1px solid #156985;
+border-radius: 4px;
+color: #156985;
+font-family: 'EnnVisionsBold';
+font-weight: 700;
+
+    }
+
+    .filter-btns .filter > input {
+      display: none;
+    }
+
+    margin-bottom: 10px;
+    p {
+      font-weight: 900;
+    }
+
+    .units-detail {
+      width: 100%;
+      display: flex;
+      /* justify-content: space-around; */
+      gap: 2%;
+    }
+  }
+
+`
 export const CreateEstimateStyled = styled.div`
+
 
   background: white;
   padding: 20px;
