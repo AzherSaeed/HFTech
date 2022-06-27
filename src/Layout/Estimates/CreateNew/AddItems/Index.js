@@ -21,8 +21,9 @@ const Index = () => {
   const { itemId } = useParams();
   const [oldData, setOldData] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState({});
 
-  const {oldUrl } = useContext(CreateContextData);
+  const { oldUrl } = useContext(CreateContextData);
 
   const fetchData = () => {
     axios.get(API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID + itemId).then((response) => setOldData(response.data.result.dtoLineItemDetails)).catch((error) => console.log(error, 'error in list admin'))
@@ -53,6 +54,12 @@ const Index = () => {
     setIsModalVisible(false);
   };
 
+  // handle change for unit of measurement
+  const handleChange = (value) => {
+    setdtoUnitOfMeasures(value)
+  }
+  console.log(dtoUnitOfMeasures, 'dtoUnitOfMeasures')
+
   // For Change detects in labor or Material details
 
   const handleItemsDetails = (index, inputName, value) => {
@@ -76,9 +83,7 @@ const Index = () => {
 
       "total": oldData.reduce((prev, current) => prev + current.total, 0),
       "isReversed": false,
-      "dtoUnitOfMeasure": itemDetails?.data.result.dtoUnitOfMeasures ? {
-        "id": itemDetails?.data.result.dtoUnitOfMeasures[0].id
-      } : null,
+      "dtoUnitOfMeasure": dtoUnitOfMeasures ? dtoUnitOfMeasures : null,
       "dtoLineItem": {
         "id": itemDetails.data.result.id
       },
@@ -97,6 +102,7 @@ const Index = () => {
     }).then((res) => {
       setIsModalVisible(true);
       setTimeout(() => {
+        refetchById();
         setIsModalVisible(false);
       }, 2000);
     }).catch((error) => console.log(error, 'error'));
@@ -210,6 +216,29 @@ const Index = () => {
                             <h6 className="amount fw-bold">{oldData.reduce((prev, current) => prev + current.total, 0)}</h6>
                           </div>
                           }
+
+                          <div className="unitOfMeasure">
+
+                            <div className="filter-btns d-flex flex-wrap">
+                              {
+                                itemDetails?.data.result.dtoUnitOfMeasures.filter(({ isSelected }) => isSelected === true).map(({name, id }, index) => (
+                                  <div className="filter ms-3" key={index}>
+                                    <input
+                                      type="radio"
+                                      id={id}
+                                      name="brand"
+
+                                      onClick={(e) =>
+                                        handleChange({ id: (+e.target.id) })
+                                      }
+                                      value={name}
+                                    />
+                                    <label htmlFor={id}>{name}</label>
+                                  </div>
+                                ))
+                              }
+                            </div>
+                          </div>
                           <div className="saveLineItems">
                             <CustomButton
                               bgcolor="#156985"
@@ -232,16 +261,16 @@ const Index = () => {
             </div>
             <div className="mt-3 ">
               <div className="d-flex justify-content-end">
-              <CustomButton
-                bgcolor="#156985"
-                color="white"
-                padding="8px 8px"
-                width="48%"
-                title="Done"
-                clicked={() => navigate(oldUrl)}
-              />
+                <CustomButton
+                  bgcolor="#156985"
+                  color="white"
+                  padding="8px 8px"
+                  width="48%"
+                  title="Done"
+                  clicked={() => navigate(oldUrl)}
+                />
               </div>
-            
+
             </div>
           </div>
         </div>

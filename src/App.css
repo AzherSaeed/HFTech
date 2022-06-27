@@ -44,6 +44,7 @@ body{
 }
 .hf-link{
   color: black;
+  width: auto;
 }
 @media screen and (max-width : 768px) {
   .content-table-main{

@@ -1,7 +1,6 @@
 import React from "react";
 import { LineItemDetailPageContainer } from "./styled";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import CustomDetailInput from "../../Components/CustomDetailInput";
 import Loader from "../../Components/Loader/Loader";
 import { API_URL, LINEITEM_DETAIL } from "../../Services/config";
 import { useParams } from "react-router-dom";
@@ -79,7 +78,7 @@ const LineItemDetailPage = () => {
                 <p className="fw-bold m-0">Unit of Measurement</p>
               </div>
               <div className="lineItemDetail-units-value">
-                {userData.data.result.dtoUnitOfMeasures?.map((data, i) => {
+                {userData.data.result.dtoUnitOfMeasures?.filter(({isSelected})=>isSelected===true).map((data, i) => {
                   return <p key={i}>{data.name},</p>;
                 })}
               </div>

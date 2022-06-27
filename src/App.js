@@ -3,7 +3,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./Layout/AuthScreens/Login/Index";
 import Signup from "./Layout/AuthScreens/SignUp/Index";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Estimates from "./Layout/Estimates/Index";
 import Locations from "./Layout/Locations/Index";
@@ -18,8 +18,6 @@ import USerContact from "./Layout/Contacts/UserContact/Index";
 import CreateNew from "./Layout/Estimates/CreateNew/CreateNew";
 import AddItem from "./Layout/Estimates/CreateNew/AddItems/Index";
 import LineItem from './Layout/LineItem';
-
-
 import ContactDetailPage from "./Layout/Contacts/ContactDetailPage";
 import LocationDetailPage from "./Layout/Locations/LocationDetailPage";
 import LineItemDetailPage from "./Layout/LineItem/LineItemDetailPage";
@@ -33,21 +31,25 @@ import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
 // this is the devTool the react query provides
 import { ReactQueryDevtools } from "react-query/devtools";
-import { useEffect } from "react";
+import WorkOrder from './Layout/Work Orders/Index'
+
 const queryClient = new QueryClient();
 export const CollapsedContext = createContext();
 
 export const CreateContextData = createContext()
 function App() {
+
+  // For Estimate Data Cache
   const [createNewData, setCreateNewData] = useState({});
   const [updateNewData, setUpdateNewData] = useState({});
-  const [oldUrl,setOldUrl]=useState();
+  const [oldUrl, setOldUrl] = useState();
   const [collapse, setCollapse] = useState(false);
-  const menuCollapsed = (data, navTitle) => {
+
+  const menuCollapsed = (data) => {
     setCollapse(data);
   };
 
-  
+
 
 
   return (
@@ -56,7 +58,7 @@ function App() {
         <MobileSiderBar />
         <ToastContainer />
         <CreateContextData.Provider value={{
-          createNewData, setCreateNewData,updateNewData, setUpdateNewData,setOldUrl,oldUrl
+          createNewData, setCreateNewData, updateNewData, setUpdateNewData, setOldUrl, oldUrl
         }}>
           <Routes>
             <Route exact path="/" element={<Home />} />
@@ -64,20 +66,35 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/resetPassword" element={<ResetPassword />} />
             <Route path="/forgetPassword" element={<ForgetPassword />} />
+
+            {/* Estimates */}
+
+            {/* Estimate Table */}
             <Route path="/estimates" element={<Estimates />} />
-            <Route path="/estimates/delete" element={<Delete />} />
+
+            {/* Estimate Create */}
             <Route path="/estimates/createNew" element={<CreateNew />} />
             <Route path="/estimates/createNew/:clientId" element={<CreateNew />} />
-            <Route path="/estimates/createNew/addItem" element={<AddItem />} />
-            <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />
+            <Route path="/estimates/createNew/:clientId/:itemId" element={<CreateNew />} />
+
+            {/* Estimate Delete */}
+            
+            <Route path="/estimates/delete" element={<Delete />} />
+
+            {/* Estimate Details */}
             <Route path="/estimates/:estimateId" element={<UserDetail />} />
             <Route path="/estimates/:estimateId/:itemId" element={<UserDetail />} />
-            <Route path="/estimates/createNew/:clientId/:itemId" element={<CreateNew />} />
+
+            {/* Update Estimate */}
             <Route path="/estimates/update" element={<UpdateEstiamte />} />
             <Route path="/estimates/update/:estimateId" element={<UpdateEstiamte />} />
             <Route path="/estimates/update/:estimateId/:itemId" element={<UpdateEstiamte />} />
 
+            {/* User Line Item Create */}
+            <Route path="/estimates/createNew/addItem" element={<AddItem />} />
+            <Route path="/estimates/createNew/addItem/:itemId" element={<AddItem />} />
 
+            {/* Contact */}
 
             <Route path="/contact" element={<Contacts />} />
             <Route path="/contact/:contactId" element={<USerContact />} />
@@ -95,7 +112,7 @@ function App() {
             <Route path="/clients/:clientId" element={<ClientDetail />} />
             <Route path="/clientsDetail/:clientId" element={<ClientDetailPage />} />
 
-            {/*Line Items */}
+            {/*Admin Line Items */}
 
             <Route path="/lineItem" element={<LineItem />} />
             <Route path="/lineItem/:lineItemId" element={<CreateLineItem />} />
@@ -104,6 +121,10 @@ function App() {
             {/* Unit Of Measurement */}
 
             <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
+
+            {/* Work Orders */}
+
+            <Route path="/workOrders" element={<WorkOrder />} />
 
           </Routes>
         </CreateContextData.Provider>

@@ -17,7 +17,7 @@ import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, 
 import ic_logo from "../../../Assets/icons/ic_logo.svg";
 import Loader from '../../../Components/Loader/Loader';
 import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/QueryCustomHook/Index';
-import { CreateEstimateStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
+import { CreateEstimateStyled, UnitOfMeasureStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
 import { useContext } from 'react';
 import { CreateContextData } from '../../../App';
 import moment from 'moment';
@@ -48,12 +48,12 @@ const CreateNew = () => {
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
+  const [deleteHandlerState, setDeleteHandlerState] = useState(true)
+
   const { createNewData, setCreateNewData, setOldUrl } = useContext(CreateContextData)
 
+  const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
 
-
-
-  const [dateAndTime, setDateAndTime] = useState();
 
   const initialValues = {
     client: createNewData.values && createNewData?.values.client,
@@ -71,9 +71,13 @@ const CreateNew = () => {
   // Save Data by Id to send Update after Changes
 
   const fetchData = (id) => {
-    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + id).then((response) => setOldData(response.data)).catch((error) => console.log('error', error));
+    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + id).then((response) => {
+      setOldData(response.data);
+      setdtoUnitOfMeasures(response.data.result.dtoUnitOfMeasureList)
+    }).catch((error) => console.log('error', error));
   }
 
+  console.log(dtoUnitOfMeasures, 'unit of measure')
 
   const antIcon = (
     <LoadingOutlined
@@ -123,9 +127,11 @@ const CreateNew = () => {
       setIsDeleteModal(true);
       labourRefetching();
       materialsRefetching();
+      setDeleteHandlerState(false);
       setTimeout(() => {
         setIsDeleteModal(false);
-        fetchData();
+        navigate(`/estimates/createNew/${clientId}`);
+
       }, 3000);
     }).catch((error) => console.log(error));
   }
@@ -139,6 +145,8 @@ const CreateNew = () => {
     navigate(`/estimates/createNew/${clientId}/${id}`);
     fetchData(id);
     refetchById();
+    setDeleteHandlerState(true);
+
   }
 
   const handleCancel = () => {
@@ -161,19 +169,19 @@ const CreateNew = () => {
       alert('plz select date and time');
     }
     else {
-      
-      
+
+
       axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
         "dtoClient": {
           "id": clientId
         },
         "dtoContact": [
           ...value.contacts.filter((item) => (Object.keys(item
-            ).length !== 0)).map(({ key }) => ({ id: key }))
+          ).length !== 0)).map(({ key }) => ({ id: key }))
         ],
         "dtoSpace": [
           ...value.locations.filter((item) => (Object.keys(item
-            ).length !== 0)).map(({ key }) => ({ id: key }))
+          ).length !== 0)).map(({ key }) => ({ id: key }))
         ],
         "referenceNumber": value.referenceNumber,
         "date": value.date,
@@ -205,7 +213,7 @@ const CreateNew = () => {
     setOldData({ ...oldData });
   }
 
-  const brands = ['Day', 'Each', 'Pair', 'Box', 'Roll', 'Week'];
+
   const onSubmitUpdate = () => {
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
       "id": oldData.result.id,
@@ -213,7 +221,7 @@ const CreateNew = () => {
       "total": oldData.result.total,
       "isReversed": oldData.result.isReversed,
       "dtoUnitOfMeasure": {
-        "id": oldData.result.dtoUnitOfMeasure ? oldData.result.dtoUnitOfMeasure.id : null
+        "id": dtoUnitOfMeasures && dtoUnitOfMeasures.filter(({ isSelected }) => isSelected === true)[0].id
       },
       "dtoLineItem": {
         "id": oldData.result.dtoLineItem.id
@@ -233,6 +241,7 @@ const CreateNew = () => {
     }).then((res) => {
       setIsModalVisible(false);
       setIsUpdateModalVisible(true);
+      refetchById();
       setTimeout(() => {
         setIsUpdateModalVisible(false);
       }, 2000);
@@ -242,9 +251,17 @@ const CreateNew = () => {
     navigate(`/estimates/createNew/${id}`);
   }
 
-  // Handle Time and date in
-  const onchangeDateTime = (formik, timeandDate) => {
-    setDateAndTime(timeandDate);
+
+  const handleChange = (index) => {
+
+    const SelectedIndex = dtoUnitOfMeasures.findIndex(object => {
+      return object.isSelected === true;
+    });
+
+    console.log(SelectedIndex, 'selected index');
+    dtoUnitOfMeasures[SelectedIndex].isSelected = false;
+    dtoUnitOfMeasures[index].isSelected = !dtoUnitOfMeasures[index].isSelected;
+    setdtoUnitOfMeasures([...dtoUnitOfMeasures]);
   };
 
 
@@ -335,7 +352,7 @@ const CreateNew = () => {
                         placeholder="Select Location"
                         defaultValue={
                           createNewData?.values?.locations && formik.values.locations.filter((item) => (Object.keys(item
-                            ).length !== 0))
+                          ).length !== 0))
                         }
                         label="Location"
                         className={
@@ -352,7 +369,7 @@ const CreateNew = () => {
                         placeholder="Select Contact"
                         defaultValue={
                           createNewData?.values?.contacts && formik.values.contacts.filter((item) => (Object.keys(item
-                            ).length !== 0))
+                          ).length !== 0))
                         }
                         label="Contact"
                         className={
@@ -450,6 +467,31 @@ const CreateNew = () => {
                         )
                         )
                       }
+                      <UnitOfMeasureStyled>
+                        <div className="unitOfMeasure mt-3">
+                          <h6 className="fw-bold">Unit of Measure</h6>
+                          <div className="filter-btns d-flex ">
+                            {
+                              dtoUnitOfMeasures && dtoUnitOfMeasures.map(({ isSelected, name, id }, index) => (
+                                <div className="filter ms-3" key={index}>
+                                  <input
+                                    type="radio"
+                                    id={id}
+                                    checked={isSelected}
+                                    name="brand"
+                                    onClick={() =>
+                                      handleChange(index)
+                                    }
+                                    value={name}
+                                  />
+                                  <label htmlFor={id}>{name}</label>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      </UnitOfMeasureStyled>
+
                       {oldData && <div className="grand-total-section mt-4 d-flex justify-content-between">
                         <h6 className="title fw-bold">Total</h6>
                         <h6 className="amount fw-bold">{oldData.result.userLineItemDetails.reduce((prev, current) => prev + current.total, 0)}</h6>
@@ -500,7 +542,7 @@ const CreateNew = () => {
                       </div>
                       <div className="col-md-6 col-sm-12 ">
                         {
-                          oldData && (
+                          deleteHandlerState === true && oldData && (
                             <div className="second-table">
                               <div className="d-none d-sm-block">
                                 <div className="inner-section">
@@ -548,20 +590,24 @@ const CreateNew = () => {
                                           }
                                         </tbody>
                                       </table>
-                                      <div className="unitOfMeasure">
-                                        <p className="heading">Units of Measure</p>
-                                        <div className='filter-btns d-flex justify-content-between'>
-                                          {
-                                            brands.map((title, index) => (
-                                              <div className='filter' key={index}>
-                                                <input type="checkbox" id={title} name="brand" value="{title}" />
-                                                <label htmlFor={title}>{title}</label>
-                                              </div>
-                                            ))
-                                          }
-                                        </div>
+                                      {
+                                        oldData?.result.dtoUnitOfMeasureList && (
+                                          <div className="unitOfMeasure">
 
-                                      </div>
+                                            <div className="filter-btns d-flex justify-content-between">
+                                              <h6 className='fw-bold'>Unit of Measure</h6>
+                                              {
+                                                oldData?.result.dtoUnitOfMeasureList.filter(({ isSelected }) => isSelected === true).map(({ name }, index) => (
+                                                  <div className="filter" key={index}>
+                                                    <h6 className='fw-bold'>{name}</h6>
+                                                  </div>
+                                                ))
+                                              }
+                                            </div>
+                                          </div>
+                                        )
+                                      }
+
                                     </UpdateEstimateRightStyled>
                                   </div>
                                 )
