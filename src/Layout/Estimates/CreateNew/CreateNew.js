@@ -1,14 +1,12 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Style from './Style';
-import GenericService from "../../../Services/GenericService";
 import Sidebar from '../../../Components/Sidebar/Sidebar';
 import FormControl from '../../../Components/FormControl';
 import * as Yup from "yup";
-import { Form, Radio } from "antd";
-import { toast } from "react-toastify";
+import { Form } from "antd";
 import { Formik } from "formik";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingOutlined, RightOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { InputNumber, Modal, Spin } from "antd";
@@ -31,24 +29,28 @@ const validationSchema = Yup.object({
   locations: Yup.array().required("Location is required!"),
   referenceNumber: Yup.string().required("Reference Number is required!"),
   description: Yup.string().required("Description is required!"),
-  // date: Yup.string().required("Date is required!"),
 });
 
-const generaticService = new GenericService();
+
 
 
 const { TabPane } = Tabs;
 
 const CreateNew = () => {
+  const navigate = useNavigate();
+
+
+
+
   const [oldData, setOldData] = useState();
   const { itemId, clientId } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
-  const navigate = useNavigate();
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
-  const firstUpdate = useRef(true);
   const { createNewData, setCreateNewData, setOldUrl } = useContext(CreateContextData)
+
+
 
 
   const [dateAndTime, setDateAndTime] = useState();
@@ -115,7 +117,6 @@ const CreateNew = () => {
   const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('userLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), false);
 
   // Item Delete Handler
-  console.log(itemDetails, "item details", oldData, 'oldata')
 
   const itemDeleteHandler = () => {
     axios.delete(API_URL + USER_LINE_ITEM_DELETE + itemId).then((res) => {
@@ -129,9 +130,9 @@ const CreateNew = () => {
     }).catch((error) => console.log(error));
   }
 
-  if (materialsLoading) {
-    return <Loader />
-  }
+  // if (materialsLoading) {
+  //   return <Loader />
+  // }
 
   // Id Navigation handler
   const refetchByIdHandler = (id) => {
@@ -206,7 +207,6 @@ const CreateNew = () => {
 
   const brands = ['Day', 'Each', 'Pair', 'Box', 'Roll', 'Week'];
   const onSubmitUpdate = () => {
-    console.log('update called');
     axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
       "id": oldData.result.id,
       "channel": oldData.result.channel,
@@ -243,9 +243,10 @@ const CreateNew = () => {
   }
 
   // Handle Time and date in
-  const onchangeDateTime = (value, timeandDate) => {
+  const onchangeDateTime = (formik, timeandDate) => {
     setDateAndTime(timeandDate);
   };
+
 
 
   return (
@@ -281,6 +282,7 @@ const CreateNew = () => {
           onSubmit={onSubmit}
         >
           {(formik) => {
+            console.log(formik , 'formikformik');
             return (
               <Form
                 name="basic"
@@ -315,7 +317,7 @@ const CreateNew = () => {
                       name="date"
                       placeholder="mm/dd/yy"
                       label="Date"
-                      defaultValue={createNewData?.values?.date && moment(formik.values.date)}
+                      defaultValue={createNewData?.values?.date && moment(createNewData?.values?.date)}
                       className={
                         formik.errors.date && formik.touched.date
                           ? "is-invalid"

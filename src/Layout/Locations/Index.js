@@ -69,7 +69,6 @@ const Index = () => {
 
   useEffect(() => {}, [detail]);
   const onError = (err) => {
-    console.log(err, "error while fetching data from api");
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchUserTable, setsearchUserTable] = useState([]);
@@ -107,10 +106,9 @@ const Index = () => {
         refetch();
       },
       onError: (err) => {
-        console.log("deleting error : ", err);
       },
       refetchInterval: false,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     }
   );
   const handleIndividualDelete = () => {
@@ -121,7 +119,7 @@ const Index = () => {
     navigate(`/locations/${data.id}`);
   };
 
-  const { isLoading, isError, refetch, data, error } = useQuery(
+  const { isLoading , isFetching , isError, refetch, data, error } = useQuery(
     "dataFetching",
     () => {
       return axios.get(API_URL + GET_SPACE_DETAIL, {
@@ -132,12 +130,12 @@ const Index = () => {
       });
     },
     {
-      refetchOnWindowFocus: "always",
-      onSuccess: () => {
+      refetchOnWindowFocus: 'always',
+      onSuccess: (data) => {
         setsearchUserTable(data?.data?.result);
       },
       onError,
-    }
+    },
   );
 
   const contactData = searchUserTable?.map((space) => {
@@ -199,6 +197,8 @@ const Index = () => {
     };
   });
 
+
+
   const carddetailHandler = (data) => {
     navigate(`/locationsDetail/${data.id}`);
   };
@@ -232,7 +232,6 @@ const Index = () => {
       },
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err);
       },
     }
   );
@@ -245,6 +244,7 @@ const Index = () => {
     };
     searchQuery.mutate(data);
   };
+
 
   return (
     <Sidebar>
@@ -279,7 +279,7 @@ const Index = () => {
           editHandler={handleEdit}
         />
         <div className="content-table-main">
-          <Table pagination={true} columns={columns} dataSource={contactData} />
+          <Table loading={isLoading && isFetching} pagination={true} columns={columns} dataSource={contactData} />
         </div>
         <Modal
           visible={isModalVisible}

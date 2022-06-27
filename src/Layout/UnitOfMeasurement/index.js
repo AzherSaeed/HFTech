@@ -49,7 +49,6 @@ const Index = () => {
     },
     {
       onSuccess: (data) => {
-        console.log(data);
       },
       refetchInterval: false,
       refetchOnWindowFocus: true,

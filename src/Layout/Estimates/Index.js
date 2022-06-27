@@ -29,6 +29,7 @@ import axios from "axios";
 import { CreateContextData } from "../../App";
 import EmailPop from "../../Components/EmailPop";
 import { useMutation } from "react-query";
+import { SpecialZoomLevel, Viewer } from "@react-pdf-viewer/core";
 
 const Index = () => {
   const { setCreateNewData } = useContext(CreateContextData);
@@ -68,6 +69,36 @@ const Index = () => {
   const emailTemplateReportHandler = (user) => {
     setstoreSpecificUser(user);
     setemailReportPopup(true);
+  };
+
+  const reportDownloadMutaion = useMutation(
+    (id) => {
+      return axios.get(API_URL + `report/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data.data, "report data");
+
+        return <Viewer
+          fileUrl={new Uint8Array([data])}
+          defaultScale={SpecialZoomLevel.PageFit}
+        />;
+      },
+      onError: (err) => {
+        console.log("deleting error : ", err);
+      },
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const reportDownloadHandler = (data) => {
+    reportDownloadMutaion.mutate(data.id);
   };
 
   const columns = [
@@ -141,17 +172,13 @@ const Index = () => {
         <Space size="large">
           <div style={{ display: "flex", gap: "6px" }}>
             <img src={pdfIcon} alt="edit Icon" className="action_icons" />
-            <a
-              href={`https://node01.dagnum.com:8443/hftech/api/report/${record.id}`}
-              alt="link"
-            >
-              <img
-                src={downloadIcon}
-                alt="Delete Icon"
-                className="action_icons"
-                // onClick={() => reportDownloadHandler(record)}
-              />
-            </a>
+
+            <img
+              src={downloadIcon}
+              alt="Delete Icon"
+              className="action_icons"
+              onClick={() => reportDownloadHandler(record)}
+            />
 
             <img
               src={emailIcon}
@@ -193,32 +220,6 @@ const Index = () => {
   const handleCancel = () => {
     setShowDeleteModal(false);
     setemailReportPopup(false);
-  };
-
-  const reportDownloadMutaion = useMutation(
-    (id) => {
-      return axios.get(API_URL + `report/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-    },
-    {
-      onSuccess: (data) => {
-        console.log(data, "data.datadata.datadata.data");
-        setIsModalVisibled(true);
-      },
-      onError: (err) => {
-        console.log("deleting error : ", err);
-      },
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const reportDownloadHandler = (data) => {
-    reportDownloadMutaion.mutate(data.id);
   };
 
   const clickedHandler = () => {

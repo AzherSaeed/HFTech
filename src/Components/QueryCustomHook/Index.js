@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
 
 
-console.log(useSelector, "use selector in custom components");
 
 // Custom Query component for data get
 
@@ -22,11 +20,9 @@ export const CustomQueryHookGet = (name, url, enable, OnWindow) => {
         },
         {
             onSuccess: (data) => {
-                console.log(data);
             },
             enabled: enable,
             onError: (error) => {
-                console.log(error)
             },
             refetchInterval: false,
             refetchOnWindowFocus: OnWindow ? true : false,
@@ -45,11 +41,9 @@ export const CustomQueryHookById = (name, id, url, enable, OnWindow) => {
         },
     }), {
         onSuccess: (data) => {
-            console.log(data);
         },
         enabled: enable,
         onError: (error) => {
-            console.log(error)
         },
         refetchInterval: false,
         refetchOnWindowFocus: OnWindow ? true : false,
@@ -72,11 +66,9 @@ export const CustomQueryHookPost = (name, url, enable) => {
         },
         {
             onSuccess: (data) => {
-                console.log(data);
             },
             enabled: enable,
             onError: (error) => {
-                console.log(error)
             },
             refetchInterval: false,
             refetchOnWindowFocus: false,

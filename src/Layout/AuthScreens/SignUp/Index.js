@@ -61,7 +61,6 @@ const Index = () => {
       onSuccess,
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err);
         toast.error('Please provide valid detail', {
           position: toast.POSITION.TOP_CENTER,
         });

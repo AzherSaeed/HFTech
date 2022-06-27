@@ -69,7 +69,6 @@ const Index = () => {
 
   useEffect(() => {}, [detail]);
   const onError = (err) => {
-    console.log(err, "error while fetching data from api");
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [successfullDeleteModal, setsuccessfullDeleteModal] = useState(false);
@@ -109,7 +108,6 @@ const Index = () => {
         refetch();
       },
       onError: (err) => {
-        console.log("deleting error : ", err);
       },
       refetchInterval: false,
       refetchOnWindowFocus: false,
@@ -232,7 +230,6 @@ const Index = () => {
       },
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err);
       },
     }
   );

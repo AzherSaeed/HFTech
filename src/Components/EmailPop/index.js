@@ -43,7 +43,6 @@ const Index = ({ user, setemailReportPopup }) => {
       },
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err);
       },
     }
   );

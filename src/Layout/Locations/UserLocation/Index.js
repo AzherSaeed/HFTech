@@ -83,7 +83,7 @@ const Index = () => {
     }
   );
 
-  const { data: countryData } = useQuery(
+  const { data: countryData , isLoading : countryLoading , isFetching : countryFetching } = useQuery(
     "get-coutnry-data",
     () => {
       return axios.get(API_URL + GET_COUNTRY, {
@@ -100,6 +100,7 @@ const Index = () => {
       // onSuccess,
     }
   );
+
 
 
 
@@ -234,6 +235,12 @@ const Index = () => {
   const handleSelectedCity = (val) => {
     setSpaceSelectedCity(val);
   };
+
+
+
+  if(countryLoading && countryFetching){
+    return  <Loader />
+  }
   return (
     <SideBarContainer>
       <Modal
@@ -253,7 +260,7 @@ const Index = () => {
       </Modal>
       <Style>
         <div>
-          {isFetching && isLoading ? (
+          {countryLoading && countryFetching  ? (
             <Loader />
           ) : (
             <div className="main-container">

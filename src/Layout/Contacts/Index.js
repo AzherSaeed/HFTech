@@ -101,7 +101,6 @@ const Index = () => {
         refetch();
       },
       onError: (err) => {
-        console.log("deleting error : ", err);
       },
       refetchInterval: false,
       refetchOnWindowFocus: false,
@@ -167,7 +166,6 @@ const Index = () => {
       },
 
       onError: (err, variables, snapshotValue) => {
-        console.log(err);
       },
     }
   );

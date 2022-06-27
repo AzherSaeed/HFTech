@@ -30,12 +30,7 @@ class UserService extends GenericService {
   getLoggedInUser = () => {
     try {
       const jwt = localStorage.getItem("token");
-      console.log(
-        "jwt",
-        jwtDecode(
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWFhZWViZWQ5YjZmNzAwMTZjZjM2NzIiLCJpYXQiOjE2Mzg2MTQ4OTcsImV4cCI6MTYzOTIxOTY5N30.Pw1HHwHmX6M9cQYhEud5_aZzfWjVlH2nfM_33t6NIwY"
-        )
-      );
+    
       return jwtDecode(jwt);
     } catch (ex) {
       return null;

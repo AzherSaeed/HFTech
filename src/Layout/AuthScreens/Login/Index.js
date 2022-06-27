@@ -32,7 +32,6 @@ const Index = () => {
   const { user } = useSelector((state) => state.authReducer);
 
   useEffect(() => {
-    console.log(user);
     if (user?.code == 500) {
       toast('login Credential Invalid' , 'error' , 'top-right')
     }

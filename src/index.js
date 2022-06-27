@@ -5,6 +5,7 @@ import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import "react-toastify/dist/ReactToastify.css";
+import '@react-pdf-viewer/core/lib/styles/index.css';
 import "antd/dist/antd.css";
 import { BrowserRouter } from "react-router-dom";
 import configureStore from "./store/store";
