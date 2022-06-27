@@ -236,8 +236,8 @@ const Index = () => {
   }
   const initialValues = {
     client: updateNewData.values ? updateNewData?.values.client : userDetails?.data.result.dtoClient.name,
-    contacts: updateNewData.values ? updateNewData?.values.contacts : userDetails?.data.result.dtoSpace,
-    locations: updateNewData.values ? updateNewData?.values.locations : userDetails?.data.result.dtoContact,
+    contacts: updateNewData.values ? updateNewData?.values.contacts : userDetails?.data.result.dtoContact,
+    locations: updateNewData.values ? updateNewData?.values.locations : userDetails?.data.result.dtoSpace,
     referenceNumber: updateNewData.values ? updateNewData?.values.referenceNumber : userDetails?.data.result.referenceNumber,
     description: updateNewData.values ? updateNewData?.values.description : userDetails?.data.result.description,
     date: updateNewData.values ? updateNewData?.values.date : userDetails?.data.result.date,
