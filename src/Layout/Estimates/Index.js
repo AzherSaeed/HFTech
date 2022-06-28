@@ -49,6 +49,7 @@ const Index = () => {
   const {
     data: listData,
     isLoading,
+    isFetching,
     refetch: refetchEstimateList,
     isRefetching,
     isSuccess,
@@ -58,6 +59,9 @@ const Index = () => {
     true,
     true
   );
+
+
+  console.log(isFetching , isLoading , 'isLoading');
 
   const deleteHandler = (id) => {
     setShowDeleteModal(true);
@@ -283,6 +287,7 @@ const Index = () => {
             ) : (
               <Table
                 pagination={false}
+                loading={isLoading}
                 columns={columns}
                 dataSource={
                   !isSuccess

@@ -1,27 +1,46 @@
-import React, { useState } from 'react';
-import Style from './Style';
-import Sidebar from '../../../Components/Sidebar/Sidebar';
-import FormControl from '../../../Components/FormControl';
+import React, { useState } from "react";
+import Style from "./Style";
+import Sidebar from "../../../Components/Sidebar/Sidebar";
+import FormControl from "../../../Components/FormControl";
 import * as Yup from "yup";
-import { Form } from "antd";
+import { Form, Input } from "antd";
 import { Formik } from "formik";
 import CustomButton from "../../../Components/CustomButton/Index";
-import { useNavigate, useParams } from 'react-router-dom';
-import { LoadingOutlined, RightOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import { useNavigate, useParams } from "react-router-dom";
+import { LoadingOutlined, RightOutlined } from "@ant-design/icons";
+import axios from "axios";
 import { InputNumber, Modal, Spin } from "antd";
 import { Tabs } from "antd";
-import editIcon from '../../../Assets/icons/ic_edit.svg';
-import deleteIcon from '../../../Assets/icons/ic_delete.svg';
-import { API_URL, ESTIMATE_CLIENTS_DATA_DROPDOWN, ESTIMATE_CONTACT_DATA_SELECT, ESTIMATE_CREATED_DATA_SAVE, ESTIMATE_LOCATIONS_DATA_SELECT, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR, LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS, USER_LINE_ITEM_DELETE, USER_LINE_ITEM_UPDATE, USER_LINE_ITEM__DETAILS_BY_ID } from "../../../Services/config";
+import editIcon from "../../../Assets/icons/ic_edit.svg";
+import deleteIcon from "../../../Assets/icons/ic_delete.svg";
+import {
+  API_URL,
+  ESTIMATE_CLIENTS_DATA_DROPDOWN,
+  ESTIMATE_CONTACT_DATA_SELECT,
+  ESTIMATE_CREATED_DATA_SAVE,
+  ESTIMATE_LOCATIONS_DATA_SELECT,
+  LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR,
+  LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS,
+  USERLINEITEM_SEARCH,
+  USER_LINE_ITEM_DELETE,
+  USER_LINE_ITEM_UPDATE,
+  USER_LINE_ITEM__DETAILS_BY_ID,
+} from "../../../Services/config";
 import ic_logo from "../../../Assets/icons/ic_logo.svg";
-import Loader from '../../../Components/Loader/Loader';
-import { CustomQueryHookById, CustomQueryHookGet } from '../../../Components/QueryCustomHook/Index';
-import { CreateEstimateStyled, UnitOfMeasureStyled, UpdateEstimateRightStyled } from '../UpdateEstiamte/Style';
-import { useContext } from 'react';
-import { CreateContextData } from '../../../App';
-import moment from 'moment';
-
+import {
+  CustomQueryHookById,
+  CustomQueryHookGet,
+} from "../../../Components/QueryCustomHook/Index";
+import {
+  CreateEstimateStyled,
+  UnitOfMeasureStyled,
+  UpdateEstimateRightStyled,
+} from "../UpdateEstiamte/Style";
+import { useContext } from "react";
+import { CreateContextData } from "../../../App";
+import moment from "moment";
+import { SearchInputContainer } from "../../../Components/GlobalStyle";
+import { useMutation } from "react-query";
 
 const validationSchema = Yup.object({
   client: Yup.string().required("Client is required!"),
@@ -31,16 +50,10 @@ const validationSchema = Yup.object({
   description: Yup.string().required("Description is required!"),
 });
 
-
-
-
 const { TabPane } = Tabs;
 
 const CreateNew = () => {
   const navigate = useNavigate();
-
-
-
 
   const [oldData, setOldData] = useState();
   const { itemId, clientId } = useParams();
@@ -48,36 +61,40 @@ const CreateNew = () => {
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [saveEstimateModal, setSaveEstimateModal] = useState(false);
-  const [deleteHandlerState, setDeleteHandlerState] = useState(true)
+  const [deleteHandlerState, setDeleteHandlerState] = useState(true);
+  const [selectedTab, setselectedTab] = useState('Labor')
+  const [labourUserTable, setlabourUserTable] = useState([])
+  const [materialUserTable, setmaterialUserTable] = useState([])
 
-  const { createNewData, setCreateNewData, setOldUrl } = useContext(CreateContextData)
+
+  console.log(materialUserTable , 'materialUserTable' , labourUserTable);
+  const { createNewData, setCreateNewData, setOldUrl } =
+    useContext(CreateContextData);
 
   const [dtoUnitOfMeasures, setdtoUnitOfMeasures] = useState([]);
-
 
   const initialValues = {
     client: createNewData.values && createNewData?.values.client,
     locations: createNewData.values && createNewData?.values.locations,
     contacts: createNewData.values && createNewData?.values.contacts,
     referenceNumber:
-      createNewData.values && createNewData?.values.referenceNumber
-    ,
+      createNewData.values && createNewData?.values.referenceNumber,
     description: createNewData.values && createNewData?.values.description,
     date: createNewData.values && createNewData?.values.date,
-
-
   };
 
   // Save Data by Id to send Update after Changes
 
   const fetchData = (id) => {
-    axios.get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + id).then((response) => {
-      setOldData(response.data);
-      setdtoUnitOfMeasures(response.data.result.dtoUnitOfMeasureList)
-    }).catch((error) => console.log('error', error));
-  }
+    axios
+      .get(API_URL + USER_LINE_ITEM__DETAILS_BY_ID + id)
+      .then((response) => {
+        setOldData(response.data);
+        setdtoUnitOfMeasures(response.data.result.dtoUnitOfMeasureList);
+      })
+      .catch((error) => console.log("error", error));
+  };
 
-  console.log(dtoUnitOfMeasures, 'unit of measure')
 
   const antIcon = (
     <LoadingOutlined
@@ -90,51 +107,106 @@ const CreateNew = () => {
 
   const navigateToAddItem = async (values) => {
     await setOldUrl(`/estimates/createNew/${clientId}`);
-    await setCreateNewData({ ...createNewData, values: values })
-    navigate('/estimates/createNew/addItem');
-
-  }
-
+    await setCreateNewData({ ...createNewData, values: values });
+    navigate("/estimates/createNew/addItem");
+  };
 
   // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('uuserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true, true);
+  const onSuccess = (data) => {
+    console.log(data , 'datadata' , selectedTab) ;
+    if(selectedTab == 'Labor'){
+      setlabourUserTable(data.data.result)
+    }
+    else if(selectedTab == 'Materials'){
+      setmaterialUserTable(data.data.result)
+    }
+  }
+
+  const {
+    data: labourData,
+    isLoading: labourLoading,
+    refetch: labourRefetching,
+  } = CustomQueryHookGet(
+    "uuserLineItemGetByUserIdAndTypeLabor",
+    API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR,
+    true,
+    true,
+    onSuccess
+  );
 
   // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('userLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true, true);
+  const {
+    data: materialsData,
+    isLoading: materialsLoading,
+    refetch: materialsRefetching,
+  } = CustomQueryHookGet(
+    "userLineItemGetByUserIdAndTypeMaterials",
+    API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS,
+    true,
+    true,
+    onSuccess
+  );
 
   // For ClientS Fetch Data
 
-  const { data: clientData } = CustomQueryHookGet('estimatesClientsDataDropdown', (API_URL + ESTIMATE_CLIENTS_DATA_DROPDOWN), true);
+  const { data: clientData } = CustomQueryHookGet(
+    "estimatesClientsDataDropdown",
+    API_URL + ESTIMATE_CLIENTS_DATA_DROPDOWN,
+    true
+  );
 
   // For Locations Fetch Data
 
-  const { data: locationsData, refetch: locationsRefetch, } = CustomQueryHookById('estimateLocationsDataSelect', clientId, (API_URL + ESTIMATE_LOCATIONS_DATA_SELECT), true);
+  const { data: locationsData, refetch: locationsRefetch } =
+    CustomQueryHookById(
+      "estimateLocationsDataSelect",
+      clientId,
+      API_URL + ESTIMATE_LOCATIONS_DATA_SELECT,
+      true
+    );
 
   // For Contact Fetch Data
 
-  const { data: contactsData, refetch: contactsRefetch } = CustomQueryHookById('estimateContactDataSelect', clientId, (API_URL + ESTIMATE_CONTACT_DATA_SELECT), true);
+  const { data: contactsData, refetch: contactsRefetch } = CustomQueryHookById(
+    "estimateContactDataSelect",
+    clientId,
+    API_URL + ESTIMATE_CONTACT_DATA_SELECT,
+    true
+  );
 
   // For Load Data by Id
 
-  const { data: itemDetails, isLoading: itemLoading, refetch: refetchById, isFetching: itemFetching } = CustomQueryHookById('userLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), false);
+  const {
+    data: itemDetails,
+    isLoading: itemLoading,
+    refetch: refetchById,
+    isFetching: itemFetching,
+  } = CustomQueryHookById(
+    "userLineItemGetUserLineItemDetailByUserLineItemId",
+    itemId,
+    API_URL + USER_LINE_ITEM__DETAILS_BY_ID,
+    false
+  );
 
   // Item Delete Handler
 
   const itemDeleteHandler = () => {
-    axios.delete(API_URL + USER_LINE_ITEM_DELETE + itemId).then((res) => {
-      setIsDeleteModal(true);
-      labourRefetching();
-      materialsRefetching();
-      setDeleteHandlerState(false);
-      setTimeout(() => {
-        setIsDeleteModal(false);
-        navigate(`/estimates/createNew/${clientId}`);
-
-      }, 3000);
-    }).catch((error) => console.log(error));
-  }
+    axios
+      .delete(API_URL + USER_LINE_ITEM_DELETE + itemId)
+      .then((res) => {
+        setIsDeleteModal(true);
+        labourRefetching();
+        materialsRefetching();
+        setDeleteHandlerState(false);
+        setTimeout(() => {
+          setIsDeleteModal(false);
+          navigate(`/estimates/createNew/${clientId}`);
+        }, 3000);
+      })
+      .catch((error) => console.log(error));
+  };
 
   // if (materialsLoading) {
   //   return <Loader />
@@ -146,8 +218,7 @@ const CreateNew = () => {
     fetchData(id);
     refetchById();
     setDeleteHandlerState(true);
-
-  }
+  };
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -164,132 +235,242 @@ const CreateNew = () => {
 
   const onSubmit = (value) => {
     if (!labourData.data.result && !materialsData.data.result) {
-      alert('plz select one line item');
+      alert("plz select one line item");
     } else if (!value.date) {
-      alert('plz select date and time');
-    }
-    else {
+      alert("plz select date and time");
+    } else {
+      axios
+        .post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
+          dtoClient: {
+            id: clientId,
+          },
+          dtoContact: [
+            ...value.contacts
+              .filter((item) => Object.keys(item).length !== 0)
+              .map(({ key }) => ({ id: key })),
+          ],
+          dtoSpace: [
+            ...value.locations
+              .filter((item) => Object.keys(item).length !== 0)
+              .map(({ key }) => ({ id: key })),
+          ],
+          referenceNumber: value.referenceNumber,
+          date: value.date,
+          description: value.description,
 
-
-      axios.post(API_URL + ESTIMATE_CREATED_DATA_SAVE, {
-        "dtoClient": {
-          "id": clientId
-        },
-        "dtoContact": [
-          ...value.contacts.filter((item) => (Object.keys(item
-          ).length !== 0)).map(({ key }) => ({ id: key }))
-        ],
-        "dtoSpace": [
-          ...value.locations.filter((item) => (Object.keys(item
-          ).length !== 0)).map(({ key }) => ({ id: key }))
-        ],
-        "referenceNumber": value.referenceNumber,
-        "date": value.date,
-        "description": value.description,
-
-        "dtoUserLineItems": materialsData.data.result && labourData.data.result ? [
-          ...labourData?.data.result.map(({ id }) => ({ id })),
-          ...materialsData?.data.result.map(({ id }) => ({ id }))
-        ] : labourData.data.result ? [...labourData?.data.result.map(({ id }) => ({ id })),] : [...materialsData?.data.result.map(({ id }) => ({ id }))],
-        "channel": "IOS"
-      }).then((res) => {
-        setSaveEstimateModal(true);
-        setTimeout(() => {
-          setSaveEstimateModal(false);
-          navigate('/estimates')
-
-        }, 2000);
-      }).catch((error) => console.log(error, 'error in estimate create'));
+          dtoUserLineItems:
+            materialsData.data.result && labourData.data.result
+              ? [
+                  ...labourData?.data.result.map(({ id }) => ({ id })),
+                  ...materialsData?.data.result.map(({ id }) => ({ id })),
+                ]
+              : labourData.data.result
+              ? [...labourData?.data.result.map(({ id }) => ({ id }))]
+              : [...materialsData?.data.result.map(({ id }) => ({ id }))],
+          channel: "IOS",
+        })
+        .then((res) => {
+          setSaveEstimateModal(true);
+          setTimeout(() => {
+            setSaveEstimateModal(false);
+            navigate("/estimates");
+          }, 2000);
+        })
+        .catch((error) => console.log(error, "error in estimate create"));
     }
   };
+
+  const searchQuery = useMutation(
+    (value) => {
+      return axios.get(
+        API_URL + USERLINEITEM_SEARCH,
+        {
+          params: {
+            searchKeyword: value.searchKeyword,
+            pageNumber: value.pageNumber,
+            pageSize: value.pageSize,
+            type: selectedTab,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data) => {
+        
+        if(selectedTab == 'Labor'){
+          if (!data.data.result) {
+            setlabourUserTable(data.data.result);
+          } else {
+            setlabourUserTable(data.data.result.records);
+          }
+        }
+        else if (selectedTab == 'Materials'){
+          if (!data.data.result) {
+            setmaterialUserTable(data.data.result);
+          } else {
+            setmaterialUserTable(data.data.result.records);
+          }
+        }
+      
+      },
+
+      onError: (err, variables, snapshotValue) => {},
+    }
+  );
+
+
   const handleItemsDetails = (index, inputName, value) => {
-    if (inputName === 'price') {
+    if (inputName === "price") {
       oldData.result.userLineItemDetails[index].price = value;
-      oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
+      oldData.result.userLineItemDetails[index].total =
+        oldData.result.userLineItemDetails[index].quantity *
+        oldData.result.userLineItemDetails[index].price;
     } else {
       oldData.result.userLineItemDetails[index].quantity = value;
-      oldData.result.userLineItemDetails[index].total = oldData.result.userLineItemDetails[index].quantity * oldData.result.userLineItemDetails[index].price;
+      oldData.result.userLineItemDetails[index].total =
+        oldData.result.userLineItemDetails[index].quantity *
+        oldData.result.userLineItemDetails[index].price;
     }
     setOldData({ ...oldData });
-  }
-
+  };
 
   const onSubmitUpdate = () => {
-    axios.post((API_URL + USER_LINE_ITEM_UPDATE), {
-      "id": oldData.result.id,
-      "channel": oldData.result.channel,
-      "total": oldData.result.total,
-      "isReversed": oldData.result.isReversed,
-      "dtoUnitOfMeasure": {
-        "id": dtoUnitOfMeasures && dtoUnitOfMeasures.filter(({ isSelected }) => isSelected === true)[0].id
-      },
-      "dtoLineItem": {
-        "id": oldData.result.dtoLineItem.id
-      },
-      "userLineItemDetails": [
-        ...oldData.result.userLineItemDetails.map(({ dtoLineItemDetail: { id }, total, quantity, price }) => (
-          {
-            "dtoLineItemDetail": {
-              id
-            },
-            total,
-            quantity,
-            price
-          }
-        ))
-      ]
-    }).then((res) => {
-      setIsModalVisible(false);
-      setIsUpdateModalVisible(true);
-      refetchById();
-      setTimeout(() => {
-        setIsUpdateModalVisible(false);
-      }, 2000);
-    }).catch((error) => console.log(error, 'error'));
-  }
+    axios
+      .post(API_URL + USER_LINE_ITEM_UPDATE, {
+        id: oldData.result.id,
+        channel: oldData.result.channel,
+        total: oldData.result.total,
+        isReversed: oldData.result.isReversed,
+        dtoUnitOfMeasure: {
+          id:
+            dtoUnitOfMeasures &&
+            dtoUnitOfMeasures.filter(({ isSelected }) => isSelected === true)[0]
+              .id,
+        },
+        dtoLineItem: {
+          id: oldData.result.dtoLineItem.id,
+        },
+        userLineItemDetails: [
+          ...oldData.result.userLineItemDetails.map(
+            ({ dtoLineItemDetail: { id }, total, quantity, price }) => ({
+              dtoLineItemDetail: {
+                id,
+              },
+              total,
+              quantity,
+              price,
+            })
+          ),
+        ],
+      })
+      .then((res) => {
+        setIsModalVisible(false);
+        setIsUpdateModalVisible(true);
+        refetchById();
+        setTimeout(() => {
+          setIsUpdateModalVisible(false);
+        }, 2000);
+      })
+      .catch((error) => console.log(error, "error"));
+  };
   const onSelectClient = (value, id) => {
     navigate(`/estimates/createNew/${id}`);
-  }
-
+  };
 
   const handleChange = (index) => {
-
-    const SelectedIndex = dtoUnitOfMeasures.findIndex(object => {
+    const SelectedIndex = dtoUnitOfMeasures.findIndex((object) => {
       return object.isSelected === true;
     });
 
-    console.log(SelectedIndex, 'selected index');
     dtoUnitOfMeasures[SelectedIndex].isSelected = false;
     dtoUnitOfMeasures[index].isSelected = !dtoUnitOfMeasures[index].isSelected;
     setdtoUnitOfMeasures([...dtoUnitOfMeasures]);
   };
 
 
+  const searchInputHandler = (value) => {
+    const data = {
+      searchKeyword: value,
+      pageNumber: 0,
+      pageSize: 10,
+    };
+    searchQuery.mutate(data);
+  };
+
+
+  const tabChangeHandler = (key) => {
+    setselectedTab(key)
+    if(key == 'Labor'){
+      labourRefetching()
+    }
+    else if(key == 'Materials'){
+      materialsRefetching()
+    }
+  }
 
   return (
     <Sidebar>
       <Style>
-        <Modal visible={isUpdateModalVisible} footer={null} onCancel={handleUpdateCancel} centered={true} closable={false}>
+        <Modal
+          visible={isUpdateModalVisible}
+          footer={null}
+          onCancel={handleUpdateCancel}
+          centered={true}
+          closable={false}
+        >
           <div className="text-center">
-            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+            <img
+              src={ic_logo}
+              alt="logo"
+              width="120px"
+              className="text-center"
+            />
           </div>
-          <div className="mt-3 text-center" >
+          <div className="mt-3 text-center">
             <h5>Item Updated Succesfull</h5>
           </div>
         </Modal>
-        <Modal visible={saveEstimateModal} footer={null} onCancel={handleEstimateModalCancel} centered={true} closable={false}>
+        <Modal
+          visible={saveEstimateModal}
+          footer={null}
+          onCancel={handleEstimateModalCancel}
+          centered={true}
+          closable={false}
+        >
           <div className="text-center">
-            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+            <img
+              src={ic_logo}
+              alt="logo"
+              width="120px"
+              className="text-center"
+            />
           </div>
-          <div className="mt-3 text-center" >
+          <div className="mt-3 text-center">
             <h5>Estimate Created Succesfull</h5>
           </div>
         </Modal>
-        <Modal visible={isDeleteModal} footer={null} onCancel={cancelDeleteModal} centered={true} closable={false}>
+        <Modal
+          visible={isDeleteModal}
+          footer={null}
+          onCancel={cancelDeleteModal}
+          centered={true}
+          closable={false}
+        >
           <div className="text-center">
-            <img src={ic_logo} alt="logo" width='120px' className="text-center" />
+            <img
+              src={ic_logo}
+              alt="logo"
+              width="120px"
+              className="text-center"
+            />
           </div>
-          <div className="mt-3 text-center" >
+          <div className="mt-3 text-center">
             <h5>Item Deleted Succesfull</h5>
           </div>
         </Modal>
@@ -299,17 +480,17 @@ const CreateNew = () => {
           onSubmit={onSubmit}
         >
           {(formik) => {
-            console.log(formik , 'formikformik');
+   
             return (
               <Form
                 name="basic"
                 onFinish={formik.handleSubmit}
                 // onFinishFailed={onFinishFailed}
                 autoComplete="off"
-              // validateMessages={validationSchema}
+                // validateMessages={validationSchema}
               >
-                <div className='grid-container'>
-                  <div className='fileds'>
+                <div className="grid-container">
+                  <div className="fileds">
                     <FormControl
                       control="select"
                       type="text"
@@ -326,7 +507,6 @@ const CreateNew = () => {
                       }
                       options={clientData?.data.result}
                       onSelect={onSelectClient}
-
                     />
                     <FormControl
                       control="dateTime"
@@ -334,16 +514,19 @@ const CreateNew = () => {
                       name="date"
                       placeholder="mm/dd/yy"
                       label="Date"
-                      defaultValue={createNewData?.values?.date && moment(createNewData?.values?.date)}
+                      defaultValue={
+                        createNewData?.values?.date &&
+                        moment(createNewData?.values?.date)
+                      }
                       className={
                         formik.errors.date && formik.touched.date
                           ? "is-invalid"
                           : "customInput"
                       }
-                    // onChange={onchangeDateTime}
+                      // onChange={onchangeDateTime}
                     />
                   </div>
-                  <div className='fileds'>
+                  <div className="fileds">
                     <div>
                       <FormControl
                         control="multiSelect"
@@ -351,8 +534,10 @@ const CreateNew = () => {
                         name="locations"
                         placeholder="Select Location"
                         defaultValue={
-                          createNewData?.values?.locations && formik.values.locations.filter((item) => (Object.keys(item
-                          ).length !== 0))
+                          createNewData?.values?.locations &&
+                          formik.values.locations.filter(
+                            (item) => Object.keys(item).length !== 0
+                          )
                         }
                         label="Location"
                         className={
@@ -368,8 +553,10 @@ const CreateNew = () => {
                         name="contacts"
                         placeholder="Select Contact"
                         defaultValue={
-                          createNewData?.values?.contacts && formik.values.contacts.filter((item) => (Object.keys(item
-                          ).length !== 0))
+                          createNewData?.values?.contacts &&
+                          formik.values.contacts.filter(
+                            (item) => Object.keys(item).length !== 0
+                          )
                         }
                         label="Contact"
                         className={
@@ -381,7 +568,7 @@ const CreateNew = () => {
                       />
                     </div>
 
-                    <div className='textarea'>
+                    <div className="textarea">
                       <FormControl
                         control="textarea"
                         type="text"
@@ -389,10 +576,12 @@ const CreateNew = () => {
                         placeholder="Enter estimate description"
                         label="Estimate Description"
                         defaultValue={
-                          createNewData?.values?.description && createNewData?.values.description
+                          createNewData?.values?.description &&
+                          createNewData?.values.description
                         }
                         className={
-                          formik.errors.description && formik.touched.description
+                          formik.errors.description &&
+                          formik.touched.description
                             ? "is-invalid"
                             : "customInput"
                         }
@@ -400,39 +589,60 @@ const CreateNew = () => {
                     </div>
                   </div>
 
-                  <div className='fileds'>
+                  <div className="fileds">
                     <FormControl
                       control="input"
                       type="text"
                       name="referenceNumber"
                       placeholder="Enter Reference Number"
                       defaultValue={
-                        createNewData?.values?.referenceNumber && createNewData?.values.referenceNumber
+                        createNewData?.values?.referenceNumber &&
+                        createNewData?.values.referenceNumber
                       }
                       label="Refernece Number"
                       className={
-                        formik.errors.referenceNumber && formik.touched.referenceNumber
+                        formik.errors.referenceNumber &&
+                        formik.touched.referenceNumber
                           ? "is-invalid"
                           : "customInput"
                       }
                     />
-                    <div className='addItem'>
-                      <div className='addItem-label'>Line Items</div>
+                    <div className="addItem">
+                      <div className="addItem-label">Line Items</div>
                       <div onClick={() => navigateToAddItem(formik.values)}>
-                        <div className='addItem-div'>
+                        <div className="addItem-div">
                           <div>Add LineItems</div>
-                          <div><RightOutlined /></div>
+                          <div>
+                            <RightOutlined />
+                          </div>
                         </div>
-
                       </div>
                     </div>
                   </div>
                 </div>
                 <CreateEstimateStyled>
-                  <Modal visible={isModalVisible} footer={null} onCancel={handleCancel} centered={true} closable={false}>
+                  <Modal
+                    visible={isModalVisible}
+                    footer={null}
+                    onCancel={handleCancel}
+                    centered={true}
+                    closable={false}
+                  >
                     <div className="tabWrapper">
-                      {
-                        oldData?.result.userLineItemDetails.map(({ id, name, quantity, price, total, dtoUser, insertedDate, updatedDate }, index) => (
+                      {oldData?.result.userLineItemDetails.map(
+                        (
+                          {
+                            id,
+                            name,
+                            quantity,
+                            price,
+                            total,
+                            dtoUser,
+                            insertedDate,
+                            updatedDate,
+                          },
+                          index
+                        ) => (
                           <div className="rateWrapper mt-3" key={id}>
                             <h5>{name}</h5>
                             <div className="input-fields d-flex">
@@ -442,22 +652,26 @@ const CreateNew = () => {
                                 defaultValue={price}
                                 controls={false}
                                 value={price}
-                                type='text'
-                                onChange={(value) => handleItemsDetails(index, 'price', value)}
+                                type="text"
+                                onChange={(value) =>
+                                  handleItemsDetails(index, "price", value)
+                                }
                               />
                               <InputNumber
                                 addonAfter="Quantity"
                                 defaultValue={quantity}
                                 value={quantity}
                                 controls={false}
-                                type='text'
-                                onChange={(value) => handleItemsDetails(index, 'quantity', value)}
+                                type="text"
+                                onChange={(value) =>
+                                  handleItemsDetails(index, "quantity", value)
+                                }
                               />
                               <InputNumber
-                                className='total-input'
+                                className="total-input"
                                 addonBefore="Total"
                                 defaultValue={total}
-                                type='text'
+                                type="text"
                                 disabled
                                 controls={false}
                                 value={total}
@@ -465,37 +679,42 @@ const CreateNew = () => {
                             </div>
                           </div>
                         )
-                        )
-                      }
+                      )}
                       <UnitOfMeasureStyled>
                         <div className="unitOfMeasure mt-3">
                           <h6 className="fw-bold">Unit of Measure</h6>
                           <div className="filter-btns d-flex ">
-                            {
-                              dtoUnitOfMeasures && dtoUnitOfMeasures.map(({ isSelected, name, id }, index) => (
-                                <div className="filter ms-3" key={index}>
-                                  <input
-                                    type="radio"
-                                    id={id}
-                                    checked={isSelected}
-                                    name="brand"
-                                    onClick={() =>
-                                      handleChange(index)
-                                    }
-                                    value={name}
-                                  />
-                                  <label htmlFor={id}>{name}</label>
-                                </div>
-                              ))
-                            }
+                            {dtoUnitOfMeasures &&
+                              dtoUnitOfMeasures.map(
+                                ({ isSelected, name, id }, index) => (
+                                  <div className="filter ms-3" key={index}>
+                                    <input
+                                      type="radio"
+                                      id={id}
+                                      checked={isSelected}
+                                      name="brand"
+                                      onClick={() => handleChange(index)}
+                                      value={name}
+                                    />
+                                    <label htmlFor={id}>{name}</label>
+                                  </div>
+                                )
+                              )}
                           </div>
                         </div>
                       </UnitOfMeasureStyled>
 
-                      {oldData && <div className="grand-total-section mt-4 d-flex justify-content-between">
-                        <h6 className="title fw-bold">Total</h6>
-                        <h6 className="amount fw-bold">{oldData.result.userLineItemDetails.reduce((prev, current) => prev + current.total, 0)}</h6>
-                      </div>}
+                      {oldData && (
+                        <div className="grand-total-section mt-4 d-flex justify-content-between">
+                          <h6 className="title fw-bold">Total</h6>
+                          <h6 className="amount fw-bold">
+                            {oldData.result.userLineItemDetails.reduce(
+                              (prev, current) => prev + current.total,
+                              0
+                            )}
+                          </h6>
+                        </div>
+                      )}
                       <div className="saveLineItems mt-3">
                         <CustomButton
                           bgcolor="#156985"
@@ -514,114 +733,171 @@ const CreateNew = () => {
                     <div className="row">
                       <div className="col-md-6 col-sm-12">
                         <div className="first-table">
-                          <Tabs defaultActiveKey="1">
-                            <TabPane tab="Labor Lineitems" key="1">
-                              {labourData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
-                                <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
-                                  <div className="addItem-div">
-                                    <div>{item.name}</div>
-                                    <div>&gt;</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </TabPane>
-                            <TabPane tab="Materials Lineitems" key="2">
-                              {materialsData?.data?.result?.map(({ id, dtoLineItem: item }, index) => (
-                                <div className="addItem" key={index} onClick={() => refetchByIdHandler(id)}>
-                                  <div className="d-none d-sm-block">
+                          <Tabs defaultActiveKey="Labor" onChange={tabChangeHandler} >
+                            <TabPane tab="Labor Lineitems" key="Labor">
+                              <SearchInputContainer>
+                                <Input
+                                  name="searchKeyword"
+                                  onChange={(e) =>
+                                    searchInputHandler(e.target.value)
+                                  }
+                                  placeholder="Search Lineitems"
+                                />
+                              </SearchInputContainer>
+                              {labourUserTable?.map(
+                                ({ id, dtoLineItem: item }, index) => (
+                                  <div
+                                    className="addItem"
+                                    key={index}
+                                    onClick={() => refetchByIdHandler(id)}
+                                  >
                                     <div className="addItem-div">
                                       <div>{item.name}</div>
                                       <div>&gt;</div>
                                     </div>
                                   </div>
-                                </div>
-                              ))}
+                                )
+                              )}
+                            </TabPane>
+                            <TabPane tab="Materials Lineitems" key="Materials">
+                              {" "}
+                              <SearchInputContainer>
+                                <Input
+                                  name="searchKeyword"
+                                  onChange={(e) =>
+                                    searchInputHandler(e.target.value)
+                                  }
+                                  placeholder="Search Lineitems"
+                                />
+                              </SearchInputContainer>
+                              {materialUserTable?.map(
+                                ({ id, dtoLineItem: item }, index) => (
+                                  <div
+                                    className="addItem"
+                                    key={index}
+                                    onClick={() => refetchByIdHandler(id)}
+                                  >
+                                    <div className="d-none d-sm-block">
+                                      <div className="addItem-div">
+                                        <div>{item.name}</div>
+                                        <div>&gt;</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              )}
                             </TabPane>
                           </Tabs>
                         </div>
                       </div>
                       <div className="col-md-6 col-sm-12 ">
-                        {
-                          deleteHandlerState === true && oldData && (
-                            <div className="second-table">
-                              <div className="d-none d-sm-block">
-                                <div className="inner-section">
-                                  <div className="main-heading-section d-flex justify-content-between">
-                                    <p className="main-heading">{itemDetails?.data.result.dtoLineItem.name}</p>
-                                    <div className="warn-actions">
-                                      <div style={{ display: 'flex', gap: '6px' }}>
-                                        <img src={deleteIcon} onClick={itemDeleteHandler} alt="delete Icon" className="action_icons deleteicon" />
-                                        <img onClick={() => setIsModalVisible(true)} src={editIcon} alt="edit Icon" className="action_icons editicon" />
-                                      </div>
+                        {deleteHandlerState === true && oldData && (
+                          <div className="second-table">
+                            <div className="d-none d-sm-block">
+                              <div className="inner-section">
+                                <div className="main-heading-section d-flex justify-content-between">
+                                  <p className="main-heading">
+                                    {itemDetails?.data.result.dtoLineItem.name}
+                                  </p>
+                                  <div className="warn-actions">
+                                    <div
+                                      style={{ display: "flex", gap: "6px" }}
+                                    >
+                                      <img
+                                        src={deleteIcon}
+                                        onClick={itemDeleteHandler}
+                                        alt="delete Icon"
+                                        className="action_icons deleteicon"
+                                      />
+                                      <img
+                                        onClick={() => setIsModalVisible(true)}
+                                        src={editIcon}
+                                        alt="edit Icon"
+                                        className="action_icons editicon"
+                                      />
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="d-sm-none">
-                              </div>
-                              <div className="d-none d-sm-block">
-                                {itemFetching ? (
-                                  <div className="d-flex justify-content-center">
-                                    <Spin indicator={antIcon} />
-                                  </div>
-                                ) : (
-                                  <div className="tabWrapper">
-                                    <UpdateEstimateRightStyled>
-                                      <table className="table">
-                                        <thead>
-                                          <tr>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Rate</th>
-                                            <th scope="col">QTY</th>
-                                            <th scope="col">Total</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {
-                                            oldData?.result.userLineItemDetails.map(({ id, name, price, total, quantity }, index) => (
-                                              <tr key={id}>
-                                                <td>{name}</td>
-                                                <td>{price}</td>
-                                                <td>{quantity}</td>
-                                                <td>{total}</td>
-                                              </tr>
-                                            )
-                                            )
-                                          }
-                                        </tbody>
-                                      </table>
-                                      {
-                                        oldData?.result.dtoUnitOfMeasureList && (
-                                          <div className="unitOfMeasure">
-
-                                            <div className="filter-btns d-flex justify-content-between">
-                                              <h6 className='fw-bold'>Unit of Measure</h6>
-                                              {
-                                                oldData?.result.dtoUnitOfMeasureList.filter(({ isSelected }) => isSelected === true).map(({ name }, index) => (
-                                                  <div className="filter" key={index}>
-                                                    <h6 className='fw-bold'>{name}</h6>
-                                                  </div>
-                                                ))
-                                              }
-                                            </div>
-                                          </div>
-                                        )
-                                      }
-
-                                    </UpdateEstimateRightStyled>
-                                  </div>
-                                )
-                                }
-                              </div>
                             </div>
-                          )
-                        }
+                            <div className="d-sm-none"></div>
+                            <div className="d-none d-sm-block">
+                              {itemFetching ? (
+                                <div className="d-flex justify-content-center">
+                                  <Spin indicator={antIcon} />
+                                </div>
+                              ) : (
+                                <div className="tabWrapper">
+                                  <UpdateEstimateRightStyled>
+                                    <table className="table">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Name</th>
+                                          <th scope="col">Rate</th>
+                                          <th scope="col">QTY</th>
+                                          <th scope="col">Total</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {oldData?.result.userLineItemDetails.map(
+                                          (
+                                            {
+                                              id,
+                                              name,
+                                              price,
+                                              total,
+                                              quantity,
+                                            },
+                                            index
+                                          ) => (
+                                            <tr key={id}>
+                                              <td>{name}</td>
+                                              <td>{price}</td>
+                                              <td>{quantity}</td>
+                                              <td>{total}</td>
+                                            </tr>
+                                          )
+                                        )}
+                                      </tbody>
+                                    </table>
+                                    {oldData?.result.dtoUnitOfMeasureList && (
+                                      <div className="unitOfMeasure">
+                                        <div className="filter-btns d-flex justify-content-between">
+                                          <h6 className="fw-bold">
+                                            Unit of Measure
+                                          </h6>
+                                          {oldData?.result.dtoUnitOfMeasureList
+                                            .filter(
+                                              ({ isSelected }) =>
+                                                isSelected === true
+                                            )
+                                            .map(({ name }, index) => (
+                                              <div
+                                                className="filter"
+                                                key={index}
+                                              >
+                                                <h6 className="fw-bold">
+                                                  {name}
+                                                </h6>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </UpdateEstimateRightStyled>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-
                   </div>
                 </CreateEstimateStyled>
-                <div style={{ width: '49%' }} className='fileds buttons mt-5 ms-auto d-flex justify-content-end '>
+                <div
+                  style={{ width: "49%" }}
+                  className="fileds buttons mt-5 ms-auto d-flex justify-content-end "
+                >
                   <CustomButton
                     bgcolor="#156985"
                     color="white"
@@ -636,9 +912,8 @@ const CreateNew = () => {
           }}
         </Formik>
       </Style>
-
     </Sidebar>
-  )
-}
+  );
+};
 
-export default CreateNew
+export default CreateNew;

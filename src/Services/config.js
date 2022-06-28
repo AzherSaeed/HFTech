@@ -65,5 +65,5 @@ export const CONTACT_SEARCH = 'contact/searchContact'
 export const SPACE_SEARCH = 'space/searchSpace';
 export const LINEITEMS_SEARCH = 'lineItem/searchLineItemWithPaging';
 export const ESTIMATES_REPORT_DOWNLOAD = 'report';
-export const USERlINEiTEM_SEARCH = 'userLineItem/searchUserLineItemByEstimateIdWithPaging';
-export const USERLINEITEM_SEARCH1 = 'userLineItem/searchUserLineItemByUserIdWithPaging';
+export const USERLINEITEM_SEARCH_BY_ESTIMATEID = 'userLineItem/searchUserLineItemByEstimateIdWithPaging';
+export const USERLINEITEM_SEARCH = 'userLineItem/searchUserLineItemByUserIdWithPaging';
