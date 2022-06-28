@@ -41,11 +41,14 @@ const Index = () => {
 
   // // For Labour Data
 
-  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeLabor', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_LABOUR), true);
+  const { data: labourData, isLoading: labourLoading, refetch: labourRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeLabour', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Labor`), true, true);
 
-  // // For Material Data
+  // For Material Data
 
-  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('createUserLineItemGetByUserIdAndTypeMaterials', (API_URL + LIST_ADMIN_LINE_ITEMS_BY_ID_TYPE_MATERIALS), true);
+  const { data: materialsData, isLoading: materialsLoading, refetch: materialsRefetching } = CustomQueryHookGet('getByEstimateIdAndTypeMaterials', (API_URL + `userLineItem/getByEstimateIdAndType?estimateId=${estimateId}&type=Materials`), true, true);
+
+
+
 
   const { data: lineItemDetails, isLoading: itemLoading, refetch: lineItemDetailsRefech, isFetching: itemFetching } = CustomQueryHookById('createUserLineItemGetUserLineItemDetailByUserLineItemId', itemId, (API_URL + USER_LINE_ITEM__DETAILS_BY_ID), true);
 
@@ -357,7 +360,7 @@ const Index = () => {
                               </thead>
                               <tbody>
                                 {
-                                  oldData.map(({ id, name, price, total, quantity }, index) => (
+                                  oldData?.map(({ id, name, price, total, quantity }, index) => (
                                     <tr key={id}>
                                       <td>{name}</td>
                                       <td>{price}</td>
@@ -369,6 +372,23 @@ const Index = () => {
                                 }
                               </tbody>
                             </table>
+                            {
+                              lineItemDetails?.data.result.dtoUnitOfMeasureList && (
+                                <div className="unitOfMeasure">
+
+                                  <div className="filter-btns d-flex justify-content-between">
+                                    <h6 className='fw-bold'>Unit of Measure</h6>
+                                    {
+                                      lineItemDetails?.data.result.dtoUnitOfMeasureList.filter(({ isSelected }) => isSelected === true).map(({ name }, index) => (
+                                        <div className="filter" key={index}>
+                                          <h6 className='fw-bold'>{name}</h6>
+                                        </div>
+                                      ))
+                                    }
+                                  </div>
+                                </div>
+                              )
+                            }
                           </UpdateEstimateRightStyled>
                         </div>
                       )

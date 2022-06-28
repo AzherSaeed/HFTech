@@ -29,6 +29,8 @@ import UnitOfMeasurement from './Layout/UnitOfMeasurement'
 import ClientDetailPage from './Layout/Clients/ClientDetailPage'
 import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
+import WorkOrderCreate from './Layout/Work Orders/Create/Index';
+
 // this is the devTool the react query provides
 import { ReactQueryDevtools } from "react-query/devtools";
 import WorkOrder from './Layout/Work Orders/Index'
@@ -125,6 +127,7 @@ function App() {
             {/* Work Orders */}
 
             <Route path="/workOrders" element={<WorkOrder />} />
+            <Route path="/workOrders/create" element={<WorkOrderCreate />} />
 
           </Routes>
         </CreateContextData.Provider>
