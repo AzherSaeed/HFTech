@@ -357,7 +357,7 @@ const Index = () => {
                       />
                       <div className="rateWrapper">
                         <div className="input-fields">
-                          <div>
+                          <div className="a">
                             <label for="reg">Regular Value</label>
                             <InputNumber
                               type='number'
@@ -385,7 +385,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="b">
                             <label for="reg">Quantity</label>
                             <InputNumber
                               type='number'
@@ -412,7 +412,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="c">
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
@@ -452,7 +452,7 @@ const Index = () => {
                       />
                       <div className="rateWrapper">
                         <div className="input-fields">
-                          <div>
+                          <div className="a">
                             <label for="reg">Regular Value</label>
                             <InputNumber
                               type='number'
@@ -481,7 +481,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="b">
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
@@ -510,7 +510,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="c">
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
@@ -551,7 +551,7 @@ const Index = () => {
                       />
                       <div className="rateWrapper">
                         <div className="input-fields">
-                          <div>
+                          <div className="a">
                             <label for="reg">Regular Value</label>
                             <InputNumber
                               type='number'
@@ -580,7 +580,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="b"> 
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
@@ -609,7 +609,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="c">
                             <label for="total">Total</label>
                             <br />
                             <InputNumber
@@ -650,7 +650,7 @@ const Index = () => {
                       />
                       <div className="rateWrapper">
                         <div className="input-fields">
-                          <div>
+                          <div className="a">
                             <label for="reg">Regular Value</label>
                             <InputNumber
                               type='number'
@@ -678,7 +678,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="b">
                             <label for="quan">Quantity</label>
                             <br />
                             <InputNumber
@@ -707,7 +707,7 @@ const Index = () => {
                               }
                             />
                           </div>
-                          <div>
+                          <div className="c">
                             <label for="total">Total</label>
                             <br />
                             <InputNumber

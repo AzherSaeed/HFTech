@@ -279,7 +279,9 @@ const Index = () => {
           editHandler={handleEdit}
         />
         <div className="content-table-main">
-          <Table loading={isLoading && isFetching} pagination={true} columns={columns} dataSource={contactData} />
+          <Table scroll={{
+            y:'60vh'
+          }} loading={isLoading && isFetching} pagination={true} columns={columns} dataSource={contactData} />
         </div>
         <Modal
           visible={isModalVisible}

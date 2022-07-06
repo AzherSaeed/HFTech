@@ -1,21 +1,24 @@
 import styled from "styled-components";
-import { PrimaryColor } from "../../Components/GlobalStyle";
+
 
 export const LineItemContainer = styled.div`
+height: 70vh;
   .btn {
     display: flex;
     justify-content: flex-end;
   }
-  
+  .ant-table{
+    height: 40vh;
+  }
   .ant-table-thead {
     background-color: #f3f6f9;
     border-radius: 8px;
     .ant-table-cell {
-      background: transparent;
-      color: #1b283f;
-      font-family: "EnnVisionsBold";
-      font-weight: 500;
-      padding: 8px 16px;
+    background: transparent;
+    color: #1b283f;
+    font-family: "EnnVisionsBold";
+    font-weight: 500;
+    padding: 8px 16px;
     }
   }
   .ant-table-tbody {
@@ -83,18 +86,18 @@ export const LineItemDetailContainer = styled.div`
       font-size: 16px;
     }
     .filter-btns .filter input[type="checkbox"]:checked + label {
-      background: #F9FBFC;
-      border: 1px solid #156985;
+background: #F9FBFC;
+border: 1px solid #156985;
 border-radius: 4px;
 color: #156985;
 font-family: 'EnnVisionsBold';
 font-weight: 700;
 
-    }
+}
 
-    .filter-btns .filter > input {
-      display: none;
-    }
+.filter-btns .filter > input {
+  display: none;
+}
 
     margin-bottom: 10px;
     p {
@@ -124,10 +127,56 @@ font-weight: 700;
     color: #1b283f !important;
     padding-left: 5px !important;
   }
+
+  .grid-container-areas{
+  display: grid;
+  grid-template-areas: 
+  "b a" 
+  "c a";
+  grid-template-columns: 1fr 1fr;
+  .a{
+    grid-area: a;
+    
+    
+  }
+  .b{
+    grid-area: b;
+  }
+  .c{
+    grid-area: c;
+  }
+  
+  column-gap: 40px;
+
+  
+  }
+
   .input-fields {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 10px;
+    grid-template-areas: 
+  "a b c" ;
+  .a{
+    grid-area: a;
+  }
+  .b{
+    grid-area: b;
+  }
+  .c{
+    grid-area: c;
+  }
+
+    @media screen and (max-width:575px){
+      grid-template-columns: repeat(2,1fr);
+      grid-template-areas: 
+  "a b"
+  "c c" ;
+  .c{
+    grid-column: 1 / span 2;
+  }
+
+    }
   }
   .rateWrapper {
   }

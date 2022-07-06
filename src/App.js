@@ -31,7 +31,17 @@ import UpdateEstiamte from "./Layout/Estimates/UpdateEstiamte/Index";
 import { QueryClientProvider, QueryClient } from "react-query";
 // this is the devTool the react query provides
 import { ReactQueryDevtools } from "react-query/devtools";
-import WorkOrder from './Layout/Work Orders/Index'
+import WorkOrderTable from './Layout/Work Orders/Index'
+import CustomerInputs from "./Layout/Work Orders/CustomerEquipment/Inputs";
+import Inputs from "./Layout/Work Orders/Create/Inputs";
+import Notes from "./Layout/Work Orders/Note/Notes";
+import List from "./Layout/Work Orders/List/List";
+import Assignment from "./Layout/Work Orders/Assignment/Assignment";
+import Equipment from "./Layout/Work Orders/Equipment/Equipment";
+import Todo from "./Layout/Work Orders/Todo/Todo";
+import CustomerEquipment from "./Layout/Work Orders/CustomerEquipment/CustomerEquipment";
+import WorkOrders from "./Layout/Work Orders/WordOrders";
+import Details from "./Layout/Work Orders/Details/Details";
 
 const queryClient = new QueryClient();
 export const CollapsedContext = createContext();
@@ -123,8 +133,17 @@ function App() {
             <Route path="/unitOfMeasurement" element={<UnitOfMeasurement />} />
 
             {/* Work Orders */}
-
-            <Route path="/workOrders" element={<WorkOrder />} />
+            <Route path="/workorders" element={<WorkOrders />} />
+            <Route path="/workOrders/create" element={<WorkOrderTable />} />
+            <Route path="/workOrders/inputs" element={<Inputs />} />
+            <Route path="/workOrders/inputs/Notes" element={<Notes />} />
+            <Route path="/workOrders/inputs/List" element={<List />} />
+            <Route path="/workOrders/assignment" element={<Assignment />} />
+            <Route path="/workOrders/equipment" element={<Equipment />} />
+            <Route path="/workOrders/todo" element={<Todo />} />
+            <Route path="/workOrders/customer-equipment" element={<CustomerEquipment />} />
+            <Route path="/workOrders/customer-inputs" element={<CustomerInputs />} />
+            <Route path="/workOrders/details" element={<Details />} />
 
           </Routes>
         </CreateContextData.Provider>

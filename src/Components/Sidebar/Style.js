@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-const SideBarContainer =styled.div`
- 
- 
+const SideBarContainer = styled.div`
+
+
 
 .ant-layout-content{
 .content-siderbar  {
@@ -9,7 +9,7 @@ const SideBarContainer =styled.div`
 padding: 0 !important;
 
 }    
-padding: 24px;
+padding: 0px 24px 24px 24px;
 } 
 }
 
@@ -23,11 +23,11 @@ margin:0px !important;
 }
 
 .ant-layout-sider-zero-width-trigger{
- display:none;
- }
+display:none;
+}
 .ant-layout-header {
-    background: #EEF0F8 !important;
-  
+background: #EEF0F8 !important;
+
 }
 .ant-layout-sider-children {
     background:#ECECEC !important;  
@@ -71,5 +71,5 @@ margin:0px !important;
 }
 
 
- ` 
- export default SideBarContainer;
+`
+export default SideBarContainer;

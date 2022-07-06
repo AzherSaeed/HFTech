@@ -6,7 +6,7 @@ const StyleEstimates = styled.div`
   }
   .ant-table {
     padding: 10px;
-    height: 70vh;
+    height: 67vh;
   }
   .ant-table-thead {
     background-color: #f3f6f9 !important;
@@ -16,7 +16,7 @@ const StyleEstimates = styled.div`
       color: #1b283f;
       font-family: "EnnVisionsBold";
       font-weight: 500;
-      padding: 8px 16px;
+      padding: 6px 16px;
     }
   }
   .ant-table-tbody > tr > td {

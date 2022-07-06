@@ -265,7 +265,7 @@ const Index = () => {
               width="130px"
               title="Create new"
               clicked={() => {
-                navigate("/locations/createNew");
+                navigate("/lineItem/:lineItemId");
               }}
             />
           </div>
@@ -278,7 +278,9 @@ const Index = () => {
           editHandler={handleEdit}
         />
         <div className="content-table-main">
-          <Table pagination={true} columns={columns} dataSource={contactData} />
+          <Table scroll={{
+            y:'60vh'
+          }} pagination={true} columns={columns} dataSource={contactData} />
         </div>
         <Modal
           visible={isModalVisible}

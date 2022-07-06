@@ -286,6 +286,9 @@ const Index = () => {
               <Loader />
             ) : (
               <Table
+              scroll={{
+                y:'60vh'
+              }}
                 pagination={false}
                 loading={isLoading}
                 columns={columns}
